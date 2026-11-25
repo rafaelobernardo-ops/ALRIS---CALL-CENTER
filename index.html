@@ -127,17 +127,17 @@
         <!-- Frame Atual do Vídeo 3D Ocupando 100% da Tela -->
         <img 
           id="fullScreenFrameImg" 
-          src="frames/frame_000.jpg?v=capa1" 
+          src="frames/frame_018.jpg?v=capa2" 
           alt="ALRIS 3D Scroll Animation" 
           class="w-full h-full object-cover object-center select-none pointer-events-none"
         >
         <!-- Vinheta Cinematográfica Suave para Leitura Perfeita dos Textos e Destaque da Iluminação -->
         <div class="absolute inset-0 bg-gradient-to-b from-[#060a12]/60 via-[#060a12]/20 to-[#060a12]/75 pointer-events-none"></div>
 
-        <!-- Barra Discreta de Progresso dos 144 Frames no Canto Inferior -->
+        <!-- Barra Discreta de Progresso dos Frames no Canto Inferior -->
         <div class="absolute bottom-6 right-6 z-20 hidden sm:flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-slate-950/75 border border-cyan-400/30 backdrop-blur-md text-[10px] font-mono text-cyan-300">
           <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
-          <span id="frameCounterBadge">FRAME 000 / 143 • ROLE O SCROLL</span>
+          <span id="frameCounterBadge">FRAME 018 / 143 • ROLE O SCROLL</span>
         </div>
       </div>
 
@@ -1758,11 +1758,11 @@
     }
 
     const TOTAL_3D_FRAMES = 144;
-    const FRAME_CACHE_VER = 'capa1';
+    const FRAME_CACHE_VER = 'capa2';
     const preloaded3DFrames = [];
-    // Sequência completa de 144 frames (000..143) do vídeo capa.mp4:
+    // Começa direto no frame 018 (último instante antes de acender) para que no primeiro toque do scroll as luzes já acendam na base da coluna!
     const activeFrameSequence = [];
-    for (let i = 0; i < TOTAL_3D_FRAMES; i++) activeFrameSequence.push(i);
+    for (let i = 18; i < TOTAL_3D_FRAMES; i++) activeFrameSequence.push(i);
 
     function preloadAll3DFrames() {
       activeFrameSequence.forEach(idx => {
@@ -1783,9 +1783,11 @@
       // O vídeo termina exatamente quando o topo da seção Planos & Checkout chega na tela
       const maxScroll = Math.max(1, planosSection.offsetTop - window.innerHeight * 0.9);
       const rawProgress = Math.max(0, Math.min(1, scrollTop / maxScroll));
+      // Curva com resposta imediata no primeiro scroll para já acender as luzes da coluna:
+      const easedProgress = scrollTop > 2 ? Math.max(0.04, Math.pow(rawProgress, 0.78)) : 0;
 
       const totalSeq = activeFrameSequence.length;
-      const seqIndex = Math.max(0, Math.min(totalSeq - 1, Math.round(rawProgress * (totalSeq - 1))));
+      const seqIndex = Math.max(0, Math.min(totalSeq - 1, Math.round(easedProgress * (totalSeq - 1))));
       const frameNumber = activeFrameSequence[seqIndex];
       const numStr = String(frameNumber).padStart(3, '0');
 
