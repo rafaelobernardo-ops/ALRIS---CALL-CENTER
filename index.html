@@ -7,81 +7,26 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
-    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
-    .mono { font-family: 'JetBrains Mono', monospace; }
-    .pipefy-card { background: #ffffff; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05); transition: all 0.2s ease; }
-    .pipefy-card:hover { border-color: #6366f1; box-shadow: 0 6px 14px -2px rgba(99, 102, 241, 0.16); transform: translateY(-1px); }
-    .custom-scroll::-webkit-scrollbar { width: 5px; height: 5px; }
-    .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-    .waveform-bar { animation: soundWave 1s ease-in-out infinite alternate; }
-    @keyframes soundWave {
-      0% { height: 4px; }
-      100% { height: 22px; }
-    }
-    /* Animações 3D Suaves & Objeto 3D Guiado pelo Scroll */
-    .scene-3d { perspective: 1200px; }
-    .card-3d-float {
-      transform-style: preserve-3d;
-      animation: float3d 6s ease-in-out infinite;
-    }
-    .orb-3d-spin {
-      animation: orbSpin 14s linear infinite;
-    }
-    .logo-3d-pulse {
-      animation: logoFloat 4s ease-in-out infinite;
-    }
-    .alris-3d-stage {
-      transform-style: preserve-3d;
-      transition: transform 0.12s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease;
-    }
-    .alris-ring-1 {
-      animation: ringSpin3D 12s linear infinite;
-    }
-    .alris-ring-2 {
-      animation: ringSpinReverse3D 16s linear infinite;
-    }
-    @keyframes ringSpin3D {
-      0% { transform: rotateX(68deg) rotateY(12deg) rotateZ(0deg); }
-      100% { transform: rotateX(68deg) rotateY(12deg) rotateZ(360deg); }
-    }
-    @keyframes ringSpinReverse3D {
-      0% { transform: rotateX(-55deg) rotateY(28deg) rotateZ(360deg); }
-      100% { transform: rotateX(-55deg) rotateY(28deg) rotateZ(0deg); }
-    }
-    @keyframes float3d {
-      0%, 100% { transform: rotateX(8deg) rotateY(-10deg) translateY(0px); }
-      50% { transform: rotateX(2deg) rotateY(8deg) translateY(-14px); }
-    }
-    @keyframes orbSpin {
-      0% { transform: rotateZ(0deg) rotateX(65deg); }
-      100% { transform: rotateZ(360deg) rotateX(65deg); }
-    }
-    @keyframes logoFloat {
-      0%, 100% { transform: translateY(0) rotateY(0deg); }
-      50% { transform: translateY(-2px) rotateY(10deg); }
-    }
-  </style>
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body class="h-full flex flex-col bg-[#f4f6fa] text-slate-800 antialiased selection:bg-indigo-600 selection:text-white">
 
   <!-- ====================================================================== -->
   <!-- ETAPA 1: PÁGINA INICIAL PÚBLICA (VÍDEO 3D EM TELA CHEIA NO SCROLL)     -->
   <!-- ====================================================================== -->
-  <div id="view-landing" onscroll="handleFullScreenFrameScroll(this)" class="flex-1 overflow-y-auto bg-[#120d08] relative">
+  <div id="view-landing" onscroll="handleFullScreenFrameScroll(this)" class="flex-1 overflow-y-auto bg-[#0b0f15] relative">
     
-    <!-- Navbar Oficial ALRIS com Paleta Arquitetônica Amadeirada & Âmbar Dourado -->
-    <header class="h-18 py-3 bg-[#140e09]/85 backdrop-blur-xl text-[#faf4eb] px-6 lg:px-12 flex items-center justify-between border-b border-amber-400/20 sticky top-0 z-50 shrink-0">
+    <!-- Navbar Oficial ALRIS — Paleta Híbrida Executiva (Grafite + Branco/Prata + Ciano/Azul Call Center) -->
+    <header class="h-18 py-3 bg-[#0b0f15]/85 backdrop-blur-xl text-white px-6 lg:px-12 flex items-center justify-between border-b border-white/10 sticky top-0 z-50 shrink-0">
       <div class="flex items-center gap-3.5 cursor-pointer group" onclick="goToView('landing')">
         <div class="flex items-center gap-3">
-          <div class="w-11 h-11 rounded-2xl bg-[#1f160e] border border-amber-400/35 shadow-md shadow-amber-500/15 flex items-center justify-center p-1.5">
+          <div class="w-11 h-11 rounded-2xl bg-[#111824] border border-cyan-400/35 shadow-md shadow-cyan-500/15 flex items-center justify-center p-1.5">
             <svg viewBox="0 0 64 64" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <linearGradient id="alrisGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#fde68a" />
-                  <stop offset="50%" stop-color="#f59e0b" />
-                  <stop offset="100%" stop-color="#b45309" />
+                  <stop offset="0%" stop-color="#22d3ee" />
+                  <stop offset="55%" stop-color="#3b82f6" />
+                  <stop offset="100%" stop-color="#10b981" />
                 </linearGradient>
               </defs>
               <path d="M12 48 L26 15 C28.5 9.5 34.5 9.5 37 15 L44 31" stroke="url(#alrisGrad1)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -90,320 +35,319 @@
           </div>
           <div>
             <div class="flex items-center gap-2">
-              <span class="text-xl font-black tracking-widest text-[#faf4eb] leading-none">ALR<span class="text-amber-400">I</span>S</span>
-              <span class="text-[9px] bg-gradient-to-r from-amber-500/25 to-yellow-600/20 text-amber-200 font-extrabold px-2 py-0.5 rounded-full border border-amber-400/35">IA</span>
+              <span class="text-xl font-black tracking-widest text-white leading-none">ALR<span class="text-cyan-400">I</span>S</span>
+              <span class="text-[9px] bg-cyan-500/15 text-cyan-300 font-extrabold px-2 py-0.5 rounded-full border border-cyan-400/35">IA</span>
             </div>
-            <p class="text-[10px] text-amber-300/80 font-bold tracking-[0.16em] uppercase mt-0.5">CANAL DE ATENDIMENTO</p>
+            <p class="text-[10px] text-slate-300 font-bold tracking-[0.16em] uppercase mt-0.5">CANAL DE ATENDIMENTO</p>
           </div>
         </div>
       </div>
 
       <!-- Links de Âncora da Própria Página Inicial -->
-      <nav class="hidden md:flex items-center gap-8 text-xs font-bold text-[#e7dac7]">
-        <a href="#experiencia-3d" class="hover:text-amber-300 transition">Experiência 3D</a>
-        <a href="#como-funciona" class="hover:text-amber-300 transition">Como Funciona</a>
-        <a href="#recursos" class="hover:text-amber-300 transition">Recursos</a>
-        <a href="#planos" class="hover:text-amber-300 transition">Planos Mensais</a>
+      <nav class="hidden md:flex items-center gap-8 text-xs font-bold text-slate-200">
+        <a href="#experiencia-3d" class="hover:text-cyan-400 transition">Experiência 3D</a>
+        <a href="#como-funciona" class="hover:text-cyan-400 transition">Como Funciona</a>
+        <a href="#recursos" class="hover:text-cyan-400 transition">Recursos</a>
+        <a href="#planos" class="hover:text-cyan-400 transition">Planos Mensais</a>
       </nav>
 
-      <!-- Botões de Login (Sou Admin / Sou Equipe c/ Código) e Teste -->
+      <!-- Botões de Login e Começar Agora (Azul/Ciano Call Center) -->
       <div class="flex items-center gap-3">
-        <button onclick="goToView('login')" class="px-4 py-2.5 rounded-xl bg-[#241a10]/80 hover:bg-[#2f2215] text-[#faf4eb] border border-amber-400/25 font-extrabold text-xs transition flex items-center gap-2">
-          <i class="fa-solid fa-arrow-right-to-bracket text-amber-400"></i> Entrar (Admin / Equipe)
+        <button onclick="goToView('login')" class="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white border border-white/15 font-extrabold text-xs transition flex items-center gap-2">
+          <i class="fa-solid fa-arrow-right-to-bracket text-cyan-400"></i> Entrar (Admin / Equipe)
         </button>
-        <a href="#planos" class="hidden sm:flex px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-600 hover:from-amber-300 hover:to-amber-500 text-[#1a120b] font-black text-xs shadow-lg shadow-amber-500/25 transition items-center gap-1.5">
+        <a href="#planos" class="hidden sm:flex px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-blue-500 text-white font-extrabold text-xs shadow-lg shadow-cyan-500/25 transition items-center gap-1.5">
           Começar Agora &rarr;
         </a>
       </div>
     </header>
 
     <!-- ==================================================================== -->
-    <!-- PALCO 3D EM TELA CHEIA (ILUMINAÇÃO ARQUITETÔNICA ATÉ OS PLANOS!)     -->
+    <!-- PALCO 3D EM TELA CHEIA (CANVAS 60FPS ULTRA-LEVE A PARTIR DO FRAME 016) -->
     <!-- ==================================================================== -->
     <div id="experiencia-3d" class="relative w-full">
 
-      <!-- TELA CHEIA FIXA (STICKY 100vw x 100vh) QUE REPRODUZ OS FRAMES ATÉ CHEGAR NOS PLANOS -->
-      <div class="sticky top-0 left-0 w-full h-screen overflow-hidden bg-[#120d08] z-0">
-        <!-- Frame Atual do Vídeo 3D Ocupando 100% da Tela -->
-        <img 
-          id="fullScreenFrameImg" 
-          src="frames/frame_024.jpg?v=capa4" 
-          alt="ALRIS 3D Scroll Animation" 
-          class="w-full h-full object-cover object-center select-none pointer-events-none"
-        >
-        <!-- Vinheta Quente Amadeirada Suave para Harmonizar com o Piso e Iluminação Dourada -->
-        <div class="absolute inset-0 bg-gradient-to-b from-[#120d08]/60 via-[#1a130c]/15 to-[#16100a]/75 pointer-events-none"></div>
+      <!-- TELA CHEIA FIXA (STICKY 100vw x 100vh) COM CANVAS HARDWARE-ACCELERATED -->
+      <div class="sticky top-0 left-0 w-full h-screen overflow-hidden bg-[#0b0f15] z-0">
+        <!-- Frame Inicial Estático (016 = totalmente sem luz) enquanto o Canvas 60fps assume imediatamente -->
+        <canvas 
+          id="fullScreenFrameCanvas" 
+          width="1280" 
+          height="720"
+          class="w-full h-full object-cover object-center select-none pointer-events-none block"
+        ></canvas>
+        <!-- Vinheta Grafite Suave para Leitura Cristalina das Fontes Brancas/Prata -->
+        <div class="absolute inset-0 bg-gradient-to-b from-[#0b0f15]/60 via-[#0f141c]/20 to-[#0b0f15]/80 pointer-events-none"></div>
 
-        <!-- Barra Discreta de Progresso dos Frames no Canto Inferior -->
-        <div class="absolute bottom-6 right-6 z-20 hidden sm:flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-[#1a120b]/85 border border-amber-400/35 backdrop-blur-md text-[10px] font-mono text-amber-200">
-          <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
-          <span id="frameCounterBadge">FRAME 024 / 143 • ROLE O SCROLL</span>
+        <!-- Barra Discreta de Progresso no Canto Inferior -->
+        <div class="absolute bottom-6 right-6 z-20 hidden sm:flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-[#0f141c]/85 border border-cyan-400/30 backdrop-blur-md text-[10px] font-mono text-cyan-300">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+          <span id="frameCounterBadge">FRAME 016 / 143 • ROLE O SCROLL</span>
         </div>
       </div>
 
-      <!-- CAMADA DE CONTEÚDO QUE DESLIZA SOBRE O VÍDEO 3D EM TELA CHEIA -->
+      <!-- CAMADA DE CONTEÚDO QUE DESLIZA SOBRE O VÍDEO EM TELA CHEIA -->
       <div class="relative z-10 -mt-[100vh]">
 
-        <!-- CENA 1 (Topo / Hero Harmônico com o Piso Amadeirado e Luzes Douradas) -->
+        <!-- CENA 1 (Topo / Hero Executivo: Grafite + Branco/Prata + Ciano/Esmeralda) -->
         <section class="min-h-[115vh] flex flex-col items-center justify-center px-6 text-center">
           <div class="max-w-3xl mx-auto">
-            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#1f160e]/80 border border-amber-400/35 text-[11px] font-bold text-amber-200 mb-5 backdrop-blur-md shadow">
-              <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#0f141c]/80 border border-cyan-400/35 text-[11px] font-bold text-cyan-300 mb-5 backdrop-blur-md shadow">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
               <span>ALRIS • CANAL DE ATENDIMENTO & COPILOTO IA</span>
             </div>
 
-            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.08] text-[#faf4eb] drop-shadow-[0_4px_24px_rgba(0,0,0,0.75)]">
-              Atendimento Inteligente que <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#fde68a] via-[#f59e0b] to-[#d97706]">Converte Vendas em Tempo Real</span>
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.08] text-white drop-shadow-[0_4px_24px_rgba(0,0,0,0.75)]">
+              Atendimento Inteligente que <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-400 to-emerald-300">Converte Vendas em Tempo Real</span>
             </h1>
 
-            <p class="mt-4 text-sm sm:text-base text-[#efe4d4] max-w-xl mx-auto leading-relaxed drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
+            <p class="mt-4 text-sm sm:text-base text-slate-200 max-w-xl mx-auto leading-relaxed drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
               Role a página para acender a central de atendimento <strong>ALRIS</strong> ou acesse diretamente o painel da sua empresa.
             </p>
 
-            <!-- Apenas 2 Botões Diretos na Paleta Âmbar / Bronze do Piso -->
+            <!-- 2 Botões Diretos na Paleta Call Center & IA -->
             <div class="mt-8 flex flex-wrap items-center justify-center gap-3.5">
-              <button onclick="goToView('login'); switchLoginMode('admin');" class="px-7 py-3.5 rounded-2xl bg-gradient-to-r from-amber-300 via-amber-500 to-yellow-600 hover:from-amber-200 hover:to-amber-400 text-[#181109] font-black text-sm shadow-xl shadow-amber-500/30 transition flex items-center gap-2">
+              <button onclick="goToView('login'); switchLoginMode('admin');" class="px-7 py-3.5 rounded-2xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-blue-500 text-white font-extrabold text-sm shadow-xl shadow-cyan-500/25 transition flex items-center gap-2">
                 <i class="fa-solid fa-lock-open"></i> Acessar Plataforma
               </button>
 
-              <button onclick="goToView('login'); switchLoginMode('team');" class="px-6 py-3.5 rounded-2xl bg-[#1f160e]/80 hover:bg-[#2c2015]/90 border border-amber-300/35 text-[#faf4eb] font-bold text-sm backdrop-blur-md transition flex items-center gap-2 shadow-lg">
-                <i class="fa-solid fa-ticket text-amber-300"></i> Entrar com Código de Equipe
+              <button onclick="goToView('login'); switchLoginMode('team');" class="px-6 py-3.5 rounded-2xl bg-[#0f141c]/85 hover:bg-[#171f2b] border border-white/20 text-white font-bold text-sm backdrop-blur-md transition flex items-center gap-2 shadow-lg">
+                <i class="fa-solid fa-ticket text-emerald-400"></i> Entrar com Código de Equipe
               </button>
             </div>
 
-            <div class="mt-12 text-amber-200/90 text-xs font-semibold flex flex-col items-center gap-1 animate-bounce drop-shadow">
+            <div class="mt-12 text-cyan-300/90 text-xs font-semibold flex flex-col items-center gap-1 animate-bounce drop-shadow">
               <span>Role o scroll para acender a central em movimento</span>
-              <i class="fa-solid fa-chevron-down text-amber-400"></i>
+              <i class="fa-solid fa-chevron-down text-cyan-400"></i>
             </div>
           </div>
         </section>
 
-        <!-- CENA 2 (Equipe Sincronizada — Card Glass Espresso/Madeira & Dourado) -->
+        <!-- CENA 2 (Equipe Sincronizada — Vidro Grafite Escuro + Reflexo Champagne Sutil + Acento Ciano) -->
         <section class="min-h-[85vh] flex items-center px-6 lg:px-16">
-          <div class="max-w-lg bg-[#1a130c]/85 backdrop-blur-xl border border-amber-400/35 rounded-3xl p-7 text-[#faf4eb] shadow-[0_20px_50px_rgba(0,0,0,0.65)]">
-            <span class="px-3 py-1 rounded-full bg-amber-500/20 text-amber-200 border border-amber-400/35 font-extrabold text-[10px] uppercase tracking-wider">
+          <div class="max-w-lg bg-[#0f141c]/88 backdrop-blur-xl border border-amber-100/15 rounded-3xl p-7 text-white shadow-[0_20px_50px_rgba(0,0,0,0.65)] ring-1 ring-cyan-400/20">
+            <span class="px-3 py-1 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-400/30 font-extrabold text-[10px] uppercase tracking-wider">
               1. Operação Conectada em Tempo Real
             </span>
-            <h2 class="text-2xl sm:text-3xl font-black text-[#faf4eb] mt-3 leading-tight">
+            <h2 class="text-2xl sm:text-3xl font-black text-white mt-3 leading-tight">
               Toda a Sua Equipe Sincronizada em um Único Canal
             </h2>
-            <p class="text-xs sm:text-sm text-[#e2d3be] mt-3 leading-relaxed">
-              O administrador gerencia o plano e libera o código exclusivo da empresa (<code class="text-amber-300 font-mono font-bold">ALRIS-8842-TEAM</code>). Cada operador acompanha os clientes do Kanban da triagem até a entrega final.
+            <p class="text-xs sm:text-sm text-slate-300 mt-3 leading-relaxed">
+              O administrador gerencia o plano e libera o código exclusivo da empresa (<code class="text-cyan-300 font-mono font-bold">ALRIS-8842-TEAM</code>). Cada operador acompanha os clientes do Kanban da triagem até a entrega final.
             </p>
             <div class="mt-5 flex items-center gap-3">
-              <button onclick="goToView('login')" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-[#181109] font-black text-xs transition shadow-md">
+              <button onclick="goToView('login')" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-extrabold text-xs transition shadow-md">
                 Abrir Quadro Kanban &rarr;
               </button>
             </div>
           </div>
         </section>
 
-        <!-- CENA 2.5 (Card do Gráfico de Análise de Sentimento na Paleta Bronze/Dourado) -->
+        <!-- CENA 2.5 (Análise de Sentimento — Vidro Grafite Escuro + Acento Esmeralda/Ciano) -->
         <section class="min-h-[85vh] flex items-center justify-end px-6 lg:px-16">
-          <div class="max-w-lg bg-[#1a130c]/85 backdrop-blur-xl border border-amber-300/40 rounded-3xl p-7 text-[#faf4eb] shadow-[0_20px_50px_rgba(0,0,0,0.65)]">
-            <span class="px-3 py-1 rounded-full bg-yellow-500/20 text-amber-200 border border-amber-300/35 font-extrabold text-[10px] uppercase tracking-wider">
+          <div class="max-w-lg bg-[#0f141c]/88 backdrop-blur-xl border border-amber-100/15 rounded-3xl p-7 text-white shadow-[0_20px_50px_rgba(0,0,0,0.65)] ring-1 ring-emerald-400/20">
+            <span class="px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-400/30 font-extrabold text-[10px] uppercase tracking-wider">
               2. Análise de Sentimento Ao Vivo
             </span>
-            <h2 class="text-2xl sm:text-3xl font-black text-[#faf4eb] mt-3 leading-tight">
+            <h2 class="text-2xl sm:text-3xl font-black text-white mt-3 leading-tight">
               Gráfico 3D de Sentimento e Telemetria de Voz na Chamada
             </h2>
-            <p class="text-xs sm:text-sm text-[#e2d3be] mt-3 leading-relaxed">
+            <p class="text-xs sm:text-sm text-slate-300 mt-3 leading-relaxed">
               Assim que a IA processa a voz do cliente, o painel projeta o sentimento positivo, neutro ou negativo da conversa em tempo real e entrega na tela o argumento exato para fechar o contrato.
             </p>
             <div class="mt-5 flex items-center gap-3">
-              <button onclick="goToView('login')" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-600 hover:from-amber-300 hover:to-amber-500 text-[#181109] font-black text-xs transition shadow-lg">
+              <button onclick="goToView('login')" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-400 hover:to-cyan-500 text-white font-extrabold text-xs transition shadow-lg">
                 Testar Copiloto de Voz IA &rarr;
               </button>
             </div>
           </div>
         </section>
 
-        <!-- CENA 3 (COMO FUNCIONA O FLUXO DE TRABALHO — PALETA AMADEIRADA & DOURADA) -->
+        <!-- CENA 3 (COMO FUNCIONA O FLUXO DE TRABALHO — VIDRO GRAFITE EXECUTIVO) -->
         <section id="como-funciona" class="min-h-[90vh] flex flex-col justify-center py-16 px-6 max-w-6xl mx-auto">
           <div class="text-center max-w-3xl mx-auto mb-10">
-            <span class="text-xs font-extrabold text-amber-200 uppercase tracking-widest bg-[#1f160e]/85 px-3.5 py-1 rounded-full border border-amber-400/35 backdrop-blur-md">
+            <span class="text-xs font-extrabold text-cyan-300 uppercase tracking-widest bg-[#0f141c]/85 px-3.5 py-1 rounded-full border border-cyan-400/30 backdrop-blur-md">
               Jornada Dentro da ALRIS
             </span>
-            <h2 class="text-3xl sm:text-4xl font-black text-[#faf4eb] mt-3 drop-shadow-[0_4px_18px_rgba(0,0,0,0.75)]">
+            <h2 class="text-3xl sm:text-4xl font-black text-white mt-3 drop-shadow-[0_4px_18px_rgba(0,0,0,0.75)]">
               Como Funciona o Fluxo de Trabalho?
             </h2>
-            <p class="text-sm text-[#efe4d4] mt-2 drop-shadow">
+            <p class="text-sm text-slate-200 mt-2 drop-shadow">
               Uma experiência limpa e sequencial: você faz login, visualiza seus processos no Kanban e abre o atendimento inteligente de qualquer etapa com um clique.
             </p>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
-            <div class="bg-[#1a130c]/85 backdrop-blur-xl p-6 rounded-2xl border border-amber-400/25 text-[#faf4eb] shadow-xl">
-              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-300 to-amber-500 text-[#181109] font-black text-sm flex items-center justify-center mb-4 shadow">1</div>
-              <h3 class="text-base font-bold text-[#faf4eb] mb-2">Login Admin ou Código</h3>
-              <p class="text-xs text-[#dfd0ba] leading-relaxed">
+            <div class="bg-[#0f141c]/88 backdrop-blur-xl p-6 rounded-2xl border border-white/15 text-white shadow-xl">
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-400 to-blue-600 text-white font-black text-sm flex items-center justify-center mb-4 shadow">1</div>
+              <h3 class="text-base font-bold text-white mb-2">Login Admin ou Código</h3>
+              <p class="text-xs text-slate-300 leading-relaxed">
                 O administrador entra com seu e-mail corporativo e libera o código da empresa para a equipe entrar rapidamente sem burocracia.
               </p>
             </div>
 
-            <div class="bg-[#1a130c]/85 backdrop-blur-xl p-6 rounded-2xl border border-amber-400/25 text-[#faf4eb] shadow-xl">
-              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-yellow-600 text-[#181109] font-black text-sm flex items-center justify-center mb-4 shadow">2</div>
-              <h3 class="text-base font-bold text-[#faf4eb] mb-2">Kanban 100% Clicável</h3>
-              <p class="text-xs text-[#dfd0ba] leading-relaxed">
+            <div class="bg-[#0f141c]/88 backdrop-blur-xl p-6 rounded-2xl border border-white/15 text-white shadow-xl">
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white font-black text-sm flex items-center justify-center mb-4 shadow">2</div>
+              <h3 class="text-base font-bold text-white mb-2">Kanban 100% Clicável</h3>
+              <p class="text-xs text-slate-300 leading-relaxed">
                 Crie chamados com Raio-X por link ou clique em qualquer card (inclusive em <strong>Desenvolvimento</strong> e <strong>Entregue</strong>) para abrir a conversa do cliente.
               </p>
             </div>
 
-            <div class="bg-[#1a130c]/85 backdrop-blur-xl p-6 rounded-2xl border border-amber-400/25 text-[#faf4eb] shadow-xl">
-              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-yellow-500 to-amber-600 text-[#181109] font-black text-sm flex items-center justify-center mb-4 shadow">3</div>
-              <h3 class="text-base font-bold text-[#faf4eb] mb-2">Ligue & Monitore em 3D</h3>
-              <p class="text-xs text-[#dfd0ba] leading-relaxed">
+            <div class="bg-[#0f141c]/88 backdrop-blur-xl p-6 rounded-2xl border border-white/15 text-white shadow-xl">
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-600 text-white font-black text-sm flex items-center justify-center mb-4 shadow">3</div>
+              <h3 class="text-base font-bold text-white mb-2">Ligue & Monitore em 3D</h3>
+              <p class="text-xs text-slate-300 leading-relaxed">
                 Inicie uma <strong>Ligação Normal</strong> no computador ou pelo <strong>WhatsApp Web</strong> com telemetria de sentimento ao vivo e 3 sugestões do que falar.
               </p>
             </div>
 
-            <div class="bg-[#1a130c]/85 backdrop-blur-xl p-6 rounded-2xl border border-amber-400/25 text-[#faf4eb] shadow-xl">
-              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 text-[#181109] font-black text-sm flex items-center justify-center mb-4 shadow">4</div>
-              <h3 class="text-base font-bold text-[#faf4eb] mb-2">Envio de Contrato no Whats</h3>
-              <p class="text-xs text-[#dfd0ba] leading-relaxed">
+            <div class="bg-[#0f141c]/88 backdrop-blur-xl p-6 rounded-2xl border border-white/15 text-white shadow-xl">
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-emerald-500 text-white font-black text-sm flex items-center justify-center mb-4 shadow">4</div>
+              <h3 class="text-base font-bold text-white mb-2">Envio de Contrato no Whats</h3>
+              <p class="text-xs text-slate-300 leading-relaxed">
                 Quando o cliente aceita a proposta, basta clicar no botão de fechamento para disparar o contrato pronto no WhatsApp dele e avançar o projeto.
               </p>
             </div>
           </div>
         </section>
 
-        <!-- CENA 4 (RECURSOS & DIFERENCIAIS NA PALETA DO PISO E MADEIRA ILUMINADA) -->
+        <!-- CENA 4 (RECURSOS & DIFERENCIAIS — VIDRO GRAFITE EXECUTIVO) -->
         <section id="recursos" class="min-h-[95vh] flex flex-col justify-center py-16 px-6 max-w-6xl mx-auto pb-20">
           <div class="text-center max-w-3xl mx-auto mb-10">
-            <span class="text-xs font-extrabold text-amber-200 uppercase tracking-widest bg-[#1f160e]/85 px-3.5 py-1 rounded-full border border-amber-400/35 backdrop-blur-md">
+            <span class="text-xs font-extrabold text-emerald-300 uppercase tracking-widest bg-[#0f141c]/85 px-3.5 py-1 rounded-full border border-emerald-400/30 backdrop-blur-md">
               Diferenciais Tecnológicos ALRIS
             </span>
-            <h2 class="text-3xl sm:text-4xl font-black text-[#faf4eb] mt-3 drop-shadow-[0_4px_18px_rgba(0,0,0,0.75)]">
+            <h2 class="text-3xl sm:text-4xl font-black text-white mt-3 drop-shadow-[0_4px_18px_rgba(0,0,0,0.75)]">
               Ferramentas Criadas para Multiplicar seus Fechamentos
             </h2>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="p-6 rounded-2xl bg-[#1a130c]/85 backdrop-blur-xl border border-amber-400/30 text-[#faf4eb] shadow-xl">
-              <div class="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-300 flex items-center justify-center text-xl mb-4 border border-amber-400/35">
+            <div class="p-6 rounded-2xl bg-[#0f141c]/88 backdrop-blur-xl border border-white/15 text-white shadow-xl">
+              <div class="w-12 h-12 rounded-xl bg-cyan-500/15 text-cyan-300 flex items-center justify-center text-xl mb-4 border border-cyan-400/30">
                 <i class="fa-solid fa-ear-listen"></i>
               </div>
-              <h3 class="text-base font-bold text-[#faf4eb] mb-2">Escuta Ativa com Google Gemini</h3>
-              <p class="text-xs text-[#dfd0ba] leading-relaxed">
+              <h3 class="text-base font-bold text-white mb-2">Escuta Ativa com Google Gemini</h3>
+              <p class="text-xs text-slate-300 leading-relaxed">
                 Transcreve a fala do cliente ao vivo e detecta pausas, hesitações e objeções de preço ou prazo no exato segundo em que acontecem.
               </p>
             </div>
 
-            <div class="p-6 rounded-2xl bg-[#1a130c]/85 backdrop-blur-xl border border-amber-400/30 text-[#faf4eb] shadow-xl">
-              <div class="w-12 h-12 rounded-xl bg-yellow-500/20 text-amber-200 flex items-center justify-center text-xl mb-4 border border-amber-300/35">
+            <div class="p-6 rounded-2xl bg-[#0f141c]/88 backdrop-blur-xl border border-white/15 text-white shadow-xl">
+              <div class="w-12 h-12 rounded-xl bg-emerald-500/15 text-emerald-300 flex items-center justify-center text-xl mb-4 border border-emerald-400/30">
                 <i class="fa-solid fa-chart-column"></i>
               </div>
-              <h3 class="text-base font-bold text-[#faf4eb] mb-2">Análise de Sentimento Ao Vivo</h3>
-              <p class="text-xs text-[#dfd0ba] leading-relaxed">
+              <h3 class="text-base font-bold text-white mb-2">Análise de Sentimento Ao Vivo</h3>
+              <p class="text-xs text-slate-300 leading-relaxed">
                 Acompanhe a probabilidade de fechamento subindo de 0% a 100% em tempo real com alerta visual imediato quando a venda entra em risco.
               </p>
             </div>
 
-            <div class="p-6 rounded-2xl bg-[#1a130c]/85 backdrop-blur-xl border border-amber-400/30 text-[#faf4eb] shadow-xl">
-              <div class="w-12 h-12 rounded-xl bg-orange-500/20 text-amber-300 flex items-center justify-center text-xl mb-4 border border-amber-400/35">
+            <div class="p-6 rounded-2xl bg-[#0f141c]/88 backdrop-blur-xl border border-white/15 text-white shadow-xl">
+              <div class="w-12 h-12 rounded-xl bg-blue-500/15 text-blue-300 flex items-center justify-center text-xl mb-4 border border-blue-400/30">
                 <i class="fa-solid fa-sliders"></i>
               </div>
-              <h3 class="text-base font-bold text-[#faf4eb] mb-2">Playbooks & Argumentos Dinâmicos</h3>
-              <p class="text-xs text-[#dfd0ba] leading-relaxed">
+              <h3 class="text-base font-bold text-white mb-2">Playbooks & Argumentos Dinâmicos</h3>
+              <p class="text-xs text-slate-300 leading-relaxed">
                 Alterne com 1 clique entre argumentos de parcelamento em 3x sem juros, garantia de alta velocidade ou escopo enxuto para converter na hora.
               </p>
             </div>
           </div>
         </section>
 
-        <!-- 1.5 PLANOS DE ASSINATURA MENSAL COM TRANSIÇÃO CONTÍNUA NO TOM DO PISO AMADEIRADO & OURO -->
-        <section id="planos" class="pt-12 pb-24 px-6 bg-gradient-to-b from-transparent via-[#1c140d]/85 to-[#120d08] relative z-20 text-[#faf4eb]">
-          <!-- Luzes âmbar suaves integradas ao brilho dourado do piso do vídeo -->
-          <div class="absolute top-0 left-1/4 w-96 h-64 bg-amber-500/15 rounded-full blur-[120px] pointer-events-none"></div>
-          <div class="absolute bottom-0 right-1/4 w-96 h-64 bg-yellow-600/15 rounded-full blur-[120px] pointer-events-none"></div>
+        <!-- 1.5 PLANOS DE ASSINATURA MENSAL — TRANSIÇÃO CONTÍNUA EM GRAFITE ESCURO + CIANO/ESMERALDA -->
+        <section id="planos" class="pt-12 pb-24 px-6 bg-gradient-to-b from-transparent via-[#0f141c]/88 to-[#0b0f15] relative z-20 text-white">
+          <div class="absolute top-0 left-1/4 w-96 h-64 bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none"></div>
+          <div class="absolute bottom-0 right-1/4 w-96 h-64 bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none"></div>
 
           <div class="max-w-6xl mx-auto relative z-10">
             <div class="text-center max-w-3xl mx-auto mb-12">
-              <span class="text-xs font-extrabold text-amber-200 uppercase tracking-widest bg-[#1f160e]/85 px-3.5 py-1 rounded-full border border-amber-400/35 backdrop-blur-md">
+              <span class="text-xs font-extrabold text-cyan-300 uppercase tracking-widest bg-[#0f141c]/85 px-3.5 py-1 rounded-full border border-cyan-400/30 backdrop-blur-md">
                 Planos & Checkout Transparente ALRIS
               </span>
-              <h2 class="text-3xl sm:text-4xl font-black text-[#faf4eb] mt-3 drop-shadow-lg">
+              <h2 class="text-3xl sm:text-4xl font-black text-white mt-3 drop-shadow-lg">
                 Escolha o Plano Ideal para o Tamanho da Sua Equipe
               </h2>
-              <p class="text-sm text-[#efe4d4] mt-2 drop-shadow">
+              <p class="text-sm text-slate-200 mt-2 drop-shadow">
                 Ao selecionar qualquer plano abaixo, você abre nossa <strong>Página de Pagamento Segura (Pix QR Code ou Cartão)</strong> com liberação automática das vagas da equipe.
               </p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
               
-              <!-- Plano 1: Starter (Glass Espresso/Bronze Harmônico com o Piso do Vídeo) -->
-              <div class="bg-[#1b140d]/88 backdrop-blur-2xl rounded-3xl p-7 border border-amber-400/25 hover:border-amber-400/55 shadow-2xl flex flex-col justify-between transition">
+              <!-- Plano 1: Starter (Vidro Grafite Escuro + Reflexo Sutil na Borda) -->
+              <div class="bg-[#0f141c]/88 backdrop-blur-2xl rounded-3xl p-7 border border-amber-100/15 hover:border-cyan-400/50 shadow-2xl flex flex-col justify-between transition">
                 <div>
-                  <span class="text-xs font-extrabold text-amber-300 uppercase tracking-wider">Plano Starter</span>
-                  <h3 class="text-xl font-extrabold text-[#faf4eb] mt-1">Individual & Autônomo</h3>
-                  <p class="text-xs text-[#d6c5ad] mt-1">Ideal para começar com 1 canal de atendimento e Kanban completo.</p>
+                  <span class="text-xs font-extrabold text-cyan-400 uppercase tracking-wider">Plano Starter</span>
+                  <h3 class="text-xl font-extrabold text-white mt-1">Individual & Autônomo</h3>
+                  <p class="text-xs text-slate-300 mt-1">Ideal para começar com 1 canal de atendimento e Kanban completo.</p>
                   <div class="my-6 flex items-baseline gap-1">
-                    <span class="text-sm font-bold text-amber-300/80">R$</span>
-                    <span class="text-4xl font-black text-[#faf4eb] mono">149</span>
-                    <span class="text-xs text-[#d6c5ad] font-semibold">/mês</span>
+                    <span class="text-sm font-bold text-slate-400">R$</span>
+                    <span class="text-4xl font-black text-white mono">149</span>
+                    <span class="text-xs text-slate-400 font-semibold">/mês</span>
                   </div>
-                  <ul class="space-y-3 text-xs text-[#ede0ce] border-t border-amber-400/15 pt-5">
-                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> <strong>1 Usuário (Admin)</strong> ativo</li>
-                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> 1 Canal WhatsApp conectado</li>
-                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> Quadro Kanban de Processos ilimitado</li>
-                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> Raio-X de Clientes por Link Social</li>
-                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> Envio de Contrato rápido no WhatsApp</li>
+                  <ul class="space-y-3 text-xs text-slate-200 border-t border-white/10 pt-5">
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> <strong>1 Usuário (Admin)</strong> ativo</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> 1 Canal WhatsApp conectado</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Quadro Kanban de Processos ilimitado</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Raio-X de Clientes por Link Social</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Envio de Contrato rápido no WhatsApp</li>
                   </ul>
                 </div>
-                <button onclick="openPaymentCheckout('Plano Starter', '149,00', 1)" class="mt-8 w-full py-3.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-[#faf4eb] border border-amber-400/35 font-extrabold text-xs transition shadow-sm flex items-center justify-center gap-2">
-                  <i class="fa-solid fa-lock text-amber-300"></i> Selecionar Starter & Ir p/ Pagamento
+                <button onclick="openPaymentCheckout('Plano Starter', '149,00', 1)" class="mt-8 w-full py-3.5 rounded-xl bg-white/10 hover:bg-cyan-500/20 text-white border border-cyan-400/35 font-extrabold text-xs transition shadow-sm flex items-center justify-center gap-2">
+                  <i class="fa-solid fa-lock text-cyan-400"></i> Selecionar Starter & Ir p/ Pagamento
                 </button>
               </div>
 
-              <!-- Plano 2: Growth / Pro Team (Destaque Central Ouro & Nogueira) -->
-              <div class="bg-gradient-to-b from-[#2a1e13]/92 to-[#17100a]/95 backdrop-blur-2xl text-[#faf4eb] rounded-3xl p-7 border-2 border-amber-400 shadow-[0_0_50px_-10px_rgba(245,158,11,0.4)] flex flex-col justify-between relative transform md:-translate-y-2">
-                <span class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-300 via-amber-500 to-yellow-600 text-[#181109] font-black text-[10px] uppercase tracking-wider px-4 py-1 rounded-full shadow">
+              <!-- Plano 2: Growth / Pro Team (Destaque Central Grafite + Ciano/Azul Call Center) -->
+              <div class="bg-gradient-to-b from-[#151e2c]/95 to-[#0b0f17]/98 backdrop-blur-2xl text-white rounded-3xl p-7 border-2 border-cyan-400 shadow-[0_0_50px_-10px_rgba(34,211,238,0.35)] flex flex-col justify-between relative transform md:-translate-y-2">
+                <span class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-cyan-400 via-blue-500 to-emerald-400 text-[#091018] font-black text-[10px] uppercase tracking-wider px-4 py-1 rounded-full shadow">
                   Mais Popular • Equipe & IA
                 </span>
                 <div>
-                  <span class="text-xs font-bold text-amber-300 uppercase tracking-wider">Plano Pro Growth</span>
-                  <h3 class="text-xl font-extrabold text-[#faf4eb] mt-1">Equipes & Copiloto Ao Vivo</h3>
-                  <p class="text-xs text-[#e5d5be] mt-1">Acesso por código para a equipe e IA escutando chamadas em tempo real.</p>
+                  <span class="text-xs font-bold text-cyan-300 uppercase tracking-wider">Plano Pro Growth</span>
+                  <h3 class="text-xl font-extrabold text-white mt-1">Equipes & Copiloto Ao Vivo</h3>
+                  <p class="text-xs text-slate-300 mt-1">Acesso por código para a equipe e IA escutando chamadas em tempo real.</p>
                   <div class="my-6 flex items-baseline gap-1">
-                    <span class="text-sm font-bold text-amber-300">R$</span>
-                    <span class="text-4xl font-black text-[#fde68a] mono">299</span>
-                    <span class="text-xs text-[#e5d5be] font-semibold">/mês</span>
+                    <span class="text-sm font-bold text-cyan-300">R$</span>
+                    <span class="text-4xl font-black text-white mono">299</span>
+                    <span class="text-xs text-slate-300 font-semibold">/mês</span>
                   </div>
-                  <ul class="space-y-3 text-xs text-[#faf4eb] border-t border-amber-400/20 pt-5">
-                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> <strong>Até 5 Membros na Equipe</strong> via Código</li>
-                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> <strong>Copiloto Gemini ao Vivo</strong> nas chamadas</li>
-                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> <strong>Gráfico 3D de Sentimento</strong> e Alerta de Risco</li>
-                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> Sugestões automáticas de quebra de objeção</li>
-                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> Ligação Normal no PC + WhatsApp Integrado</li>
+                  <ul class="space-y-3 text-xs text-slate-100 border-t border-white/10 pt-5">
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> <strong>Até 5 Membros na Equipe</strong> via Código</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> <strong>Copiloto Gemini ao Vivo</strong> nas chamadas</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> <strong>Gráfico 3D de Sentimento</strong> e Alerta de Risco</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Sugestões automáticas de quebra de objeção</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Ligação Normal no PC + WhatsApp Integrado</li>
                   </ul>
                 </div>
-                <button onclick="openPaymentCheckout('Plano Pro Growth', '299,00', 5)" class="mt-8 w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-300 via-amber-500 to-yellow-600 hover:from-amber-200 hover:to-amber-400 text-[#181109] font-black text-xs shadow-lg shadow-amber-500/25 transition flex items-center justify-center gap-2">
+                <button onclick="openPaymentCheckout('Plano Pro Growth', '299,00', 5)" class="mt-8 w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-blue-500 text-white font-extrabold text-xs shadow-lg shadow-cyan-500/25 transition flex items-center justify-center gap-2">
                   <i class="fa-solid fa-credit-card"></i> Fazer Upgrade p/ Pro (Página de Pagamento)
                 </button>
               </div>
 
-              <!-- Plano 3: Scale / Enterprise (Glass Nogueira & Bronze) -->
-              <div class="bg-[#1b140d]/88 backdrop-blur-2xl rounded-3xl p-7 border border-amber-400/25 hover:border-amber-300/60 shadow-2xl flex flex-col justify-between transition">
+              <!-- Plano 3: Scale / Enterprise (Vidro Grafite Escuro + Acento Azul/Esmeralda) -->
+              <div class="bg-[#0f141c]/88 backdrop-blur-2xl rounded-3xl p-7 border border-amber-100/15 hover:border-emerald-400/55 shadow-2xl flex flex-col justify-between transition">
                 <div>
-                  <span class="text-xs font-extrabold text-amber-200 uppercase tracking-wider">Plano Enterprise Scale</span>
-                  <h3 class="text-xl font-extrabold text-[#faf4eb] mt-1">Operação Ilimitada</h3>
-                  <p class="text-xs text-[#d6c5ad] mt-1">Para agências e centrais com múltiplos operadores e canais.</p>
+                  <span class="text-xs font-extrabold text-emerald-400 uppercase tracking-wider">Plano Enterprise Scale</span>
+                  <h3 class="text-xl font-extrabold text-white mt-1">Operação Ilimitada</h3>
+                  <p class="text-xs text-slate-300 mt-1">Para agências e centrais com múltiplos operadores e canais.</p>
                   <div class="my-6 flex items-baseline gap-1">
-                    <span class="text-sm font-bold text-amber-300/80">R$</span>
-                    <span class="text-4xl font-black text-[#faf4eb] mono">699</span>
-                    <span class="text-xs text-[#d6c5ad] font-semibold">/mês</span>
+                    <span class="text-sm font-bold text-slate-400">R$</span>
+                    <span class="text-4xl font-black text-white mono">699</span>
+                    <span class="text-xs text-slate-400 font-semibold">/mês</span>
                   </div>
-                  <ul class="space-y-3 text-xs text-[#ede0ce] border-t border-amber-400/15 pt-5">
-                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-300"></i> <strong>Membros Ilimitados</strong> com Código de Equipe</li>
-                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-300"></i> Múltiplos WhatsApps & Ramais VoIP</li>
-                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-300"></i> Motor <strong>Gemini 4 Argon</strong> Dedicado</li>
-                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-300"></i> Playbooks customizados & API Aberta</li>
-                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-300"></i> Gerente de Conta & SLA VIP</li>
+                  <ul class="space-y-3 text-xs text-slate-200 border-t border-white/10 pt-5">
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> <strong>Membros Ilimitados</strong> com Código de Equipe</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Múltiplos WhatsApps & Ramais VoIP</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Motor <strong>Gemini 4 Argon</strong> Dedicado</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Playbooks customizados & API Aberta</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Gerente de Conta & SLA VIP</li>
                   </ul>
                 </div>
-                <button onclick="openPaymentCheckout('Plano Enterprise Scale', '699,00', 99)" class="mt-8 w-full py-3.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-[#faf4eb] border border-amber-300/40 font-extrabold text-xs transition shadow-sm flex items-center justify-center gap-2">
-                  <i class="fa-solid fa-crown text-amber-300"></i> Selecionar Enterprise & Ir p/ Pagamento
+                <button onclick="openPaymentCheckout('Plano Enterprise Scale', '699,00', 99)" class="mt-8 w-full py-3.5 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 text-white border border-emerald-400/35 font-extrabold text-xs transition shadow-sm flex items-center justify-center gap-2">
+                  <i class="fa-solid fa-crown text-emerald-300"></i> Selecionar Enterprise & Ir p/ Pagamento
                 </button>
               </div>
 
@@ -414,15 +358,15 @@
       </div>
     </div>
 
-    <!-- Rodapé Público ALRIS no Tom Espresso Amadeirado -->
-    <footer class="bg-[#120d08] text-[#cbb89d] py-8 px-6 text-xs mt-auto border-t border-amber-400/15">
+    <!-- Rodapé Público ALRIS em Grafite Executivo -->
+    <footer class="bg-[#0b0f15] text-slate-400 py-8 px-6 text-xs mt-auto border-t border-white/10">
       <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-4">
         <div class="flex items-center gap-3">
-          <img src="prints/logo-alris.jpg" alt="ALRIS Logo" class="h-8 w-auto rounded-md border border-amber-400/35">
-          <span class="font-black text-[#faf4eb] tracking-wider">ALRIS • CANAL DE ATENDIMENTO</span>
+          <img src="assets/prints/logo-alris.jpg" alt="ALRIS Logo" class="h-8 w-auto rounded-md border border-cyan-400/30">
+          <span class="font-black text-white tracking-wider">ALRIS • CANAL DE ATENDIMENTO</span>
           <span>• © 2026 Todos os direitos reservados.</span>
         </div>
-        <button onclick="goToView('login')" class="text-amber-300 hover:underline font-bold">
+        <button onclick="goToView('login')" class="text-cyan-400 hover:underline font-bold">
           Acessar Portal (Sou Administrador / Sou Equipe com Código) &rarr;
         </button>
       </div>
@@ -431,38 +375,38 @@
   </div>
 
   <!-- ====================================================================== -->
-  <!-- ETAPA 2: PÁGINA DE LOGIN & ASSINATURA (ACESSO AO PAINEL INTERNO ALRIS) -->
+  <!-- ETAPA 2: PÁGINA DE LOGIN & ASSINATURA (PALETA GRAFITE + CIANO/ESMERALDA) -->
   <!-- ====================================================================== -->
-  <div id="view-login" class="hidden flex-1 flex flex-col bg-gradient-to-br from-[#0c1322] via-[#121d38] to-[#0f172a] overflow-y-auto">
+  <div id="view-login" class="hidden flex-1 flex flex-col bg-gradient-to-br from-[#0b0f15] via-[#0f141c] to-[#0b0f15] overflow-y-auto">
     
     <!-- Topo da Tela de Login com Botão de Voltar para a Página Inicial -->
     <div class="p-6 flex items-center justify-between max-w-6xl w-full mx-auto">
-      <button onclick="goToView('landing')" class="text-xs font-bold text-slate-300 hover:text-white flex items-center gap-2 bg-white/10 px-4 py-2 rounded-xl border border-white/10 transition">
-        <i class="fa-solid fa-arrow-left"></i> Voltar para a Página Inicial
+      <button onclick="goToView('landing')" class="text-xs font-bold text-slate-200 hover:text-white flex items-center gap-2 bg-[#141b26] px-4 py-2 rounded-xl border border-white/15 transition">
+        <i class="fa-solid fa-arrow-left text-cyan-400"></i> Voltar para a Página Inicial
       </button>
-      <span class="text-xs text-cyan-300 font-semibold"><i class="fa-solid fa-shield-halved mr-1"></i> Ambiente Criptografado SSL • ALRIS</span>
+      <span class="text-xs text-emerald-300 font-semibold"><i class="fa-solid fa-shield-halved mr-1"></i> Ambiente Criptografado SSL • ALRIS</span>
     </div>
 
     <div class="flex-1 flex items-center justify-center p-4">
-      <div class="bg-white w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-12 border border-slate-200">
+      <div class="bg-[#111822]/95 backdrop-blur-2xl w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-12 border border-white/15">
         
         <!-- Lado Esquerdo: Resumo do Acesso ALRIS -->
-        <div class="md:col-span-5 bg-[#0c1322] text-white p-8 flex flex-col justify-between border-r border-slate-800">
+        <div class="md:col-span-5 bg-[#0b0f15] text-white p-8 flex flex-col justify-between border-r border-white/10">
           <div>
             <div class="flex items-center gap-3 mb-6">
-              <img src="prints/logo-alris.jpg" alt="ALRIS Canal de Atendimento" class="h-11 w-auto rounded-xl border border-cyan-400/30 shadow-md shadow-indigo-500/20">
+              <img src="assets/prints/logo-alris.jpg" alt="ALRIS Canal de Atendimento" class="h-11 w-auto rounded-xl border border-cyan-400/35 shadow-md shadow-cyan-500/15">
               <div>
                 <span class="font-black text-base tracking-wider block">ALR<span class="text-cyan-400">I</span>S</span>
-                <span class="text-[10px] text-cyan-300 uppercase tracking-widest font-bold block">Canal de Atendimento</span>
+                <span class="text-[10px] text-slate-300 uppercase tracking-widest font-bold block">Canal de Atendimento</span>
               </div>
             </div>
 
-            <div id="selectedPlanBanner" class="hidden mb-4 p-3 rounded-xl bg-cyan-500/20 border border-cyan-400/40 text-xs">
+            <div id="selectedPlanBanner" class="hidden mb-4 p-3 rounded-xl bg-cyan-500/15 border border-cyan-400/35 text-xs">
               <span class="text-[10px] font-bold text-cyan-300 uppercase block">Plano Selecionado:</span>
               <strong id="selectedPlanText" class="text-white text-sm">Plano Pro Growth - R$ 299/mês</strong>
             </div>
 
-            <h2 class="text-2xl font-extrabold leading-snug mb-3">
+            <h2 class="text-2xl font-extrabold leading-snug mb-3 text-white">
               Entre para Acessar seu Canal de Atendimento
             </h2>
             <p class="text-xs text-slate-300 leading-relaxed">
@@ -470,12 +414,12 @@
             </p>
           </div>
 
-          <div class="space-y-2.5 pt-6 border-t border-slate-800 text-xs">
-            <div class="flex items-center gap-2 text-cyan-400 font-semibold">
+          <div class="space-y-2.5 pt-6 border-t border-white/10 text-xs">
+            <div class="flex items-center gap-2 text-emerald-400 font-semibold">
               <i class="fa-solid fa-circle-check"></i>
               <span>Fluxo Sequencial: Login &rarr; Kanban &rarr; Call IA</span>
             </div>
-            <div class="flex items-center gap-2 text-purple-300 font-semibold">
+            <div class="flex items-center gap-2 text-cyan-300 font-semibold">
               <i class="fa-solid fa-users"></i>
               <span>Acesso Isolado p/ Administrador e Equipe</span>
             </div>
@@ -483,14 +427,14 @@
         </div>
 
         <!-- Lado Direito: Seletor Administrador vs Equipe por Código -->
-        <div class="md:col-span-7 p-8 text-xs text-slate-800">
+        <div class="md:col-span-7 p-8 text-xs text-slate-100 bg-[#111822]">
           
           <!-- Abas de Escolha: Administrador vs Equipe (Código) -->
-          <div class="grid grid-cols-2 gap-2 p-1 bg-slate-100 rounded-2xl border border-slate-200 mb-6">
-            <button type="button" onclick="switchLoginMode('admin')" id="btnModeAdmin" class="py-2.5 px-3 rounded-xl font-extrabold text-xs bg-blue-600 text-white shadow-sm transition flex items-center justify-center gap-1.5">
+          <div class="grid grid-cols-2 gap-2 p-1 bg-[#0b0f15] rounded-2xl border border-white/10 mb-6">
+            <button type="button" onclick="switchLoginMode('admin')" id="btnModeAdmin" class="py-2.5 px-3 rounded-xl font-extrabold text-xs bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-sm transition flex items-center justify-center gap-1.5">
               <i class="fa-solid fa-building-user"></i> Sou Administrador
             </button>
-            <button type="button" onclick="switchLoginMode('team')" id="btnModeTeam" class="py-2.5 px-3 rounded-xl font-bold text-xs text-slate-600 hover:text-slate-900 transition flex items-center justify-center gap-1.5">
+            <button type="button" onclick="switchLoginMode('team')" id="btnModeTeam" class="py-2.5 px-3 rounded-xl font-bold text-xs text-slate-300 hover:text-white transition flex items-center justify-center gap-1.5">
               <i class="fa-solid fa-ticket"></i> Sou Equipe (Código)
             </button>
           </div>
@@ -498,44 +442,44 @@
           <!-- MODO 1: LOGIN DO ADMINISTRADOR (DONO DA EMPRESA) -->
           <div id="loginBoxAdmin">
             <div class="mb-5">
-              <h3 class="text-lg font-extrabold text-slate-900">Acesso do Administrador da Empresa</h3>
-              <p class="text-xs text-slate-500 mt-0.5">Gerencie seu plano mensal, crie seu código de convite e monitore sua equipe:</p>
+              <h3 class="text-lg font-extrabold text-white">Acesso do Administrador da Empresa</h3>
+              <p class="text-xs text-slate-400 mt-0.5">Gerencie seu plano mensal, crie seu código de convite e monitore sua equipe:</p>
             </div>
 
             <form onsubmit="handleAdminLogin(event)" class="space-y-3.5">
               <div>
-                <label class="block font-bold text-slate-700 mb-1">Nome da Sua Empresa *</label>
-                <input type="text" id="adminCompanyInput" required value="Agência Rafael Tech" placeholder="Ex: Minha Agência Web" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 font-semibold focus:outline-none focus:border-blue-600">
+                <label class="block font-bold text-slate-200 mb-1">Nome da Sua Empresa *</label>
+                <input type="text" id="adminCompanyInput" required value="Agência Rafael Tech" placeholder="Ex: Minha Agência Web" class="w-full bg-[#0b0f15] border border-white/15 rounded-xl px-3.5 py-2.5 text-white font-semibold focus:outline-none focus:border-cyan-400">
               </div>
 
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label class="block font-bold text-slate-700 mb-1">Seu Nome (Admin) *</label>
-                  <input type="text" id="adminNameInput" required value="Rafael" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 focus:outline-none focus:border-blue-600">
+                  <label class="block font-bold text-slate-200 mb-1">Seu Nome (Admin) *</label>
+                  <input type="text" id="adminNameInput" required value="Rafael" class="w-full bg-[#0b0f15] border border-white/15 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-cyan-400">
                 </div>
                 <div>
-                  <label class="block font-bold text-slate-700 mb-1">E-mail Corporativo *</label>
-                  <input type="email" id="loginEmail" required value="rafael@alris.com.br" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 focus:outline-none focus:border-blue-600">
+                  <label class="block font-bold text-slate-200 mb-1">E-mail Corporativo *</label>
+                  <input type="email" id="loginEmail" required value="rafael@alris.com.br" class="w-full bg-[#0b0f15] border border-white/15 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-cyan-400">
                 </div>
               </div>
 
               <div>
-                <label class="block font-bold text-slate-700 mb-1">Senha do Administrador *</label>
-                <input type="password" id="loginPass" required value="12345678" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 focus:outline-none focus:border-blue-600">
+                <label class="block font-bold text-slate-200 mb-1">Senha do Administrador *</label>
+                <input type="password" id="loginPass" required value="12345678" class="w-full bg-[#0b0f15] border border-white/15 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-cyan-400">
               </div>
 
-              <button type="submit" class="w-full bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white font-extrabold text-sm py-3.5 rounded-xl shadow-lg shadow-indigo-600/20 transition flex items-center justify-center gap-2">
+              <button type="submit" class="w-full bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-blue-500 text-white font-extrabold text-sm py-3.5 rounded-xl shadow-lg shadow-cyan-500/20 transition flex items-center justify-center gap-2">
                 <i class="fa-solid fa-lock-open"></i> Entrar como Administrador
               </button>
             </form>
 
             <!-- BOTÃO CONTA DEMO DO ADMINISTRADOR (1 CLIQUE) + CONFIRMAÇÃO DE E-MAIL -->
-            <div class="mt-4 pt-4 border-t border-slate-200 space-y-2">
-              <button type="button" onclick="loginDemoAdmin()" class="w-full py-3 px-4 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-900 border-2 border-indigo-400 font-extrabold text-xs transition flex items-center justify-center gap-2 shadow-sm">
-                <i class="fa-solid fa-bolt text-indigo-600"></i> Acessar Conta Demo Administrador (1 Clique)
+            <div class="mt-4 pt-4 border-t border-white/10 space-y-2">
+              <button type="button" onclick="loginDemoAdmin()" class="w-full py-3 px-4 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-400/40 font-extrabold text-xs transition flex items-center justify-center gap-2 shadow-sm">
+                <i class="fa-solid fa-bolt text-emerald-400"></i> Acessar Conta Demo Administrador (1 Clique)
               </button>
-              <button type="button" onclick="sendConfirmationEmailDemo()" id="btnEmailConfirm" class="w-full py-2 px-3 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold text-[11px] transition flex items-center justify-center gap-1.5">
-                <i class="fa-solid fa-envelope-circle-check text-blue-600"></i> Enviar Link de Confirmação p/ E-mail Corporativo
+              <button type="button" onclick="sendConfirmationEmailDemo()" id="btnEmailConfirm" class="w-full py-2 px-3 rounded-lg bg-[#0b0f15] hover:bg-white/5 text-slate-300 border border-white/10 font-semibold text-[11px] transition flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-envelope-circle-check text-cyan-400"></i> Enviar Link de Confirmação p/ E-mail Corporativo
               </button>
             </div>
           </div>
@@ -543,27 +487,27 @@
           <!-- MODO 2: ACESSO DA EQUIPE (APENAS COM CÓDIGO DE CONVITE!) -->
           <div id="loginBoxTeam" class="hidden">
             <div class="mb-5">
-              <span class="text-[10px] font-extrabold uppercase bg-purple-50 text-purple-700 px-2.5 py-0.5 rounded-full border border-purple-200">
+              <span class="text-[10px] font-extrabold uppercase bg-emerald-500/15 text-emerald-300 px-2.5 py-0.5 rounded-full border border-emerald-400/30">
                 Acesso Rápido de Funcionário
               </span>
-              <h3 class="text-lg font-extrabold text-slate-900 mt-1.5">Entrar na Equipe com Código</h3>
-              <p class="text-xs text-slate-500 mt-0.5">Cole o código fornecido pelo administrador da sua empresa para entrar no Kanban:</p>
+              <h3 class="text-lg font-extrabold text-white mt-1.5">Entrar na Equipe com Código</h3>
+              <p class="text-xs text-slate-400 mt-0.5">Cole o código fornecido pelo administrador da sua empresa para entrar no Kanban:</p>
             </div>
 
             <form onsubmit="handleTeamCodeLogin(event)" class="space-y-3.5">
               <div>
-                <label class="block font-bold text-slate-700 mb-1">Código de Acesso da Empresa *</label>
-                <input type="text" id="teamCodeInput" required value="ALRIS-8842-TEAM" placeholder="Ex: ALRIS-8842-TEAM" class="w-full bg-[#0c1322] text-cyan-300 border-2 border-indigo-500 rounded-xl px-4 py-3 font-mono text-base font-black tracking-widest uppercase text-center focus:outline-none">
+                <label class="block font-bold text-slate-200 mb-1">Código de Acesso da Empresa *</label>
+                <input type="text" id="teamCodeInput" required value="ALRIS-8842-TEAM" placeholder="Ex: ALRIS-8842-TEAM" class="w-full bg-[#0b0f15] text-cyan-300 border-2 border-cyan-500/50 rounded-xl px-4 py-3 font-mono text-base font-black tracking-widest uppercase text-center focus:outline-none focus:border-cyan-400">
               </div>
 
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label class="block font-bold text-slate-700 mb-1">Seu Nome *</label>
-                  <input type="text" id="memberLoginName" required value="Lucas Torres" placeholder="Ex: Lucas Torres" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 focus:outline-none focus:border-blue-600">
+                  <label class="block font-bold text-slate-200 mb-1">Seu Nome *</label>
+                  <input type="text" id="memberLoginName" required value="Lucas Torres" placeholder="Ex: Lucas Torres" class="w-full bg-[#0b0f15] border border-white/15 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-cyan-400">
                 </div>
                 <div>
-                  <label class="block font-bold text-slate-700 mb-1">Sua Função na Equipe</label>
-                  <select id="memberLoginRole" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2.5 text-slate-800 font-semibold focus:outline-none focus:border-blue-600">
+                  <label class="block font-bold text-slate-200 mb-1">Sua Função na Equipe</label>
+                  <select id="memberLoginRole" class="w-full bg-[#0b0f15] border border-white/15 rounded-xl px-3 py-2.5 text-white font-semibold focus:outline-none focus:border-cyan-400">
                     <option value="Vendas & Atendimento">Vendas & Atendimento</option>
                     <option value="Design UI/UX">Design UI/UX</option>
                     <option value="Desenvolvedor">Desenvolvedor</option>
@@ -571,7 +515,7 @@
                 </div>
               </div>
 
-              <button type="submit" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-extrabold text-sm py-3.5 rounded-xl shadow-lg shadow-purple-600/20 transition flex items-center justify-center gap-2">
+              <button type="submit" class="w-full bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-400 hover:to-cyan-500 text-white font-extrabold text-sm py-3.5 rounded-xl shadow-lg shadow-emerald-500/20 transition flex items-center justify-center gap-2">
                 <i class="fa-solid fa-users"></i> Validar Código e Entrar na Equipe
               </button>
             </form>
@@ -1721,920 +1665,7 @@
     </div>
   </div>
 
-  <script>
-    let sentimentChart = null;
-    let recognition = null;
-    let isListeningMic = false;
-    let activeClientPhone = "5511987654321";
-    let currentPlanLimit = 1;
-    let currentPlanName = "Starter";
-    let activeTeamMembers = [
-      { name: "Rafael (Você)", initials: "RC", role: "ADM", color: "bg-blue-600" }
-    ];
-    let pcCallTimerInterval = null;
-    let pcCallSeconds = 0;
-
-    function toggleProfileDropdown() {
-      const drop = document.getElementById('profileDropdown');
-      if (drop) drop.classList.toggle('hidden');
-    }
-
-    function openTeamInviteModal() {
-      document.getElementById('teamInviteModal').classList.remove('hidden');
-    }
-
-    function closeTeamInviteModal() {
-      document.getElementById('teamInviteModal').classList.add('hidden');
-    }
-
-    function copyInviteCode() {
-      const code = document.getElementById('teamInviteCodeDisplay').innerText;
-      if (navigator.clipboard) navigator.clipboard.writeText(code);
-      const btn = document.getElementById('btnCopyCode');
-      btn.innerHTML = `<i class="fa-solid fa-check"></i> Copiado!`;
-      setTimeout(() => {
-        btn.innerHTML = `<i class="fa-regular fa-copy"></i> Copiar Código`;
-      }, 2000);
-    }
-
-    const TOTAL_3D_FRAMES = 144;
-    const FRAME_CACHE_VER = 'capa4';
-    const preloaded3DFrames = [];
-    // Começa no frame 024 (início da luz na base da coluna) e avança imediatamente na primeira rolagem do scroll:
-    const activeFrameSequence = [];
-    for (let i = 24; i < TOTAL_3D_FRAMES; i++) activeFrameSequence.push(i);
-
-    function preloadAll3DFrames() {
-      activeFrameSequence.forEach(idx => {
-        const img = new Image();
-        const num = String(idx).padStart(3, '0');
-        img.src = `frames/frame_${num}.jpg?v=${FRAME_CACHE_VER}`;
-        preloaded3DFrames.push(img);
-      });
-    }
-
-    function handleFullScreenFrameScroll(container) {
-      const frameImg = document.getElementById('fullScreenFrameImg');
-      const badge = document.getElementById('frameCounterBadge');
-      const planosSection = document.getElementById('planos');
-      if (!frameImg || !container || !planosSection) return;
-
-      const scrollTop = container.scrollTop;
-      // O vídeo completa 100% da iluminação exatamente quando a seção Planos chega na tela
-      const maxScroll = Math.max(1, planosSection.offsetTop - window.innerHeight * 0.85);
-      const rawProgress = Math.max(0, Math.min(1, scrollTop / maxScroll));
-      // Resposta imediata na primeira rolagem do scroll para as luzes já subirem pela coluna central:
-      const easedProgress = scrollTop > 2 ? Math.max(0.10, Math.pow(rawProgress, 0.68)) : 0;
-
-      const totalSeq = activeFrameSequence.length;
-      const seqIndex = Math.max(0, Math.min(totalSeq - 1, Math.round(easedProgress * (totalSeq - 1))));
-      const frameNumber = activeFrameSequence[seqIndex];
-      const numStr = String(frameNumber).padStart(3, '0');
-
-      frameImg.src = `frames/frame_${numStr}.jpg?v=${FRAME_CACHE_VER}`;
-      if (badge) {
-        badge.innerText = `FRAME ${numStr} / 143 • ${Math.round(rawProgress * 100)}%`;
-      }
-    }
-
-    // Inicia o pré-carregamento dos frames ativos imediatamente
-    setTimeout(preloadAll3DFrames, 100);
-
-    function filterKanbanCards(query) {
-      const q = (query || '').toLowerCase().trim();
-      const cards = document.querySelectorAll('#view-kanban .pipefy-card');
-      cards.forEach(card => {
-        const text = card.innerText.toLowerCase();
-        card.style.display = (!q || text.includes(q)) ? '' : 'none';
-      });
-    }
-
-    function renderTeamBar() {
-      const container = document.getElementById('activeTeamAvatars');
-      const countLabel = document.getElementById('teamCountLabel');
-      const limitStr = currentPlanLimit > 20 ? '∞' : currentPlanLimit;
-      if (countLabel) countLabel.innerText = `${activeTeamMembers.length}/${limitStr}`;
-
-      if (container) {
-        container.innerHTML = activeTeamMembers.map(m => `
-          <span class="w-5 h-5 rounded-full ${m.color} text-white font-bold text-[9px] flex items-center justify-center ring-1 ring-slate-900" title="${m.name} (${m.role}) - Online">${m.initials}</span>
-        `).join('');
-      }
-    }
-
-    function addTeamMemberWithCode(e) {
-      e.preventDefault();
-      if (activeTeamMembers.length >= currentPlanLimit) {
-        alert(`Seu plano atual (${currentPlanName}) permite até ${currentPlanLimit} membro(s) ativo(s). Faça o Upgrade para o Plano Pro ou Enterprise para liberar mais vagas com o código de convite!`);
-        closeTeamInviteModal();
-        openUpgradeModal();
-        return;
-      }
-
-      const name = document.getElementById('newMemberName').value.trim();
-      const role = document.getElementById('newMemberRole').value;
-      if (!name) return;
-
-      const colors = ['bg-emerald-600', 'bg-purple-600', 'bg-amber-600', 'bg-cyan-600', 'bg-indigo-600'];
-      const color = colors[activeTeamMembers.length % colors.length];
-      const initials = name.split(' ').map(p => p[0]).join('').substring(0, 2).toUpperCase();
-
-      activeTeamMembers.push({ name, initials, role, color });
-      renderTeamBar();
-
-      document.getElementById('newMemberName').value = '';
-      document.getElementById('teamModalPlanTitle').innerText = `Plano Atual: ${currentPlanName} (${activeTeamMembers.length} de ${currentPlanLimit > 20 ? 'Ilimitadas' : currentPlanLimit} vagas usadas)`;
-    }
-
-    // Navegação Hierárquica Sequencial:
-    // 1. 'landing' (Pública) -> 2. 'login' (Autenticação) -> 3. 'kanban' (Workspace) -> 4. 'callcenter' (Atendimento do Card)
-    function goToView(view) {
-      const landing = document.getElementById('view-landing');
-      const login = document.getElementById('view-login');
-      const shell = document.getElementById('workspace-shell');
-      const kanban = document.getElementById('view-kanban');
-      const callcenter = document.getElementById('view-callcenter');
-      const breadcrumb = document.getElementById('workspaceBreadcrumb');
-
-      landing.classList.add('hidden');
-      login.classList.add('hidden');
-      shell.classList.add('hidden');
-      kanban.classList.add('hidden');
-      callcenter.classList.add('hidden');
-
-      if (view === 'landing') {
-        landing.classList.remove('hidden');
-      } else if (view === 'login') {
-        login.classList.remove('hidden');
-      } else if (view === 'kanban') {
-        shell.classList.remove('hidden');
-        kanban.classList.remove('hidden');
-        if (breadcrumb) breadcrumb.innerText = "Etapa Atual: Quadro Kanban de Processos";
-      } else if (view === 'callcenter') {
-        shell.classList.remove('hidden');
-        callcenter.classList.remove('hidden');
-        if (breadcrumb) breadcrumb.innerText = "Etapa Atual: Atendimento ao Vivo & Copiloto IA";
-        setTimeout(initSentimentChart, 50);
-      }
-    }
-
-    let selectedCheckoutPlanName = "Plano Pro Growth";
-    let selectedCheckoutPlanPrice = "299,00";
-    let selectedCheckoutPlanSeats = 5;
-
-    function openPaymentCheckout(planName, priceStr, seatsLimit) {
-      selectedCheckoutPlanName = planName;
-      selectedCheckoutPlanPrice = priceStr;
-      selectedCheckoutPlanSeats = seatsLimit;
-
-      document.getElementById('upgradeModal').classList.remove('hidden');
-      document.getElementById('upgradeStepPlans').classList.add('hidden');
-      document.getElementById('upgradeStepCheckout').classList.remove('hidden');
-
-      document.getElementById('checkoutPlanTitle').innerText = planName;
-      document.getElementById('checkoutPlanPrice').innerText = priceStr;
-      document.getElementById('checkoutPlanSeats').innerText = seatsLimit > 20 ? 'Ilimitados (∞)' : `Até ${seatsLimit} membro(s)`;
-    }
-
-    function backToPlanSelection() {
-      document.getElementById('upgradeStepCheckout').classList.add('hidden');
-      document.getElementById('upgradeStepPlans').classList.remove('hidden');
-    }
-
-    function switchPaymentTab(tab) {
-      const pixBox = document.getElementById('paymentTabPix');
-      const cardBox = document.getElementById('paymentTabCard');
-      const btnPix = document.getElementById('tabBtnPix');
-      const btnCard = document.getElementById('tabBtnCard');
-
-      if (tab === 'pix') {
-        pixBox.classList.remove('hidden');
-        cardBox.classList.add('hidden');
-        btnPix.className = "py-2.5 px-3 rounded-xl font-extrabold text-xs bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-sm transition flex items-center justify-center gap-1.5";
-        btnCard.className = "py-2.5 px-3 rounded-xl font-bold text-xs text-slate-600 hover:text-slate-900 transition flex items-center justify-center gap-1.5";
-      } else {
-        pixBox.classList.add('hidden');
-        cardBox.classList.remove('hidden');
-        btnCard.className = "py-2.5 px-3 rounded-xl font-extrabold text-xs bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-sm transition flex items-center justify-center gap-1.5";
-        btnPix.className = "py-2.5 px-3 rounded-xl font-bold text-xs text-slate-600 hover:text-slate-900 transition flex items-center justify-center gap-1.5";
-      }
-    }
-
-    function copyPixCode() {
-      const pixInput = document.getElementById('pixCopyInput');
-      if (navigator.clipboard && pixInput) navigator.clipboard.writeText(pixInput.value);
-      const btn = document.getElementById('btnCopyPix');
-      btn.innerHTML = `<i class="fa-solid fa-check text-cyan-400"></i> Copiado!`;
-      setTimeout(() => {
-        btn.innerHTML = `<i class="fa-regular fa-copy"></i> Copiar Pix`;
-      }, 2000);
-    }
-
-    function processFinalPayment(methodLabel) {
-      const btnPix = document.getElementById('btnConfirmPixPay');
-      const btnCard = document.getElementById('btnConfirmCardPay');
-      if (btnPix) btnPix.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Validando Pagamento (${methodLabel})...`;
-      if (btnCard) btnCard.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Processando Cartão...`;
-
-      setTimeout(() => {
-        confirmSubscriptionUpgrade(`${selectedCheckoutPlanName} (R$ ${selectedCheckoutPlanPrice}/mês via ${methodLabel})`);
-        if (btnPix) btnPix.innerHTML = `<i class="fa-solid fa-circle-check"></i> Pagamento Aprovado — Plano Ativo!`;
-        if (btnCard) btnCard.innerHTML = `<i class="fa-solid fa-circle-check"></i> Assinatura Ativada no Cartão!`;
-      }, 650);
-    }
-
-    function selectPlan(planName) {
-      if (planName.includes('Starter')) {
-        openPaymentCheckout('Plano Starter', '149,00', 1);
-      } else if (planName.includes('Enterprise')) {
-        openPaymentCheckout('Plano Enterprise Scale', '699,00', 99);
-      } else {
-        openPaymentCheckout('Plano Pro Growth', '299,00', 5);
-      }
-    }
-
-    function switchLoginMode(mode) {
-      const boxAdmin = document.getElementById('loginBoxAdmin');
-      const boxTeam = document.getElementById('loginBoxTeam');
-      const btnAdmin = document.getElementById('btnModeAdmin');
-      const btnTeam = document.getElementById('btnModeTeam');
-
-      if (mode === 'admin') {
-        boxAdmin.classList.remove('hidden');
-        boxTeam.classList.add('hidden');
-        btnAdmin.className = "py-2.5 px-3 rounded-xl font-extrabold text-xs bg-blue-600 text-white shadow-sm transition flex items-center justify-center gap-1.5";
-        btnTeam.className = "py-2.5 px-3 rounded-xl font-bold text-xs text-slate-600 hover:text-slate-900 transition flex items-center justify-center gap-1.5";
-      } else {
-        boxAdmin.classList.add('hidden');
-        boxTeam.classList.remove('hidden');
-        btnTeam.className = "py-2.5 px-3 rounded-xl font-extrabold text-xs bg-purple-600 text-white shadow-sm transition flex items-center justify-center gap-1.5";
-        btnAdmin.className = "py-2.5 px-3 rounded-xl font-bold text-xs text-slate-600 hover:text-slate-900 transition flex items-center justify-center gap-1.5";
-      }
-    }
-
-    function handleAdminLogin(e) {
-      if (e) e.preventDefault();
-      const company = document.getElementById('adminCompanyInput') ? document.getElementById('adminCompanyInput').value.trim() : "Agência Rafael Tech";
-      const adminName = document.getElementById('adminNameInput') ? document.getElementById('adminNameInput').value.trim() : "Rafael";
-      const initials = adminName.substring(0, 2).toUpperCase();
-
-      document.getElementById('navAvatar').innerText = initials;
-      document.getElementById('navUserName').innerText = `${adminName} (ADM)`;
-      if (document.getElementById('dropUserName')) {
-        document.getElementById('dropUserName').innerText = `${adminName} — ${company}`;
-      }
-      renderTeamBar();
-      goToView('kanban');
-    }
-
-    function loginDemoAdmin() {
-      // Conta Demo Administrador já com Plano Pro (5 vagas liberadas e equipe ativa para demonstração)
-      currentPlanName = "Pro Growth (Demo)";
-      currentPlanLimit = 5;
-      activeTeamMembers = [
-        { name: "Rafael (Admin Demo)", initials: "RC", role: "ADM", color: "bg-blue-600" },
-        { name: "Lucas Torres", initials: "LT", role: "Vendas", color: "bg-cyan-600" },
-        { name: "Mariana Alves", initials: "MA", role: "Design", color: "bg-purple-600" }
-      ];
-      document.getElementById('navAvatar').innerText = "RC";
-      document.getElementById('navUserName').innerText = "Rafael (ADM Demo)";
-      if (document.getElementById('topPlanBadge')) {
-        document.getElementById('topPlanBadge').className = "text-[10px] bg-cyan-500/20 text-cyan-300 font-bold px-2 py-0.5 rounded border border-cyan-400/30";
-        document.getElementById('topPlanBadge').innerText = "PRO DEMO (3/5)";
-      }
-      if (document.getElementById('dropPlanInfo')) {
-        document.getElementById('dropPlanInfo').innerText = "Plano: Pro Growth Demo (Até 5 membros)";
-      }
-      renderTeamBar();
-      goToView('kanban');
-    }
-
-    function sendConfirmationEmailDemo() {
-      const email = document.getElementById('loginEmail') ? document.getElementById('loginEmail').value : "rafael@alris.com.br";
-      const btn = document.getElementById('btnEmailConfirm');
-      btn.className = "w-full py-2 px-3 rounded-lg bg-cyan-100 text-cyan-900 border border-cyan-300 font-bold text-[11px] transition flex items-center justify-center gap-1.5";
-      btn.innerHTML = `<i class="fa-solid fa-check-double"></i> Link de Confirmação Enviado para ${email}!`;
-    }
-
-    function handleTeamCodeLogin(e) {
-      if (e) e.preventDefault();
-      const code = document.getElementById('teamCodeInput').value.trim().toUpperCase();
-      const memberName = document.getElementById('memberLoginName').value.trim() || "Colaborador";
-      const memberRole = document.getElementById('memberLoginRole').value;
-      const initials = memberName.split(' ').map(p => p[0]).join('').substring(0, 2).toUpperCase();
-
-      if (!code.startsWith('ALRIS-') && !code.startsWith('CONV-')) {
-        alert('Código inválido! Use o código fornecido pelo Administrador (ex: ALRIS-8842-TEAM).');
-        return;
-      }
-
-      // Garante vaga para demonstração quando entra via código
-      if (currentPlanLimit < 5) {
-        currentPlanLimit = 5;
-        currentPlanName = "Pro Growth";
-      }
-
-      const exists = activeTeamMembers.some(m => m.name.toLowerCase() === memberName.toLowerCase());
-      if (!exists) {
-        activeTeamMembers.push({ name: memberName, initials, role: memberRole, color: "bg-purple-600" });
-      }
-
-      document.getElementById('navAvatar').innerText = initials;
-      document.getElementById('navUserName').innerText = `${memberName} (Equipe)`;
-      if (document.getElementById('dropUserName')) {
-        document.getElementById('dropUserName').innerText = `${memberName} — ${memberRole}`;
-      }
-      if (document.getElementById('topPlanBadge')) {
-        document.getElementById('topPlanBadge').className = "text-[10px] bg-cyan-500/20 text-cyan-300 font-bold px-2 py-0.5 rounded border border-cyan-400/30";
-        document.getElementById('topPlanBadge').innerText = `CÓDIGO: ${code}`;
-      }
-      renderTeamBar();
-      goToView('kanban');
-    }
-
-    function handleUserLogin(e) {
-      handleAdminLogin(e);
-    }
-
-    function quickLogin(name, initials) {
-      loginDemoAdmin();
-    }
-
-    let isRecordingCall = false;
-
-    function toggleCallRecording() {
-      isRecordingCall = !isRecordingCall;
-      const dot = document.getElementById('recordDot');
-      const txt = document.getElementById('recordBtnText');
-      if (isRecordingCall) {
-        if (dot) dot.className = "w-2 h-2 rounded-full bg-rose-500 animate-ping";
-        if (txt) txt.innerText = "Gravando...";
-      } else {
-        if (dot) dot.className = "w-2 h-2 rounded-full bg-slate-400";
-        if (txt) txt.innerText = "Gravar";
-      }
-    }
-
-    function endActiveCall() {
-      if (pcCallTimerInterval) {
-        clearInterval(pcCallTimerInterval);
-        pcCallTimerInterval = null;
-      }
-      if (isListeningMic && recognition) {
-        recognition.stop();
-        isListeningMic = false;
-      }
-      const timerTxt = document.getElementById('topCallTimerText');
-      if (timerTxt) timerTxt.innerText = "Chamada Finalizada";
-      const badge = document.getElementById('callActiveBadge');
-      if (badge) {
-        badge.className = "px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200 font-bold text-[10px]";
-        badge.innerText = "Encerrada";
-      }
-    }
-
-    function updateChecklistProgress() {
-      const checks = document.querySelectorAll('.chk-item');
-      let done = 0;
-      checks.forEach(c => { if (c.checked) done++; });
-      const total = checks.length || 3;
-      const pct = Math.round((done / total) * 100);
-      const titleEl = document.getElementById('checklistTitleText');
-      const barEl = document.getElementById('checklistProgressBar');
-      const pctEl = document.getElementById('checklistPercentText');
-      if (titleEl) titleEl.innerText = `CHECKLIST DO ATENDIMENTO (${done}/${total} CONCLUÍDO)`;
-      if (barEl) barEl.style.width = `${pct}%`;
-      if (pctEl) pctEl.innerText = `${pct}%`;
-    }
-
-    // Abre o Atendimento ao Vivo específico do Card clicado no Kanban
-    function openClientAttendance(name, company, phone, channel, inventory, pain) {
-      activeClientPhone = phone.replace(/\D/g, '') || "5511987654321";
-      document.getElementById('liveCardName').innerText = name;
-      document.getElementById('liveCardCompany').innerText = company;
-      document.getElementById('liveCardPhone').innerText = phone.startsWith('+') ? phone : `+${phone}`;
-      document.getElementById('liveCardChannel').innerText = channel;
-      document.getElementById('liveCardInventory').innerText = inventory;
-      document.getElementById('liveCardPain').innerText = `"${pain}"`;
-      document.getElementById('liveAvatar').innerText = name.substring(0, 2).toUpperCase();
-      const firstName = name.split(' ')[0];
-      const lbl = document.getElementById('transcriptClientLabel');
-      if (lbl) lbl.innerText = `Cliente (${firstName})`;
-
-      const badge = document.getElementById('callActiveBadge');
-      if (badge) {
-        badge.className = "px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold text-[10px]";
-        badge.innerText = "Ligação Ativa";
-      }
-
-      goToView('callcenter');
-    }
-
-    function copyClientPhone() {
-      const formatted = `+${activeClientPhone}`;
-      if (navigator.clipboard) navigator.clipboard.writeText(formatted);
-      const b1 = document.getElementById('btnCopyCardPhone');
-      const b2 = document.getElementById('btnCopyModalPhone');
-      if (b1) {
-        b1.innerHTML = `<i class="fa-solid fa-check text-emerald-600"></i> Copiado!`;
-        setTimeout(() => { b1.innerHTML = `<i class="fa-regular fa-copy"></i> Copiar`; }, 2000);
-      }
-      if (b2) {
-        b2.innerHTML = `<i class="fa-solid fa-check"></i> Número Copiado!`;
-        setTimeout(() => { b2.innerHTML = `<i class="fa-regular fa-copy"></i> Copiar Número`; }, 2000);
-      }
-    }
-
-    function closeVoipDialerModal() {
-      const m = document.getElementById('voipDialerModal');
-      if (m) m.classList.add('hidden');
-    }
-
-    function triggerSystemTelCall() {
-      window.location.href = `tel:+${activeClientPhone}`;
-      closeVoipDialerModal();
-    }
-
-    function startNormalPhoneCall() {
-      const name = document.getElementById('liveCardName').innerText;
-      const phone = activeClientPhone;
-      const btn = document.getElementById('btnNormalCall');
-      const softLine = document.getElementById('softphoneStatusLine');
-      const timerTxt = document.getElementById('topCallTimerText');
-
-      const dName = document.getElementById('dialerClientName');
-      const dPhone = document.getElementById('dialerPhoneDisplay');
-      if (dName) dName.innerText = name;
-      if (dPhone) dPhone.innerText = `+${phone}`;
-      const modal = document.getElementById('voipDialerModal');
-      if (modal) modal.classList.remove('hidden');
-
-      if (!pcCallTimerInterval) {
-        pcCallSeconds = 252;
-        btn.className = "w-8 h-8 rounded-lg bg-blue-600 text-white border border-blue-700 flex items-center justify-center transition shadow-sm animate-pulse";
-
-        pcCallTimerInterval = setInterval(() => {
-          pcCallSeconds++;
-          const mins = String(Math.floor(pcCallSeconds / 60)).padStart(2, '0');
-          const secs = String(pcCallSeconds % 60).padStart(2, '0');
-          if (timerTxt) timerTxt.innerText = `Em Atendimento • ${mins}:${secs}`;
-          if (softLine) softLine.innerText = `VoIP WebRTC Conectado (${mins}:${secs})`;
-        }, 1000);
-      }
-      
-      if (!isListeningMic) toggleRealMicrophone();
-
-      const box = document.getElementById('transcriptBox');
-      box.innerHTML += `
-        <div class="p-2.5 rounded-xl bg-blue-50 border border-blue-200 text-center text-[11px] font-bold text-blue-800">
-          <i class="fa-solid fa-headset mr-1"></i> Central VoIP & Microfone IA ativados para ${name} (+${phone})!
-        </div>
-      `;
-      box.scrollTop = box.scrollHeight;
-    }
-
-    function startWhatsAppCall() {
-      const name = document.getElementById('liveCardName').innerText;
-      const phone = activeClientPhone;
-      const btn = document.getElementById('btnWhatsCall');
-
-      btn.className = "w-8 h-8 rounded-lg bg-emerald-600 text-white border border-emerald-700 flex items-center justify-center transition shadow-sm";
-
-      if (!isListeningMic) toggleRealMicrophone();
-
-      const msgText = `Olá ${name}, tudo bem? Estou entrando em contato sobre o novo site da sua empresa!`;
-      const webUrl = `https://web.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(msgText)}`;
-
-      const box = document.getElementById('transcriptBox');
-      box.innerHTML += `
-        <div class="p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-center text-[11px] font-bold text-emerald-800">
-          <i class="fa-brands fa-whatsapp mr-1"></i> WhatsApp Web aberto diretamente no navegador para ${name} (+${phone}) — IA escutando em tempo real...
-        </div>
-      `;
-      box.scrollTop = box.scrollHeight;
-      window.open(webUrl, '_blank');
-    }
-
-    function sendWhatsAppContract() {
-      const name = document.getElementById('liveCardName').innerText;
-      const company = document.getElementById('liveCardCompany').innerText;
-      const phone = activeClientPhone;
-
-      const chkClose = document.getElementById('chkClosing');
-      if (chkClose) {
-        chkClose.checked = true;
-        updateChecklistProgress();
-      }
-
-      simulateEvent('positive_close');
-
-      const msg = `Olá ${name}! Conforme conversamos na ligação, segue a proposta oficial e o contrato para o novo site de alta conversão da *${company}*:\n\n✅ Layout Mobile Ultrarrápido (abertura < 1s)\n✅ Integração Direta com WhatsApp e Instagram\n✅ Condição aprovada: 3x sem juros\n\n👉 *Clique aqui para assinar digitalmente e confirmar:* https://alris.com.br/contrato/${encodeURIComponent(company.toLowerCase().replace(/\s+/g, '-'))}`;
-
-      window.open(`https://web.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(msg)}`, '_blank');
-    }
-
-    function openUpgradeModal() {
-      document.getElementById('upgradeModal').classList.remove('hidden');
-    }
-
-    function closeUpgradeModal() {
-      document.getElementById('upgradeModal').classList.add('hidden');
-    }
-
-    function confirmSubscriptionUpgrade(planName) {
-      if (planName.includes('Pro')) {
-        currentPlanLimit = 5;
-        currentPlanName = "Pro Team";
-        if (activeTeamMembers.length < 3) {
-          activeTeamMembers = [
-            { name: "Rafael (Você)", initials: "RC", role: "ADM", color: "bg-blue-600" },
-            { name: "Lucas Torres", initials: "LT", role: "Vendas", color: "bg-emerald-600" },
-            { name: "Mariana Alves", initials: "MA", role: "Design", color: "bg-purple-600" }
-          ];
-        }
-      } else if (planName.includes('Enterprise')) {
-        currentPlanLimit = 99;
-        currentPlanName = "Enterprise";
-      } else {
-        currentPlanLimit = 1;
-        currentPlanName = "Starter";
-      }
-
-      renderTeamBar();
-      const limitStr = currentPlanLimit > 20 ? '∞' : currentPlanLimit;
-      if (document.getElementById('topPlanBadge')) {
-        document.getElementById('topPlanBadge').className = "text-[10px] bg-emerald-500/20 text-emerald-300 font-bold px-2 py-0.5 rounded border border-emerald-400/30";
-        document.getElementById('topPlanBadge').innerText = `${currentPlanName.toUpperCase()} (${activeTeamMembers.length}/${limitStr})`;
-      }
-      if (document.getElementById('dropPlanInfo')) {
-        document.getElementById('dropPlanInfo').innerText = `Plano Atual: ${currentPlanName} (Limite ${limitStr} membros)`;
-      }
-      if (document.getElementById('teamModalPlanTitle')) {
-        document.getElementById('teamModalPlanTitle').innerText = `Plano Atual: ${currentPlanName} (${activeTeamMembers.length} de ${limitStr} vagas usadas)`;
-      }
-
-      const box = document.getElementById('checkoutBox');
-      box.className = "p-4 rounded-2xl bg-emerald-50 border-2 border-emerald-400 flex flex-wrap items-center justify-between gap-4";
-      box.innerHTML = `
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-lg">
-            <i class="fa-solid fa-check-double"></i>
-          </div>
-          <div>
-            <strong class="text-emerald-950 block text-sm">Assinatura Confirmada: ${planName}!</strong>
-            <span class="text-xs text-emerald-700">Limite de equipe atualizado (${limitStr} vagas) e código de convite CONV-8842-TEAM liberado!</span>
-          </div>
-        </div>
-        <button onclick="closeUpgradeModal()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs shadow">
-          Continuar Usando Painel &rarr;
-        </button>
-      `;
-    }
-
-    function openApiModal() {
-      const savedKey = localStorage.getItem('APEX_GEMINI_KEY') || '';
-      document.getElementById('geminiApiKeyInput').value = savedKey;
-      document.getElementById('apiModal').classList.remove('hidden');
-    }
-
-    function closeApiModal() {
-      document.getElementById('apiModal').classList.add('hidden');
-    }
-
-    function saveApiKey() {
-      const key = document.getElementById('geminiApiKeyInput').value.trim();
-      const model = document.getElementById('geminiModelSelect').value;
-      const statusTxt = document.getElementById('apiStatusText');
-      if (key) {
-        localStorage.setItem('APEX_GEMINI_KEY', key);
-        localStorage.setItem('APEX_GEMINI_MODEL', model);
-        if (statusTxt) {
-          statusTxt.innerText = 'Ativa';
-          statusTxt.className = 'text-[9px] bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded font-extrabold';
-        }
-      } else {
-        localStorage.removeItem('APEX_GEMINI_KEY');
-        if (statusTxt) {
-          statusTxt.innerText = 'Padrão';
-          statusTxt.className = 'text-[9px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded font-bold';
-        }
-      }
-      closeApiModal();
-    }
-
-    async function callRealGeminiAPI(customerSpeech) {
-      const apiKey = localStorage.getItem('APEX_GEMINI_KEY');
-      const model = localStorage.getItem('APEX_GEMINI_MODEL') || 'gemini-2.5-flash';
-      const clientCompany = document.getElementById('liveCardCompany').innerText;
-
-      if (apiKey) {
-        try {
-          const prompt = `Você é um Copiloto de Vendas em tempo real falando com o cliente da empresa "${clientCompany}".
-O cliente acabou de dizer: "${customerSpeech}"
-Responda APENAS com um objeto JSON válido:
-{
-  "probabilidade": <numero de 10 a 98>,
-  "status_curto": "<ex: Objeção de Preço | Dúvida de Prazo | Sinal de Compra | Risco de Perda>",
-  "tom_cliente": "<ex: Cauteloso | Interessado | Resistente | Decidido>",
-  "sugestao_fala": "<frase persuasiva e direta que o vendedor deve falar agora para converter o cliente>"
-}`;
-          const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              contents: [{ parts: [{ text: prompt }] }],
-              generationConfig: { responseMimeType: "application/json" }
-            })
-          });
-          if (resp.ok) {
-            const data = await resp.json();
-            const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-            if (rawText) return JSON.parse(rawText);
-          }
-        } catch (err) {
-          console.warn('Fallback local:', err);
-        }
-      }
-
-      const lower = customerSpeech.toLowerCase();
-      if (lower.includes('caro') || lower.includes('preço') || lower.includes('valor') || lower.includes('desconto')) {
-        return {
-          probabilidade: 38,
-          status_curto: 'Área de Risco: Preço',
-          tom_cliente: 'Resistente a Preço',
-          sugestao_fala: `"Entendo sua cautela com o investimento. Mas pense comigo: um site lento faz você perder clientes todos os dias. Se parcelarmos em 3x sem juros e o novo site te trouxer apenas 1 cliente novo nesta semana, o projeto já se paga sozinho. Vamos fechar assim?"`
-        };
-      } else if (lower.includes('pensar') || lower.includes('sócio') || lower.includes('depois')) {
-        return {
-          probabilidade: 44,
-          status_curto: 'Risco: Adiamento',
-          tom_cliente: 'Indeciso / Adiando',
-          sugestao_fala: `"Claro! Qual é a principal dúvida que você e seu sócio ainda têm? Se eu liberar um bônus de 30 dias de suporte VIP e hospedagem gratuita para fecharmos hoje, ajuda vocês a baterem o martelo?"`
-        };
-      } else if (lower.includes('fechar') || lower.includes('gostei') || lower.includes('manda') || lower.includes('contrato')) {
-        return {
-          probabilidade: 95,
-          status_curto: 'Venda Convertida!',
-          tom_cliente: 'Decidido / Pronto',
-          sugestao_fala: `"Excelente decisão! Já estou clicando aqui para enviar o contrato e o link no seu WhatsApp agora mesmo!"`
-        };
-      } else {
-        return {
-          probabilidade: 68,
-          status_curto: 'Em Negociação Ativa',
-          tom_cliente: 'Analítico / Avaliando',
-          sugestao_fala: `"Perfeito! Nós entregamos o projeto 100% adaptado para celular, integrado ao WhatsApp e puxando os dados do seu Instagram automaticamente. Prefere fazer em 3x sem juros ou à vista com desconto?"`
-        };
-      }
-    }
-
-    async function analyzeCustomCustomerSpeech(e) {
-      if (e) e.preventDefault();
-      const input = document.getElementById('customSpeechInput');
-      const speech = input.value.trim();
-      if (!speech) return;
-
-      const btn = document.getElementById('btnAnalyzeSpeech');
-      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i>`;
-
-      const box = document.getElementById('transcriptBox');
-      const clientName = document.getElementById('liveCardName').innerText.split(' ')[0];
-      box.innerHTML += `
-        <div class="flex flex-col items-start">
-          <span class="text-[10px] font-bold text-slate-600 mb-1">Cliente (${clientName})</span>
-          <div class="max-w-[90%] p-3.5 rounded-2xl rounded-tl-sm bg-white border border-slate-200 text-slate-800 leading-relaxed shadow-sm">
-            "${speech}"
-          </div>
-          <span class="text-[10px] text-slate-400 mt-1 font-mono">Agora</span>
-        </div>
-      `;
-      box.scrollTop = box.scrollHeight;
-      input.value = '';
-
-      const result = await callRealGeminiAPI(speech);
-
-      document.getElementById('pitchLine').innerHTML = result.sugestao_fala;
-      document.getElementById('aiAlertBadge').innerText = `${result.status_curto}`;
-      document.getElementById('clientTone').innerText = result.tom_cliente;
-
-      const color = result.probabilidade < 45 ? '#e11d48' : (result.probabilidade < 75 ? '#d97706' : '#059669');
-      const bg = result.probabilidade < 45 ? 'rgba(225, 29, 72, 0.15)' : (result.probabilidade < 75 ? 'rgba(217, 119, 6, 0.15)' : 'rgba(5, 150, 105, 0.15)');
-      updateTelemetry(result.probabilidade, result.status_curto, color, bg, 'Fala Real');
-
-      btn.innerHTML = `Analisar`;
-    }
-
-    function toggleRealMicrophone() {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SpeechRecognition) {
-        alert('Use a barra de texto abaixo da transcrição para testar qualquer frase no seu navegador!');
-        return;
-      }
-
-      const btn = document.getElementById('realMicBtn');
-      const txt = document.getElementById('realMicText');
-
-      if (isListeningMic && recognition) {
-        recognition.stop();
-        isListeningMic = false;
-        if (btn) btn.className = "px-2.5 py-1 rounded-lg bg-[#232f49] hover:bg-slate-700 text-slate-200 border border-slate-600/60 font-semibold text-[10px] transition flex items-center gap-1.5";
-        if (txt) txt.innerText = "Microfone";
-        return;
-      }
-
-      recognition = new SpeechRecognition();
-      recognition.lang = 'pt-BR';
-      recognition.continuous = true;
-      recognition.interimResults = false;
-
-      recognition.onstart = () => {
-        isListeningMic = true;
-        if (btn) btn.className = "px-2.5 py-1 rounded-lg bg-cyan-600 text-white font-bold text-[10px] transition flex items-center gap-1.5 animate-pulse shadow";
-        if (txt) txt.innerText = "Ouvindo...";
-      };
-
-      recognition.onresult = (event) => {
-        const lastResult = event.results[event.results.length - 1];
-        if (lastResult.isFinal) {
-          document.getElementById('customSpeechInput').value = lastResult[0].transcript;
-          analyzeCustomCustomerSpeech();
-        }
-      };
-
-      recognition.onerror = () => {
-        isListeningMic = false;
-        if (txt) txt.innerText = "Microfone";
-      };
-
-      recognition.start();
-    }
-
-    function initSentimentChart() {
-      // Gráfico de onda SVG dinâmico já renderizado diretamente no DOM
-    }
-
-    function changePitch(mode) {
-      const pitch = document.getElementById('pitchLine');
-      const b1 = document.getElementById('btnPitch1');
-      const b2 = document.getElementById('btnPitch2');
-      const b3 = document.getElementById('btnPitch3');
-      const activeCls = "px-2.5 py-1 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold text-[10px] shadow-sm transition";
-      const idleCls = "px-2.5 py-1 rounded-full bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 font-semibold text-[10px] transition";
-
-      if (b1) b1.className = mode === 'parcelado' ? activeCls : idleCls;
-      if (b2) b2.className = mode === 'garantia' ? activeCls : idleCls;
-      if (b3) b3.className = mode === 'mvp' ? activeCls : idleCls;
-
-      if (mode === 'parcelado') {
-        pitch.innerHTML = `"Compreendo perfeitamente! A diferença é que um site barato demora 7 segundos para abrir e faz você perder clientes todo dia. Se o nosso site salvar <strong>apenas UMA venda</strong> neste mês, ele já se pagou 5 vezes. Vamos fechar em <strong>3x de R$ 1.500 sem juros</strong> para colocar no ar já na próxima semana?"`;
-      } else if (mode === 'garantia') {
-        pitch.innerHTML = `"Colocamos em contrato a garantia de <strong>nota acima de 95 no Google PageSpeed</strong>. Seu site vai abrir em menos de 1 segundo no 4G de qualquer cliente."`;
-      } else if (mode === 'mvp') {
-        pitch.innerHTML = `"Se preferir começar mais enxuto, lançamos a <strong>Versão Essencial + Botão WhatsApp por R$ 3.200</strong> em 7 dias úteis!"`;
-      }
-    }
-
-    function applyAiSuggestionToCall() {
-      const pitchText = document.getElementById('pitchLine').innerText;
-      const box = document.getElementById('transcriptBox');
-      box.innerHTML += `
-        <div class="flex flex-col items-end">
-          <span class="text-[10px] font-bold text-slate-600 mb-1">Operador (Sua Equipe)</span>
-          <div class="max-w-[90%] p-3.5 rounded-2xl rounded-tr-sm bg-[#eef4ff] border border-blue-100 text-slate-800 leading-relaxed">
-            ${pitchText}
-          </div>
-          <span class="text-[10px] text-slate-400 mt-1 font-mono">Agora</span>
-        </div>
-      `;
-      box.scrollTop = box.scrollHeight;
-      updateTelemetry(78, 'RECUPERANDO • POSITIVO', '#2563eb', 'rgba(37, 99, 235, 0.15)', 'Sugestão IA');
-    }
-
-    function simulateEvent(type) {
-      if (type === 'objection_price') {
-        document.getElementById('customSpeechInput').value = "Olha, achei o valor muito caro, acima de R$ 3.000 não consigo pagar.";
-      } else if (type === 'objection_time') {
-        document.getElementById('customSpeechInput').value = "Vou pensar com meu sócio e semana que vem te dou um retorno.";
-      } else if (type === 'positive_close') {
-        document.getElementById('customSpeechInput').value = "Gostei da proposta parcelada em 3x! Vamos fechar, pode mandar o contrato.";
-      }
-      analyzeCustomCustomerSpeech();
-    }
-
-    function updateTelemetry(score, label, colorHex, bgRgba, chartLabel) {
-      const num = document.getElementById('probNumber');
-      const status = document.getElementById('probStatus');
-      const ring = document.getElementById('probRingCircle');
-      const score3d = document.getElementById('live3DScoreCurrent');
-      const trendBadge = document.getElementById('sentimentTrendBadge');
-      const waveDot = document.getElementById('waveLiveDot');
-      const waveHalo = document.getElementById('waveLiveHalo');
-      const wavePath = document.getElementById('sentimentWavePath');
-      const waveArea = document.getElementById('sentimentWaveArea');
-
-      if (num) num.innerText = score + '%';
-      if (status) status.innerText = label.toUpperCase();
-
-      // Atualiza o anel SVG (circunferência = 201)
-      if (ring) {
-        const circumference = 201;
-        const offset = Math.round(circumference - (score / 100) * circumference);
-        ring.setAttribute('stroke-dashoffset', offset);
-      }
-
-      // Atualiza o ponto final da curva SVG (y entre 18 e 95)
-      const endY = Math.max(18, Math.min(95, Math.round(110 - (score / 100) * 90)));
-      if (waveDot) waveDot.setAttribute('cy', endY);
-      if (waveHalo) waveHalo.setAttribute('cy', endY);
-      if (wavePath) {
-        wavePath.setAttribute('d', `M 10,85 C 45,55 65,40 90,40 C 125,40 145,75 170,78 C 195,82 220,96 245,86 C 270,74 290,45 305,${endY}`);
-      }
-      if (waveArea) {
-        waveArea.setAttribute('d', `M 10,85 C 45,55 65,40 90,40 C 125,40 145,75 170,78 C 195,82 220,96 245,86 C 270,74 290,45 305,${endY} L 305,105 L 10,105 Z`);
-      }
-
-      if (score < 45) {
-        if (num) num.className = "absolute text-lg font-extrabold text-rose-600";
-        if (status) status.className = "inline-block mt-1.5 px-2.5 py-0.5 rounded-md text-[10px] font-extrabold uppercase bg-rose-100 text-rose-800 border border-rose-200";
-        if (score3d) score3d.innerText = `${score}% Risco`;
-        if (trendBadge) {
-          trendBadge.className = "text-[10px] text-rose-700 font-bold flex items-center gap-1 bg-rose-50 px-2.5 py-0.5 rounded-full border border-rose-200";
-          trendBadge.innerHTML = `<i class="fa-solid fa-arrow-trend-down text-[9px]"></i> Em Queda`;
-        }
-      } else if (score < 75) {
-        if (num) num.className = "absolute text-lg font-extrabold text-blue-600";
-        if (status) status.className = "inline-block mt-1.5 px-2.5 py-0.5 rounded-md text-[10px] font-extrabold uppercase bg-amber-100 text-amber-800 border border-amber-200";
-        if (score3d) score3d.innerText = `${score}% Atenção`;
-        if (trendBadge) {
-          trendBadge.className = "text-[10px] text-amber-700 font-bold flex items-center gap-1 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200";
-          trendBadge.innerHTML = `<i class="fa-solid fa-scale-balanced text-[9px]"></i> Negociando`;
-        }
-      } else {
-        if (num) num.className = "absolute text-lg font-extrabold text-emerald-600";
-        if (status) status.className = "inline-block mt-1.5 px-2.5 py-0.5 rounded-md text-[10px] font-extrabold uppercase bg-emerald-100 text-emerald-800 border border-emerald-200";
-        if (score3d) score3d.innerText = `${score}% Positivo`;
-        if (trendBadge) {
-          trendBadge.className = "text-[10px] text-emerald-700 font-bold flex items-center gap-1 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200";
-          trendBadge.innerHTML = `<i class="fa-solid fa-arrow-trend-up text-[9px]"></i> Recuperando`;
-        }
-      }
-    }
-
-    function openNewTicketModal() {
-      document.getElementById('newTicketModal').classList.remove('hidden');
-    }
-
-    function closeNewTicketModal() {
-      document.getElementById('newTicketModal').classList.add('hidden');
-    }
-
-    function handleCreateTicket(e) {
-      e.preventDefault();
-      const btn = document.getElementById('btnCreateTicket');
-      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> IA Analisando Perfil...`;
-
-      const name = document.getElementById('ticketName').value;
-      const phone = document.getElementById('ticketPhone') ? document.getElementById('ticketPhone').value : "5511987654321";
-      const company = document.getElementById('ticketCompany').value;
-      const link = document.getElementById('ticketLink').value || "Sem link informado";
-      const bio = document.getElementById('ticketBio').value || "Cliente procurando orçamento rápido.";
-
-      setTimeout(() => {
-        const painText = `${bio} — Diagnóstico Gemini: O cliente necessita de site rápido com captação direta no WhatsApp e versão mobile otimizada.`;
-
-        const cardsContainer = document.getElementById('colCards-1');
-        const newCard = document.createElement('div');
-        newCard.className = "pipefy-card rounded-xl p-3.5 cursor-pointer border-l-4 border-l-emerald-500";
-        newCard.onclick = () => openClientAttendance(name, company, phone, link, 'Mapeado via IA', painText);
-        newCard.innerHTML = `
-          <div class="flex justify-between items-start mb-2">
-            <span class="text-[10px] font-extrabold uppercase bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded border border-emerald-200">${company}</span>
-            <span class="text-[10px] text-emerald-600 font-bold">Novo</span>
-          </div>
-          <h4 class="font-bold text-xs text-slate-900">${name} — Criação de Site</h4>
-          <p class="text-[11px] text-slate-500 mt-1 line-clamp-2">${bio}</p>
-          <div class="mt-3 pt-2.5 border-t border-slate-100 flex justify-between items-center text-[11px]">
-            <span class="text-slate-400 truncate max-w-[120px]">${link}</span>
-            <span class="bg-blue-600 text-white px-2.5 py-1 rounded-lg font-bold text-[10px] shadow-sm">
-              <i class="fa-solid fa-headset mr-1"></i> Fazer Atendimento &rarr;
-            </span>
-          </div>
-        `;
-        cardsContainer.prepend(newCard);
-
-        btn.innerHTML = `<i class="fa-solid fa-sparkles"></i> Analisar com IA & Adicionar ao Kanban`;
-        closeNewTicketModal();
-        goToView('kanban');
-      }, 600);
-    }
-
-    window.onload = function() {
-      const statusTxt = document.getElementById('apiStatusText');
-      if (localStorage.getItem('APEX_GEMINI_KEY') && statusTxt) {
-        statusTxt.innerText = 'Ativa';
-        statusTxt.className = 'text-[9px] bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded font-extrabold';
-      }
-    };
-  </script>
+  <script src="js/scroll-3d.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>
