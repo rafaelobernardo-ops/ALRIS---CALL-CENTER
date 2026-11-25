@@ -67,9 +67,23 @@ const TOTAL_3D_FRAMES = 144;
     function handleFullScreenFrameScroll(container) {
       const badge = document.getElementById('frameCounterBadge');
       const planosSection = document.getElementById('planos');
+      const header = document.getElementById('mainHeader');
       if (!container || !planosSection) return;
 
       const scrollTop = container.scrollTop;
+
+      // Minimizar cabeçalho suavemente no scroll
+      if (header) {
+        if (scrollTop > 40) {
+          header.classList.remove('py-4', 'bg-[#0a0d14]/40');
+          header.classList.add('py-1.5', 'bg-[#07090e]/80', 'backdrop-blur-xl', 'shadow-md');
+          header.querySelector('.group > div')?.classList.add('scale-90');
+        } else {
+          header.classList.add('py-4', 'bg-[#0a0d14]/40');
+          header.classList.remove('py-1.5', 'bg-[#07090e]/80', 'backdrop-blur-xl', 'shadow-md');
+          header.querySelector('.group > div')?.classList.remove('scale-90');
+        }
+      }
       const maxScroll = Math.max(1, planosSection.offsetTop - window.innerHeight * 0.85);
       const rawProgress = Math.max(0, Math.min(1, scrollTop / maxScroll));
 

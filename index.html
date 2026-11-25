@@ -14,13 +14,13 @@
   <!-- ====================================================================== -->
   <!-- ETAPA 1: PÁGINA INICIAL PÚBLICA (VÍDEO 3D EM TELA CHEIA NO SCROLL)     -->
   <!-- ====================================================================== -->
-  <div id="view-landing" onscroll="handleFullScreenFrameScroll(this)" class="flex-1 overflow-y-auto bg-[#14110f] relative">
+  <div id="view-landing" onscroll="handleFullScreenFrameScroll(this)" class="flex-1 overflow-y-auto bg-[#0b0d13] relative">
     
     <!-- Navbar Oficial ALRIS — Paleta Híbrida Executiva (Grafite + Branco/Prata + Ciano/Azul Call Center) -->
-    <header class="h-18 py-3 bg-gradient-to-r from-[#4a3828]/95 via-[#3b2d21]/95 to-[#4a3828]/95 backdrop-blur-xl text-[#fbf6ee] px-6 lg:px-12 flex items-center justify-between border-b border-[#e2c799]/40 shadow-[0_8px_30px_rgba(0,0,0,0.45)] sticky top-0 z-50 shrink-0">
+    <header id="mainHeader" class="py-4 bg-[#0a0d14]/40 hover:bg-[#0a0d14]/75 backdrop-blur-md transition-all duration-300 text-slate-100 px-6 lg:px-12 flex items-center justify-between border-none shadow-none sticky top-0 z-50 shrink-0">
       <div class="flex items-center gap-3.5 cursor-pointer group" onclick="goToView('landing')">
         <div class="flex items-center gap-3">
-          <div class="w-11 h-11 rounded-2xl bg-[#1e1915] border border-[#e2c799]/30 shadow-md shadow-black/20 flex items-center justify-center p-1.5">
+          <div class="w-11 h-11 rounded-2xl bg-[#161b26] border border-slate-700/60 shadow-md shadow-black/20 flex items-center justify-center p-1.5">
             <svg viewBox="0 0 64 64" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <linearGradient id="alrisGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -35,8 +35,8 @@
           </div>
           <div>
             <div class="flex items-center gap-2">
-              <span class="text-xl font-black tracking-widest text-white leading-none">ALR<span class="text-[#e2c799]">I</span>S</span>
-              <span class="text-[9px] bg-[#e2c799]/15 text-[#ead5b3] font-extrabold px-2 py-0.5 rounded-full border border-[#e2c799]/30">IA</span>
+              <span class="text-xl font-black tracking-widest text-white leading-none">ALR<span class="text-cyan-400">I</span>S</span>
+              <span class="text-[9px] bg-cyan-400/15 text-cyan-300 font-extrabold px-2 py-0.5 rounded-full border border-[#e2c799]/30">IA</span>
             </div>
             <p class="text-[10px] text-slate-300 font-bold tracking-[0.16em] uppercase mt-0.5">CANAL DE ATENDIMENTO</p>
           </div>
@@ -45,18 +45,18 @@
 
       <!-- Links de Âncora da Própria Página Inicial -->
       <nav class="hidden md:flex items-center gap-8 text-xs font-bold text-slate-200">
-        <a href="#experiencia-3d" class="hover:text-[#e2c799] transition">Experiência 3D</a>
-        <a href="#como-funciona" class="hover:text-[#e2c799] transition">Como Funciona</a>
-        <a href="#recursos" class="hover:text-[#e2c799] transition">Recursos</a>
-        <a href="#planos" class="hover:text-[#e2c799] transition">Planos Mensais</a>
+        <a href="#experiencia-3d" class="hover:text-cyan-400 transition">Experiência 3D</a>
+        <a href="#como-funciona" class="hover:text-cyan-400 transition">Como Funciona</a>
+        <a href="#recursos" class="hover:text-cyan-400 transition">Recursos</a>
+        <a href="#planos" class="hover:text-cyan-400 transition">Planos Mensais</a>
       </nav>
 
       <!-- Botões de Login e Começar Agora (Azul/Ciano Call Center) -->
       <div class="flex items-center gap-3">
         <button onclick="goToView('login')" class="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white border border-white/15 font-extrabold text-xs transition flex items-center gap-2">
-          <i class="fa-solid fa-arrow-right-to-bracket text-[#e2c799]"></i> Entrar (Admin / Equipe)
+          <i class="fa-solid fa-arrow-right-to-bracket text-cyan-400"></i> Entrar (Admin / Equipe)
         </button>
-        <a href="#planos" class="hidden sm:flex px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#f5efe6] via-[#e8d9c5] to-[#d8c09e] hover:from-white hover:to-[#e8d9c5] text-[#171310] font-extrabold text-xs shadow-lg shadow-black/30 transition items-center gap-1.5">
+        <a href="#planos" class="hidden sm:flex px-4 py-2.5 rounded-xl bg-gradient-to-r from-slate-100 via-slate-200 to-slate-300 hover:from-white hover:to-[#e8d9c5] text-[#171310] font-extrabold text-xs shadow-lg shadow-black/30 transition items-center gap-1.5">
           Começar Agora &rarr;
         </a>
       </div>
@@ -68,7 +68,7 @@
     <div id="experiencia-3d" class="relative w-full">
 
       <!-- TELA CHEIA FIXA (STICKY 100vw x 100vh) COM CANVAS HARDWARE-ACCELERATED -->
-      <div class="sticky top-0 left-0 w-full h-screen overflow-hidden bg-[#14110f] z-0">
+      <div class="sticky top-0 left-0 w-full h-screen overflow-hidden bg-[#0b0d13] z-0">
         <!-- Frame Inicial Estático (016 = totalmente sem luz) enquanto o Canvas 60fps assume imediatamente -->
         <canvas 
           id="fullScreenFrameCanvas" 
@@ -80,8 +80,8 @@
         <div class="absolute inset-0 bg-gradient-to-b from-[#14110f]/60 via-[#1a1613]/15 to-[#14110f]/80 pointer-events-none"></div>
 
         <!-- Barra Discreta de Progresso no Canto Inferior -->
-        <div class="absolute bottom-6 right-6 z-20 hidden sm:flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-[#181411]/85 border border-[#e2c799]/25 backdrop-blur-md text-[10px] font-mono text-[#ead5b3]">
-          <span class="w-2 h-2 rounded-full bg-[#e2c799] animate-ping"></span>
+        <div class="absolute bottom-6 right-6 z-20 hidden sm:flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-[#121620]/90 border border-[#e2c799]/25 backdrop-blur-md text-[10px] font-mono text-cyan-300">
+          <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
           <span id="frameCounterBadge">FRAME 016 / 143 • ROLE O SCROLL</span>
         </div>
       </div>
@@ -92,13 +92,13 @@
         <!-- CENA 1 (Topo / Hero Executivo: Grafite + Branco/Prata + Ciano/Esmeralda) -->
         <section class="min-h-[115vh] flex flex-col items-center justify-center px-6 text-center">
           <div class="max-w-3xl mx-auto">
-            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#181411]/80 border border-[#e2c799]/30 text-[11px] font-bold text-[#ead5b3] mb-5 backdrop-blur-md shadow">
-              <span class="w-1.5 h-1.5 rounded-full bg-[#e2c799]"></span>
+            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#181411]/80 border border-[#e2c799]/30 text-[11px] font-bold text-cyan-300 mb-5 backdrop-blur-md shadow">
+              <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
               <span>ALRIS • CANAL DE ATENDIMENTO & COPILOTO IA</span>
             </div>
 
             <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.08] text-white drop-shadow-[0_4px_24px_rgba(0,0,0,0.75)]">
-              Atendimento Inteligente que <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#faf7f2] via-[#e6cfa8] to-[#c9a370]">Converte Vendas em Tempo Real</span>
+              Atendimento Inteligente que <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-slate-400">Converte Vendas em Tempo Real</span>
             </h1>
 
             <p class="mt-4 text-sm sm:text-base text-slate-200 max-w-xl mx-auto leading-relaxed drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
@@ -107,18 +107,18 @@
 
             <!-- 2 Botões Diretos na Paleta Call Center & IA -->
             <div class="mt-8 flex flex-wrap items-center justify-center gap-3.5">
-              <button onclick="goToView('login'); switchLoginMode('admin');" class="px-7 py-3.5 rounded-2xl bg-gradient-to-r from-[#f5efe6] via-[#e8d9c5] to-[#d8c09e] hover:from-white hover:to-[#e8d9c5] text-[#171310] font-extrabold text-sm shadow-xl shadow-black/30 transition flex items-center gap-2">
+              <button onclick="goToView('login'); switchLoginMode('admin');" class="px-7 py-3.5 rounded-2xl bg-gradient-to-r from-slate-100 via-slate-200 to-slate-300 hover:from-white hover:to-[#e8d9c5] text-[#171310] font-extrabold text-sm shadow-xl shadow-black/30 transition flex items-center gap-2">
                 <i class="fa-solid fa-lock-open"></i> Acessar Plataforma
               </button>
 
-              <button onclick="goToView('login'); switchLoginMode('team');" class="px-6 py-3.5 rounded-2xl bg-[#181411]/85 hover:bg-[#171f2b] border border-white/20 text-white font-bold text-sm backdrop-blur-md transition flex items-center gap-2 shadow-lg">
-                <i class="fa-solid fa-ticket text-[#e2c799]"></i> Entrar com Código de Equipe
+              <button onclick="goToView('login'); switchLoginMode('team');" class="px-6 py-3.5 rounded-2xl bg-[#121620]/90 hover:bg-[#171f2b] border border-white/20 text-white font-bold text-sm backdrop-blur-md transition flex items-center gap-2 shadow-lg">
+                <i class="fa-solid fa-ticket text-cyan-400"></i> Entrar com Código de Equipe
               </button>
             </div>
 
-            <div class="mt-12 text-[#ead5b3]/90 text-xs font-semibold flex flex-col items-center gap-1 animate-bounce drop-shadow">
+            <div class="mt-12 text-cyan-300/90 text-xs font-semibold flex flex-col items-center gap-1 animate-bounce drop-shadow">
               <span>Role o scroll para acender a central em movimento</span>
-              <i class="fa-solid fa-chevron-down text-[#e2c799]"></i>
+              <i class="fa-solid fa-chevron-down text-cyan-400"></i>
             </div>
           </div>
         </section>
@@ -126,17 +126,17 @@
         <!-- CENA 2 (Equipe Sincronizada — Vidro Grafite Escuro + Reflexo Champagne Sutil + Acento Ciano) -->
         <section class="min-h-[85vh] flex items-center px-6 lg:px-16">
           <div class="max-w-lg bg-[#181411]/88 backdrop-blur-xl border border-amber-100/15 rounded-3xl p-7 text-white shadow-[0_20px_50px_rgba(0,0,0,0.65)] ring-1 ring-[#e2c799]/15">
-            <span class="px-3 py-1 rounded-full bg-[#e2c799]/15 text-[#ead5b3] border border-[#e2c799]/25 font-extrabold text-[10px] uppercase tracking-wider">
+            <span class="px-3 py-1 rounded-full bg-cyan-400/15 text-cyan-300 border border-[#e2c799]/25 font-extrabold text-[10px] uppercase tracking-wider">
               1. Operação Conectada em Tempo Real
             </span>
             <h2 class="text-2xl sm:text-3xl font-black text-white mt-3 leading-tight">
               Toda a Sua Equipe Sincronizada em um Único Canal
             </h2>
             <p class="text-xs sm:text-sm text-slate-300 mt-3 leading-relaxed">
-              O administrador gerencia o plano e libera o código exclusivo da empresa (<code class="text-[#ead5b3] font-mono font-bold">ALRIS-8842-TEAM</code>). Cada operador acompanha os clientes do Kanban da triagem até a entrega final.
+              O administrador gerencia o plano e libera o código exclusivo da empresa (<code class="text-cyan-300 font-mono font-bold">ALRIS-8842-TEAM</code>). Cada operador acompanha os clientes do Kanban da triagem até a entrega final.
             </p>
             <div class="mt-5 flex items-center gap-3">
-              <button onclick="goToView('login')" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#f5efe6] to-[#dec8a6] hover:from-white hover:to-[#e8d9c5] text-[#171310] font-extrabold text-xs transition shadow-md">
+              <button onclick="goToView('login')" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-slate-100 to-slate-200 hover:from-white hover:to-[#e8d9c5] text-[#171310] font-extrabold text-xs transition shadow-md">
                 Abrir Quadro Kanban &rarr;
               </button>
             </div>
@@ -146,7 +146,7 @@
         <!-- CENA 2.5 (Análise de Sentimento — Vidro Grafite Escuro + Acento Esmeralda/Ciano) -->
         <section class="min-h-[85vh] flex items-center justify-end px-6 lg:px-16">
           <div class="max-w-lg bg-[#181411]/88 backdrop-blur-xl border border-amber-100/15 rounded-3xl p-7 text-white shadow-[0_20px_50px_rgba(0,0,0,0.65)] ring-1 ring-[#e2c799]/15">
-            <span class="px-3 py-1 rounded-full bg-[#e2c799]/15 text-[#ead5b3] border border-[#e2c799]/25 font-extrabold text-[10px] uppercase tracking-wider">
+            <span class="px-3 py-1 rounded-full bg-cyan-400/15 text-cyan-300 border border-[#e2c799]/25 font-extrabold text-[10px] uppercase tracking-wider">
               2. Análise de Sentimento Ao Vivo
             </span>
             <h2 class="text-2xl sm:text-3xl font-black text-white mt-3 leading-tight">
@@ -156,7 +156,7 @@
               Assim que a IA processa a voz do cliente, o painel projeta o sentimento positivo, neutro ou negativo da conversa em tempo real e entrega na tela o argumento exato para fechar o contrato.
             </p>
             <div class="mt-5 flex items-center gap-3">
-              <button onclick="goToView('login')" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#f5efe6] to-[#dec8a6] hover:from-white hover:to-[#e8d9c5] text-[#171310] font-extrabold text-xs transition shadow-lg">
+              <button onclick="goToView('login')" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-slate-100 to-slate-200 hover:from-white hover:to-[#e8d9c5] text-[#171310] font-extrabold text-xs transition shadow-lg">
                 Testar Copiloto de Voz IA &rarr;
               </button>
             </div>
@@ -166,7 +166,7 @@
         <!-- CENA 3 (COMO FUNCIONA O FLUXO DE TRABALHO — VIDRO GRAFITE EXECUTIVO) -->
         <section id="como-funciona" class="min-h-[90vh] flex flex-col justify-center py-16 px-6 max-w-6xl mx-auto">
           <div class="text-center max-w-3xl mx-auto mb-10">
-            <span class="text-xs font-extrabold text-[#ead5b3] uppercase tracking-widest bg-[#181411]/85 px-3.5 py-1 rounded-full border border-[#e2c799]/25 backdrop-blur-md">
+            <span class="text-xs font-extrabold text-cyan-300 uppercase tracking-widest bg-[#121620]/90 px-3.5 py-1 rounded-full border border-[#e2c799]/25 backdrop-blur-md">
               Jornada Dentro da ALRIS
             </span>
             <h2 class="text-3xl sm:text-4xl font-black text-white mt-3 drop-shadow-[0_4px_18px_rgba(0,0,0,0.75)]">
@@ -215,7 +215,7 @@
         <!-- CENA 4 (RECURSOS & DIFERENCIAIS — VIDRO GRAFITE EXECUTIVO) -->
         <section id="recursos" class="min-h-[95vh] flex flex-col justify-center py-16 px-6 max-w-6xl mx-auto pb-20">
           <div class="text-center max-w-3xl mx-auto mb-10">
-            <span class="text-xs font-extrabold text-[#ead5b3] uppercase tracking-widest bg-[#181411]/85 px-3.5 py-1 rounded-full border border-[#e2c799]/25 backdrop-blur-md">
+            <span class="text-xs font-extrabold text-cyan-300 uppercase tracking-widest bg-[#121620]/90 px-3.5 py-1 rounded-full border border-[#e2c799]/25 backdrop-blur-md">
               Diferenciais Tecnológicos ALRIS
             </span>
             <h2 class="text-3xl sm:text-4xl font-black text-white mt-3 drop-shadow-[0_4px_18px_rgba(0,0,0,0.75)]">
@@ -225,7 +225,7 @@
 
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="p-6 rounded-2xl bg-[#181411]/88 backdrop-blur-xl border border-white/15 text-white shadow-xl">
-              <div class="w-12 h-12 rounded-xl bg-[#e2c799]/15 text-[#ead5b3] flex items-center justify-center text-xl mb-4 border border-[#e2c799]/25">
+              <div class="w-12 h-12 rounded-xl bg-cyan-400/15 text-cyan-300 flex items-center justify-center text-xl mb-4 border border-[#e2c799]/25">
                 <i class="fa-solid fa-ear-listen"></i>
               </div>
               <h3 class="text-base font-bold text-white mb-2">Escuta Ativa com Google Gemini</h3>
@@ -235,7 +235,7 @@
             </div>
 
             <div class="p-6 rounded-2xl bg-[#181411]/88 backdrop-blur-xl border border-white/15 text-white shadow-xl">
-              <div class="w-12 h-12 rounded-xl bg-[#e2c799]/15 text-[#ead5b3] flex items-center justify-center text-xl mb-4 border border-[#e2c799]/25">
+              <div class="w-12 h-12 rounded-xl bg-cyan-400/15 text-cyan-300 flex items-center justify-center text-xl mb-4 border border-[#e2c799]/25">
                 <i class="fa-solid fa-chart-column"></i>
               </div>
               <h3 class="text-base font-bold text-white mb-2">Análise de Sentimento Ao Vivo</h3>
@@ -245,7 +245,7 @@
             </div>
 
             <div class="p-6 rounded-2xl bg-[#181411]/88 backdrop-blur-xl border border-white/15 text-white shadow-xl">
-              <div class="w-12 h-12 rounded-xl bg-[#e2c799]/15 text-[#ead5b3] flex items-center justify-center text-xl mb-4 border border-blue-400/30">
+              <div class="w-12 h-12 rounded-xl bg-cyan-400/15 text-cyan-300 flex items-center justify-center text-xl mb-4 border border-blue-400/30">
                 <i class="fa-solid fa-sliders"></i>
               </div>
               <h3 class="text-base font-bold text-white mb-2">Playbooks & Argumentos Dinâmicos</h3>
@@ -258,12 +258,12 @@
 
         <!-- 1.5 PLANOS DE ASSINATURA MENSAL — TRANSIÇÃO CONTÍNUA EM GRAFITE ESCURO + CIANO/ESMERALDA -->
         <section id="planos" class="pt-12 pb-24 px-6 bg-gradient-to-b from-transparent via-[#181411]/90 to-[#14110f] relative z-20 text-white">
-          <div class="absolute top-0 left-1/4 w-96 h-64 bg-[#e2c799]/10 rounded-full blur-[120px] pointer-events-none"></div>
-          <div class="absolute bottom-0 right-1/4 w-96 h-64 bg-[#e2c799]/10 rounded-full blur-[120px] pointer-events-none"></div>
+          <div class="absolute top-0 left-1/4 w-96 h-64 bg-cyan-400/10 rounded-full blur-[120px] pointer-events-none"></div>
+          <div class="absolute bottom-0 right-1/4 w-96 h-64 bg-cyan-400/10 rounded-full blur-[120px] pointer-events-none"></div>
 
           <div class="max-w-6xl mx-auto relative z-10">
             <div class="text-center max-w-3xl mx-auto mb-12">
-              <span class="text-xs font-extrabold text-[#ead5b3] uppercase tracking-widest bg-[#181411]/85 px-3.5 py-1 rounded-full border border-[#e2c799]/25 backdrop-blur-md">
+              <span class="text-xs font-extrabold text-cyan-300 uppercase tracking-widest bg-[#121620]/90 px-3.5 py-1 rounded-full border border-[#e2c799]/25 backdrop-blur-md">
                 Planos & Checkout Transparente ALRIS
               </span>
               <h2 class="text-3xl sm:text-4xl font-black text-white mt-3 drop-shadow-lg">
@@ -279,7 +279,7 @@
               <!-- Plano 1: Starter (Vidro Grafite Escuro + Reflexo Sutil na Borda) -->
               <div class="bg-[#181411]/88 backdrop-blur-2xl rounded-3xl p-7 border border-amber-100/15 hover:border-[#e2c799]/50 shadow-2xl flex flex-col justify-between transition">
                 <div>
-                  <span class="text-xs font-extrabold text-[#e2c799] uppercase tracking-wider">Plano Starter</span>
+                  <span class="text-xs font-extrabold text-cyan-400 uppercase tracking-wider">Plano Starter</span>
                   <h3 class="text-xl font-extrabold text-white mt-1">Individual & Autônomo</h3>
                   <p class="text-xs text-slate-300 mt-1">Ideal para começar com 1 canal de atendimento e Kanban completo.</p>
                   <div class="my-6 flex items-baseline gap-1">
@@ -288,15 +288,15 @@
                     <span class="text-xs text-slate-400 font-semibold">/mês</span>
                   </div>
                   <ul class="space-y-3 text-xs text-slate-200 border-t border-white/10 pt-5">
-                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-[#e2c799]"></i> <strong>1 Usuário (Admin)</strong> ativo</li>
-                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-[#e2c799]"></i> 1 Canal WhatsApp conectado</li>
-                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-[#e2c799]"></i> Quadro Kanban de Processos ilimitado</li>
-                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-[#e2c799]"></i> Raio-X de Clientes por Link Social</li>
-                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-[#e2c799]"></i> Envio de Contrato rápido no WhatsApp</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-cyan-400"></i> <strong>1 Usuário (Admin)</strong> ativo</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-cyan-400"></i> 1 Canal WhatsApp conectado</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-cyan-400"></i> Quadro Kanban de Processos ilimitado</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-cyan-400"></i> Raio-X de Clientes por Link Social</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-cyan-400"></i> Envio de Contrato rápido no WhatsApp</li>
                   </ul>
                 </div>
-                <button onclick="openPaymentCheckout('Plano Starter', '149,00', 1)" class="mt-8 w-full py-3.5 rounded-xl bg-white/10 hover:bg-[#e2c799]/20 text-white border border-[#e2c799]/30 font-extrabold text-xs transition shadow-sm flex items-center justify-center gap-2">
-                  <i class="fa-solid fa-lock text-[#e2c799]"></i> Selecionar Starter & Ir p/ Pagamento
+                <button onclick="openPaymentCheckout('Plano Starter', '149,00', 1)" class="mt-8 w-full py-3.5 rounded-xl bg-white/10 hover:bg-cyan-400/20 text-white border border-[#e2c799]/30 font-extrabold text-xs transition shadow-sm flex items-center justify-center gap-2">
+                  <i class="fa-solid fa-lock text-cyan-400"></i> Selecionar Starter & Ir p/ Pagamento
                 </button>
               </div>
 
@@ -306,23 +306,23 @@
                   Mais Popular • Equipe & IA
                 </span>
                 <div>
-                  <span class="text-xs font-bold text-[#ead5b3] uppercase tracking-wider">Plano Pro Growth</span>
+                  <span class="text-xs font-bold text-cyan-300 uppercase tracking-wider">Plano Pro Growth</span>
                   <h3 class="text-xl font-extrabold text-white mt-1">Equipes & Copiloto Ao Vivo</h3>
                   <p class="text-xs text-slate-300 mt-1">Acesso por código para a equipe e IA escutando chamadas em tempo real.</p>
                   <div class="my-6 flex items-baseline gap-1">
-                    <span class="text-sm font-bold text-[#ead5b3]">R$</span>
+                    <span class="text-sm font-bold text-cyan-300">R$</span>
                     <span class="text-4xl font-black text-white mono">299</span>
                     <span class="text-xs text-slate-300 font-semibold">/mês</span>
                   </div>
                   <ul class="space-y-3 text-xs text-slate-100 border-t border-white/10 pt-5">
-                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-[#e2c799]"></i> <strong>Até 5 Membros na Equipe</strong> via Código</li>
-                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-[#e2c799]"></i> <strong>Copiloto Gemini ao Vivo</strong> nas chamadas</li>
-                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-[#e2c799]"></i> <strong>Gráfico 3D de Sentimento</strong> e Alerta de Risco</li>
-                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-[#e2c799]"></i> Sugestões automáticas de quebra de objeção</li>
-                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-[#e2c799]"></i> Ligação Normal no PC + WhatsApp Integrado</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-cyan-400"></i> <strong>Até 5 Membros na Equipe</strong> via Código</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-cyan-400"></i> <strong>Copiloto Gemini ao Vivo</strong> nas chamadas</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-cyan-400"></i> <strong>Gráfico 3D de Sentimento</strong> e Alerta de Risco</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-cyan-400"></i> Sugestões automáticas de quebra de objeção</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-cyan-400"></i> Ligação Normal no PC + WhatsApp Integrado</li>
                   </ul>
                 </div>
-                <button onclick="openPaymentCheckout('Plano Pro Growth', '299,00', 5)" class="mt-8 w-full py-3.5 rounded-xl bg-gradient-to-r from-[#f5efe6] via-[#e8d9c5] to-[#d8c09e] hover:from-white hover:to-[#e8d9c5] text-[#171310] font-extrabold text-xs shadow-lg shadow-black/30 transition flex items-center justify-center gap-2">
+                <button onclick="openPaymentCheckout('Plano Pro Growth', '299,00', 5)" class="mt-8 w-full py-3.5 rounded-xl bg-gradient-to-r from-slate-100 via-slate-200 to-slate-300 hover:from-white hover:to-[#e8d9c5] text-[#171310] font-extrabold text-xs shadow-lg shadow-black/30 transition flex items-center justify-center gap-2">
                   <i class="fa-solid fa-credit-card"></i> Fazer Upgrade p/ Pro (Página de Pagamento)
                 </button>
               </div>
@@ -330,7 +330,7 @@
               <!-- Plano 3: Scale / Enterprise (Vidro Grafite Escuro + Acento Azul/Esmeralda) -->
               <div class="bg-[#181411]/88 backdrop-blur-2xl rounded-3xl p-7 border border-amber-100/15 hover:border-[#e2c799]/50 shadow-2xl flex flex-col justify-between transition">
                 <div>
-                  <span class="text-xs font-extrabold text-[#e2c799] uppercase tracking-wider">Plano Enterprise Scale</span>
+                  <span class="text-xs font-extrabold text-cyan-400 uppercase tracking-wider">Plano Enterprise Scale</span>
                   <h3 class="text-xl font-extrabold text-white mt-1">Operação Ilimitada</h3>
                   <p class="text-xs text-slate-300 mt-1">Para agências e centrais com múltiplos operadores e canais.</p>
                   <div class="my-6 flex items-baseline gap-1">
@@ -339,15 +339,15 @@
                     <span class="text-xs text-slate-400 font-semibold">/mês</span>
                   </div>
                   <ul class="space-y-3 text-xs text-slate-200 border-t border-white/10 pt-5">
-                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-[#e2c799]"></i> <strong>Membros Ilimitados</strong> com Código de Equipe</li>
-                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-[#e2c799]"></i> Múltiplos WhatsApps & Ramais VoIP</li>
-                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-[#e2c799]"></i> Motor <strong>Gemini 4 Argon</strong> Dedicado</li>
-                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-[#e2c799]"></i> Playbooks customizados & API Aberta</li>
-                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-[#e2c799]"></i> Gerente de Conta & SLA VIP</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-cyan-400"></i> <strong>Membros Ilimitados</strong> com Código de Equipe</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-cyan-400"></i> Múltiplos WhatsApps & Ramais VoIP</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-cyan-400"></i> Motor <strong>Gemini 4 Argon</strong> Dedicado</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-cyan-400"></i> Playbooks customizados & API Aberta</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-cyan-400"></i> Gerente de Conta & SLA VIP</li>
                   </ul>
                 </div>
-                <button onclick="openPaymentCheckout('Plano Enterprise Scale', '699,00', 99)" class="mt-8 w-full py-3.5 rounded-xl bg-[#e2c799]/15 hover:bg-[#e2c799]/25 text-white border border-[#e2c799]/30 font-extrabold text-xs transition shadow-sm flex items-center justify-center gap-2">
-                  <i class="fa-solid fa-crown text-[#ead5b3]"></i> Selecionar Enterprise & Ir p/ Pagamento
+                <button onclick="openPaymentCheckout('Plano Enterprise Scale', '699,00', 99)" class="mt-8 w-full py-3.5 rounded-xl bg-cyan-400/15 hover:bg-cyan-400/25 text-white border border-[#e2c799]/30 font-extrabold text-xs transition shadow-sm flex items-center justify-center gap-2">
+                  <i class="fa-solid fa-crown text-cyan-300"></i> Selecionar Enterprise & Ir p/ Pagamento
                 </button>
               </div>
 
@@ -359,14 +359,14 @@
     </div>
 
     <!-- Rodapé Público ALRIS em Grafite Executivo -->
-    <footer class="bg-[#14110f] text-slate-400 py-8 px-6 text-xs mt-auto border-t border-white/10">
+    <footer class="bg-[#0b0d13] text-slate-400 py-8 px-6 text-xs mt-auto border-t border-white/10">
       <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-4">
         <div class="flex items-center gap-3">
           <img src="assets/prints/logo-alris.jpg" alt="ALRIS Logo" class="h-8 w-auto rounded-md border border-[#e2c799]/25">
           <span class="font-black text-white tracking-wider">ALRIS • CANAL DE ATENDIMENTO</span>
           <span>• © 2026 Todos os direitos reservados.</span>
         </div>
-        <button onclick="goToView('login')" class="text-[#e2c799] hover:underline font-bold">
+        <button onclick="goToView('login')" class="text-cyan-400 hover:underline font-bold">
           Acessar Portal (Sou Administrador / Sou Equipe com Código) &rarr;
         </button>
       </div>
@@ -382,27 +382,27 @@
     <!-- Topo da Tela de Login com Botão de Voltar para a Página Inicial -->
     <div class="p-6 flex items-center justify-between max-w-6xl w-full mx-auto">
       <button onclick="goToView('landing')" class="text-xs font-bold text-slate-200 hover:text-white flex items-center gap-2 bg-[#221c18] px-4 py-2 rounded-xl border border-white/15 transition">
-        <i class="fa-solid fa-arrow-left text-[#e2c799]"></i> Voltar para a Página Inicial
+        <i class="fa-solid fa-arrow-left text-cyan-400"></i> Voltar para a Página Inicial
       </button>
-      <span class="text-xs text-[#ead5b3] font-semibold"><i class="fa-solid fa-shield-halved mr-1"></i> Ambiente Criptografado SSL • ALRIS</span>
+      <span class="text-xs text-cyan-300 font-semibold"><i class="fa-solid fa-shield-halved mr-1"></i> Ambiente Criptografado SSL • ALRIS</span>
     </div>
 
     <div class="flex-1 flex items-center justify-center p-4">
       <div class="bg-[#191512]/95 backdrop-blur-2xl w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-12 border border-white/15">
         
         <!-- Lado Esquerdo: Resumo do Acesso ALRIS -->
-        <div class="md:col-span-5 bg-[#14110f] text-white p-8 flex flex-col justify-between border-r border-white/10">
+        <div class="md:col-span-5 bg-[#0b0d13] text-white p-8 flex flex-col justify-between border-r border-white/10">
           <div>
             <div class="flex items-center gap-3 mb-6">
               <img src="assets/prints/logo-alris.jpg" alt="ALRIS Canal de Atendimento" class="h-11 w-auto rounded-xl border border-[#e2c799]/30 shadow-md shadow-black/20">
               <div>
-                <span class="font-black text-base tracking-wider block">ALR<span class="text-[#e2c799]">I</span>S</span>
+                <span class="font-black text-base tracking-wider block">ALR<span class="text-cyan-400">I</span>S</span>
                 <span class="text-[10px] text-slate-300 uppercase tracking-widest font-bold block">Canal de Atendimento</span>
               </div>
             </div>
 
-            <div id="selectedPlanBanner" class="hidden mb-4 p-3 rounded-xl bg-[#e2c799]/15 border border-[#e2c799]/30 text-xs">
-              <span class="text-[10px] font-bold text-[#ead5b3] uppercase block">Plano Selecionado:</span>
+            <div id="selectedPlanBanner" class="hidden mb-4 p-3 rounded-xl bg-cyan-400/15 border border-[#e2c799]/30 text-xs">
+              <span class="text-[10px] font-bold text-cyan-300 uppercase block">Plano Selecionado:</span>
               <strong id="selectedPlanText" class="text-white text-sm">Plano Pro Growth - R$ 299/mês</strong>
             </div>
 
@@ -415,11 +415,11 @@
           </div>
 
           <div class="space-y-2.5 pt-6 border-t border-white/10 text-xs">
-            <div class="flex items-center gap-2 text-[#e2c799] font-semibold">
+            <div class="flex items-center gap-2 text-cyan-400 font-semibold">
               <i class="fa-solid fa-circle-check"></i>
               <span>Fluxo Sequencial: Login &rarr; Kanban &rarr; Call IA</span>
             </div>
-            <div class="flex items-center gap-2 text-[#ead5b3] font-semibold">
+            <div class="flex items-center gap-2 text-cyan-300 font-semibold">
               <i class="fa-solid fa-users"></i>
               <span>Acesso Isolado p/ Administrador e Equipe</span>
             </div>
@@ -430,8 +430,8 @@
         <div class="md:col-span-7 p-8 text-xs text-slate-100 bg-[#191512]">
           
           <!-- Abas de Escolha: Administrador vs Equipe (Código) -->
-          <div class="grid grid-cols-2 gap-2 p-1 bg-[#14110f] rounded-2xl border border-white/10 mb-6">
-            <button type="button" onclick="switchLoginMode('admin')" id="btnModeAdmin" class="py-2.5 px-3 rounded-xl font-extrabold text-xs bg-gradient-to-r from-[#f5efe6] to-[#dec8a6] text-[#171310] shadow-sm transition flex items-center justify-center gap-1.5">
+          <div class="grid grid-cols-2 gap-2 p-1 bg-[#0b0d13] rounded-2xl border border-white/10 mb-6">
+            <button type="button" onclick="switchLoginMode('admin')" id="btnModeAdmin" class="py-2.5 px-3 rounded-xl font-extrabold text-xs bg-gradient-to-r from-slate-100 to-slate-200 text-[#171310] shadow-sm transition flex items-center justify-center gap-1.5">
               <i class="fa-solid fa-building-user"></i> Sou Administrador
             </button>
             <button type="button" onclick="switchLoginMode('team')" id="btnModeTeam" class="py-2.5 px-3 rounded-xl font-bold text-xs text-slate-300 hover:text-white transition flex items-center justify-center gap-1.5">
@@ -449,37 +449,37 @@
             <form onsubmit="handleAdminLogin(event)" class="space-y-3.5">
               <div>
                 <label class="block font-bold text-slate-200 mb-1">Nome da Sua Empresa *</label>
-                <input type="text" id="adminCompanyInput" required value="Agência Rafael Tech" placeholder="Ex: Minha Agência Web" class="w-full bg-[#14110f] border border-white/15 rounded-xl px-3.5 py-2.5 text-white font-semibold focus:outline-none focus:border-[#e2c799]">
+                <input type="text" id="adminCompanyInput" required value="Agência Rafael Tech" placeholder="Ex: Minha Agência Web" class="w-full bg-[#0b0d13] border border-white/15 rounded-xl px-3.5 py-2.5 text-white font-semibold focus:outline-none focus:border-cyan-400">
               </div>
 
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label class="block font-bold text-slate-200 mb-1">Seu Nome (Admin) *</label>
-                  <input type="text" id="adminNameInput" required value="Rafael" class="w-full bg-[#14110f] border border-white/15 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-[#e2c799]">
+                  <input type="text" id="adminNameInput" required value="Rafael" class="w-full bg-[#0b0d13] border border-white/15 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-cyan-400">
                 </div>
                 <div>
                   <label class="block font-bold text-slate-200 mb-1">E-mail Corporativo *</label>
-                  <input type="email" id="loginEmail" required value="rafael@alris.com.br" class="w-full bg-[#14110f] border border-white/15 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-[#e2c799]">
+                  <input type="email" id="loginEmail" required value="rafael@alris.com.br" class="w-full bg-[#0b0d13] border border-white/15 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-cyan-400">
                 </div>
               </div>
 
               <div>
                 <label class="block font-bold text-slate-200 mb-1">Senha do Administrador *</label>
-                <input type="password" id="loginPass" required value="12345678" class="w-full bg-[#14110f] border border-white/15 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-[#e2c799]">
+                <input type="password" id="loginPass" required value="12345678" class="w-full bg-[#0b0d13] border border-white/15 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-cyan-400">
               </div>
 
-              <button type="submit" class="w-full bg-gradient-to-r from-[#f5efe6] via-[#e8d9c5] to-[#d8c09e] hover:from-white hover:to-[#e8d9c5] text-[#171310] font-extrabold text-sm py-3.5 rounded-xl shadow-lg shadow-black/25 transition flex items-center justify-center gap-2">
+              <button type="submit" class="w-full bg-gradient-to-r from-slate-100 via-slate-200 to-slate-300 hover:from-white hover:to-[#e8d9c5] text-[#171310] font-extrabold text-sm py-3.5 rounded-xl shadow-lg shadow-black/25 transition flex items-center justify-center gap-2">
                 <i class="fa-solid fa-lock-open"></i> Entrar como Administrador
               </button>
             </form>
 
             <!-- BOTÃO CONTA DEMO DO ADMINISTRADOR (1 CLIQUE) + CONFIRMAÇÃO DE E-MAIL -->
             <div class="mt-4 pt-4 border-t border-white/10 space-y-2">
-              <button type="button" onclick="loginDemoAdmin()" class="w-full py-3 px-4 rounded-xl bg-[#e2c799]/15 hover:bg-[#e2c799]/25 text-[#ead5b3] border border-[#e2c799]/35 font-extrabold text-xs transition flex items-center justify-center gap-2 shadow-sm">
-                <i class="fa-solid fa-bolt text-[#e2c799]"></i> Acessar Conta Demo Administrador (1 Clique)
+              <button type="button" onclick="loginDemoAdmin()" class="w-full py-3 px-4 rounded-xl bg-cyan-400/15 hover:bg-cyan-400/25 text-cyan-300 border border-[#e2c799]/35 font-extrabold text-xs transition flex items-center justify-center gap-2 shadow-sm">
+                <i class="fa-solid fa-bolt text-cyan-400"></i> Acessar Conta Demo Administrador (1 Clique)
               </button>
-              <button type="button" onclick="sendConfirmationEmailDemo()" id="btnEmailConfirm" class="w-full py-2 px-3 rounded-lg bg-[#14110f] hover:bg-white/5 text-slate-300 border border-white/10 font-semibold text-[11px] transition flex items-center justify-center gap-1.5">
-                <i class="fa-solid fa-envelope-circle-check text-[#e2c799]"></i> Enviar Link de Confirmação p/ E-mail Corporativo
+              <button type="button" onclick="sendConfirmationEmailDemo()" id="btnEmailConfirm" class="w-full py-2 px-3 rounded-lg bg-[#0b0d13] hover:bg-white/5 text-slate-300 border border-white/10 font-semibold text-[11px] transition flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-envelope-circle-check text-cyan-400"></i> Enviar Link de Confirmação p/ E-mail Corporativo
               </button>
             </div>
           </div>
@@ -487,7 +487,7 @@
           <!-- MODO 2: ACESSO DA EQUIPE (APENAS COM CÓDIGO DE CONVITE!) -->
           <div id="loginBoxTeam" class="hidden">
             <div class="mb-5">
-              <span class="text-[10px] font-extrabold uppercase bg-[#e2c799]/15 text-[#ead5b3] px-2.5 py-0.5 rounded-full border border-[#e2c799]/25">
+              <span class="text-[10px] font-extrabold uppercase bg-cyan-400/15 text-cyan-300 px-2.5 py-0.5 rounded-full border border-[#e2c799]/25">
                 Acesso Rápido de Funcionário
               </span>
               <h3 class="text-lg font-extrabold text-white mt-1.5">Entrar na Equipe com Código</h3>
@@ -497,17 +497,17 @@
             <form onsubmit="handleTeamCodeLogin(event)" class="space-y-3.5">
               <div>
                 <label class="block font-bold text-slate-200 mb-1">Código de Acesso da Empresa *</label>
-                <input type="text" id="teamCodeInput" required value="ALRIS-8842-TEAM" placeholder="Ex: ALRIS-8842-TEAM" class="w-full bg-[#14110f] text-[#ead5b3] border-2 border-[#e2c799]/40 rounded-xl px-4 py-3 font-mono text-base font-black tracking-widest uppercase text-center focus:outline-none focus:border-[#e2c799]">
+                <input type="text" id="teamCodeInput" required value="ALRIS-8842-TEAM" placeholder="Ex: ALRIS-8842-TEAM" class="w-full bg-[#0b0d13] text-cyan-300 border-2 border-[#e2c799]/40 rounded-xl px-4 py-3 font-mono text-base font-black tracking-widest uppercase text-center focus:outline-none focus:border-cyan-400">
               </div>
 
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label class="block font-bold text-slate-200 mb-1">Seu Nome *</label>
-                  <input type="text" id="memberLoginName" required value="Lucas Torres" placeholder="Ex: Lucas Torres" class="w-full bg-[#14110f] border border-white/15 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-[#e2c799]">
+                  <input type="text" id="memberLoginName" required value="Lucas Torres" placeholder="Ex: Lucas Torres" class="w-full bg-[#0b0d13] border border-white/15 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-cyan-400">
                 </div>
                 <div>
                   <label class="block font-bold text-slate-200 mb-1">Sua Função na Equipe</label>
-                  <select id="memberLoginRole" class="w-full bg-[#14110f] border border-white/15 rounded-xl px-3 py-2.5 text-white font-semibold focus:outline-none focus:border-[#e2c799]">
+                  <select id="memberLoginRole" class="w-full bg-[#0b0d13] border border-white/15 rounded-xl px-3 py-2.5 text-white font-semibold focus:outline-none focus:border-cyan-400">
                     <option value="Vendas & Atendimento">Vendas & Atendimento</option>
                     <option value="Design UI/UX">Design UI/UX</option>
                     <option value="Desenvolvedor">Desenvolvedor</option>
@@ -515,7 +515,7 @@
                 </div>
               </div>
 
-              <button type="submit" class="w-full bg-gradient-to-r from-[#f5efe6] to-[#dec8a6] hover:from-white hover:to-[#e8d9c5] text-[#171310] font-extrabold text-sm py-3.5 rounded-xl shadow-lg shadow-black/25 transition flex items-center justify-center gap-2">
+              <button type="submit" class="w-full bg-gradient-to-r from-slate-100 to-slate-200 hover:from-white hover:to-[#e8d9c5] text-[#171310] font-extrabold text-sm py-3.5 rounded-xl shadow-lg shadow-black/25 transition flex items-center justify-center gap-2">
                 <i class="fa-solid fa-users"></i> Validar Código e Entrar na Equipe
               </button>
             </form>
@@ -553,8 +553,8 @@
           </div>
           <div class="leading-none">
             <div class="flex items-center gap-1.5">
-              <span class="text-sm font-black tracking-widest text-white">ALR<span class="text-[#e2c799]">I</span>S</span>
-              <span id="topPlanBadge" class="text-[8px] bg-[#e2c799]/15 text-[#ead5b3] font-bold px-1.5 py-0.5 rounded border border-[#e2c799]/25 whitespace-nowrap">STARTER (1/1)</span>
+              <span class="text-sm font-black tracking-widest text-white">ALR<span class="text-cyan-400">I</span>S</span>
+              <span id="topPlanBadge" class="text-[8px] bg-cyan-400/15 text-cyan-300 font-bold px-1.5 py-0.5 rounded border border-[#e2c799]/25 whitespace-nowrap">STARTER (1/1)</span>
             </div>
             <span class="text-[7px] text-slate-400 font-semibold tracking-wider uppercase block mt-0.5">CANAL DE ATENDIMENTO</span>
           </div>
@@ -562,12 +562,12 @@
 
         <!-- Pílula Unificada e Elegante: Equipe Ativa + Botão Convidar c/ Código -->
         <div class="hidden md:flex items-center bg-[#141d30] rounded-full p-1 pl-2.5 border border-slate-700/70 gap-1.5 whitespace-nowrap">
-          <span class="w-1.5 h-1.5 rounded-full bg-[#e2c799]"></span>
+          <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
           <span class="text-slate-300 font-semibold text-[10px]">Equipe (<span id="teamCountLabel">1/1</span>)</span>
           <div id="activeTeamAvatars" class="flex items-center -space-x-1">
             <span class="w-5 h-5 rounded-full bg-blue-600 text-white font-bold text-[9px] flex items-center justify-center ring-1 ring-slate-900" title="Rafael (Você) - Online">RC</span>
           </div>
-          <button onclick="openTeamInviteModal()" class="px-2 py-0.5 rounded-full bg-blue-600/20 hover:bg-blue-600/35 text-[#ead5b3] border border-[#e2c799]/25 text-[10px] font-bold transition flex items-center gap-1" title="Convidar membro por código de acesso">
+          <button onclick="openTeamInviteModal()" class="px-2 py-0.5 rounded-full bg-blue-600/20 hover:bg-blue-600/35 text-cyan-300 border border-[#e2c799]/25 text-[10px] font-bold transition flex items-center gap-1" title="Convidar membro por código de acesso">
             <i class="fa-solid fa-user-plus text-[8px]"></i> Código
           </button>
         </div>
@@ -582,7 +582,7 @@
 
         <div class="flex items-center gap-1">
           <button onclick="toggleRealMicrophone()" id="realMicBtn" class="px-2 py-0.5 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-[10px] transition flex items-center gap-1">
-            <i class="fa-solid fa-microphone text-[#e2c799] text-[9px]"></i> <span id="realMicText">Microfone</span>
+            <i class="fa-solid fa-microphone text-cyan-400 text-[9px]"></i> <span id="realMicText">Microfone</span>
           </button>
           <button onclick="toggleCallRecording()" id="btnRecordCall" class="px-2 py-0.5 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-[10px] transition flex items-center gap-1">
             <span id="recordDot" class="w-1.5 h-1.5 rounded-full bg-slate-400"></span> <span id="recordBtnText">Gravar</span>
@@ -602,7 +602,7 @@
         </div>
 
         <!-- Botão "+ Novo Chamado" -->
-        <button onclick="openNewTicketModal()" class="px-3 py-1.5 rounded-full bg-emerald-500 hover:bg-[#e2c799] text-slate-950 font-extrabold text-[10px] shadow-md transition flex items-center gap-1 whitespace-nowrap">
+        <button onclick="openNewTicketModal()" class="px-3 py-1.5 rounded-full bg-emerald-500 hover:bg-cyan-400 text-slate-950 font-extrabold text-[10px] shadow-md transition flex items-center gap-1 whitespace-nowrap">
           <i class="fa-solid fa-plus text-[9px]"></i> Novo Chamado
         </button>
 
@@ -1086,7 +1086,7 @@
                 <div class="relative pt-2 pb-1">
                   <!-- Tooltip Escura Flutuante sobre o Ponto Final -->
                   <div id="waveTooltipBadge" class="absolute right-2 top-1 bg-[#0f172a] text-white text-[10px] font-bold px-2.5 py-1 rounded-lg shadow-lg flex items-center gap-1 z-10">
-                    <i class="fa-solid fa-arrow-trend-up text-[#e2c799] text-[9px]"></i> <span id="live3DScoreCurrent">78% Positivo</span>
+                    <i class="fa-solid fa-arrow-trend-up text-cyan-400 text-[9px]"></i> <span id="live3DScoreCurrent">78% Positivo</span>
                   </div>
 
                   <div class="flex items-center">
@@ -1217,17 +1217,17 @@
 
           <!-- Pro Growth -->
           <div class="p-5 rounded-2xl border-2 border-[#00a859] bg-[#071a12] text-white flex flex-col justify-between shadow-lg relative">
-            <span class="absolute -top-2.5 right-4 bg-[#e2c799] text-slate-950 font-black text-[9px] uppercase px-2.5 py-0.5 rounded-full">
+            <span class="absolute -top-2.5 right-4 bg-cyan-400 text-slate-950 font-black text-[9px] uppercase px-2.5 py-0.5 rounded-full">
               Mais Escolhido
             </span>
             <div>
-              <span class="text-[10px] font-bold text-[#e2c799] uppercase">Plano Pro Growth</span>
+              <span class="text-[10px] font-bold text-cyan-400 uppercase">Plano Pro Growth</span>
               <div class="text-2xl font-black text-white mono my-2">R$ 299<span class="text-xs font-normal text-slate-300">/mês</span></div>
               <ul class="space-y-1.5 text-[11px] text-slate-200 mt-3">
-                <li><i class="fa-solid fa-check text-[#e2c799] mr-1"></i> Até 5 Membros com Código</li>
-                <li><i class="fa-solid fa-check text-[#e2c799] mr-1"></i> Copiloto Gemini ao Vivo nas Calls</li>
-                <li><i class="fa-solid fa-check text-[#e2c799] mr-1"></i> Gráfico 3D de Sentimento & Risco</li>
-                <li><i class="fa-solid fa-check text-[#e2c799] mr-1"></i> Disparo de Contrato no WhatsApp</li>
+                <li><i class="fa-solid fa-check text-cyan-400 mr-1"></i> Até 5 Membros com Código</li>
+                <li><i class="fa-solid fa-check text-cyan-400 mr-1"></i> Copiloto Gemini ao Vivo nas Calls</li>
+                <li><i class="fa-solid fa-check text-cyan-400 mr-1"></i> Gráfico 3D de Sentimento & Risco</li>
+                <li><i class="fa-solid fa-check text-cyan-400 mr-1"></i> Disparo de Contrato no WhatsApp</li>
               </ul>
             </div>
             <button onclick="openPaymentCheckout('Plano Pro Growth', '299,00', 5)" class="mt-5 w-full py-2.5 rounded-xl bg-[#00a859] hover:bg-emerald-500 text-white font-extrabold transition shadow flex items-center justify-center gap-1.5">
@@ -1270,11 +1270,11 @@
           <!-- Resumo do Pedido (Coluna Esquerda - 5 cols) -->
           <div class="lg:col-span-5 bg-slate-900 text-white rounded-2xl p-5 flex flex-col justify-between border border-slate-800">
             <div>
-              <span class="text-[10px] font-bold text-[#e2c799] uppercase tracking-wider">Resumo da Assinatura</span>
+              <span class="text-[10px] font-bold text-cyan-400 uppercase tracking-wider">Resumo da Assinatura</span>
               <h4 id="checkoutPlanTitle" class="text-xl font-black text-white mt-1">Plano Pro Growth</h4>
               <div class="my-4 pb-4 border-b border-slate-800 flex items-baseline gap-1">
                 <span class="text-sm text-slate-400 font-bold">R$</span>
-                <span id="checkoutPlanPrice" class="text-4xl font-black text-[#e2c799] mono">299,00</span>
+                <span id="checkoutPlanPrice" class="text-4xl font-black text-cyan-400 mono">299,00</span>
                 <span class="text-xs text-slate-400">/mês</span>
               </div>
 
@@ -1285,7 +1285,7 @@
                 </div>
                 <div class="flex justify-between">
                   <span class="text-slate-400">Código de Convite da Empresa:</span>
-                  <strong class="text-[#e2c799] mono">CONV-8842-TEAM</strong>
+                  <strong class="text-cyan-400 mono">CONV-8842-TEAM</strong>
                 </div>
                 <div class="flex justify-between">
                   <span class="text-slate-400">Liberação do Painel & IA:</span>
@@ -1295,7 +1295,7 @@
             </div>
 
             <div class="mt-6 pt-4 border-t border-slate-800 text-[11px] text-slate-400 space-y-1">
-              <div class="flex items-center gap-2 text-[#ead5b3] font-bold">
+              <div class="flex items-center gap-2 text-cyan-300 font-bold">
                 <i class="fa-solid fa-bolt"></i> Ativação Automática de Vagas
               </div>
               <p>Assim que você confirmar o pagamento ao lado, o limite da sua equipe e o Copiloto Gemini 3D são atualizados na hora.</p>
@@ -1449,12 +1449,12 @@
       <!-- Código de Acesso Exclusivo para Convite -->
       <div class="p-4 rounded-2xl bg-[#0c1322] text-white mb-4 border border-slate-800">
         <div class="flex items-center justify-between mb-1.5">
-          <span class="text-[10px] font-bold text-[#ead5b3] uppercase tracking-wider">Código de Acesso ALRIS para Convidar Equipe:</span>
-          <span class="text-[10px] text-[#e2c799] font-mono">● Ativo</span>
+          <span class="text-[10px] font-bold text-cyan-300 uppercase tracking-wider">Código de Acesso ALRIS para Convidar Equipe:</span>
+          <span class="text-[10px] text-cyan-400 font-mono">● Ativo</span>
         </div>
         <div class="flex items-center justify-between bg-slate-950 p-3 rounded-xl border border-slate-800">
           <span id="teamInviteCodeDisplay" class="mono text-lg font-black tracking-widest text-white">ALRIS-8842-TEAM</span>
-          <button onclick="copyInviteCode()" id="btnCopyCode" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-[#f5efe6] to-[#dec8a6] hover:from-white hover:to-[#e8d9c5] text-[#171310] font-bold text-xs transition flex items-center gap-1.5">
+          <button onclick="copyInviteCode()" id="btnCopyCode" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-slate-100 to-slate-200 hover:from-white hover:to-[#e8d9c5] text-[#171310] font-bold text-xs transition flex items-center gap-1.5">
             <i class="fa-regular fa-copy"></i> Copiar Código
           </button>
         </div>
@@ -1607,7 +1607,7 @@
       <!-- Visor do Número com Botão de Copiar Rápido -->
       <div class="p-3.5 rounded-2xl bg-[#0b1120] text-white mb-4 flex items-center justify-between border border-slate-800">
         <div>
-          <span class="text-[9px] text-[#e2c799] font-bold uppercase tracking-wider block">Número do Cliente (Pronto p/ Discar):</span>
+          <span class="text-[9px] text-cyan-400 font-bold uppercase tracking-wider block">Número do Cliente (Pronto p/ Discar):</span>
           <span id="dialerPhoneDisplay" class="mono text-lg font-black text-white">+5511987654321</span>
         </div>
         <button type="button" onclick="copyClientPhone()" id="btnCopyModalPhone" class="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition flex items-center gap-1.5 shadow">
