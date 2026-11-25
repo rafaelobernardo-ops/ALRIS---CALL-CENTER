@@ -1,0 +1,2683 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ALRIS — Canal de Atendimento, Processos em Kanban & Copiloto IA</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    .pipefy-card { background: #ffffff; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05); transition: all 0.2s ease; }
+    .pipefy-card:hover { border-color: #6366f1; box-shadow: 0 6px 14px -2px rgba(99, 102, 241, 0.16); transform: translateY(-1px); }
+    .custom-scroll::-webkit-scrollbar { width: 5px; height: 5px; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .waveform-bar { animation: soundWave 1s ease-in-out infinite alternate; }
+    @keyframes soundWave {
+      0% { height: 4px; }
+      100% { height: 22px; }
+    }
+    /* Animações 3D Suaves & Objeto 3D Guiado pelo Scroll */
+    .scene-3d { perspective: 1200px; }
+    .card-3d-float {
+      transform-style: preserve-3d;
+      animation: float3d 6s ease-in-out infinite;
+    }
+    .orb-3d-spin {
+      animation: orbSpin 14s linear infinite;
+    }
+    .logo-3d-pulse {
+      animation: logoFloat 4s ease-in-out infinite;
+    }
+    .alris-3d-stage {
+      transform-style: preserve-3d;
+      transition: transform 0.12s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease;
+    }
+    .alris-ring-1 {
+      animation: ringSpin3D 12s linear infinite;
+    }
+    .alris-ring-2 {
+      animation: ringSpinReverse3D 16s linear infinite;
+    }
+    @keyframes ringSpin3D {
+      0% { transform: rotateX(68deg) rotateY(12deg) rotateZ(0deg); }
+      100% { transform: rotateX(68deg) rotateY(12deg) rotateZ(360deg); }
+    }
+    @keyframes ringSpinReverse3D {
+      0% { transform: rotateX(-55deg) rotateY(28deg) rotateZ(360deg); }
+      100% { transform: rotateX(-55deg) rotateY(28deg) rotateZ(0deg); }
+    }
+    @keyframes float3d {
+      0%, 100% { transform: rotateX(8deg) rotateY(-10deg) translateY(0px); }
+      50% { transform: rotateX(2deg) rotateY(8deg) translateY(-14px); }
+    }
+    @keyframes orbSpin {
+      0% { transform: rotateZ(0deg) rotateX(65deg); }
+      100% { transform: rotateZ(360deg) rotateX(65deg); }
+    }
+    @keyframes logoFloat {
+      0%, 100% { transform: translateY(0) rotateY(0deg); }
+      50% { transform: translateY(-2px) rotateY(10deg); }
+    }
+  </style>
+</head>
+<body class="h-full flex flex-col bg-[#f4f6fa] text-slate-800 antialiased selection:bg-indigo-600 selection:text-white">
+
+  <!-- ====================================================================== -->
+  <!-- ETAPA 1: PÁGINA INICIAL PÚBLICA (PALETA ALRIS + OBJETO 3D NO SCROLL)   -->
+  <!-- ====================================================================== -->
+  <div id="view-landing" onscroll="handleLandingScroll3D(this)" class="flex-1 overflow-y-auto bg-white relative">
+
+    <!-- OBJETO 3D INTERATIVO ALRIS QUE ACOMPANHA O SCROLL ATÉ ANTES DOS PLANOS -->
+    <div id="scroll3DCompanion" class="hidden xl:flex fixed right-7 top-28 z-30 pointer-events-none flex-col items-center alris-3d-stage">
+      <div class="relative w-28 h-28 flex items-center justify-center">
+        <!-- Halo Luminoso Ciano/Violeta -->
+        <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-cyan-400/30 via-blue-500/25 to-purple-600/30 blur-xl animate-pulse"></div>
+        <!-- Anel Orbital 3D 1 -->
+        <div class="absolute inset-1 rounded-full border-2 border-cyan-400/50 alris-ring-1"></div>
+        <!-- Anel Orbital 3D 2 -->
+        <div class="absolute inset-3 rounded-full border-2 border-purple-500/50 alris-ring-2"></div>
+        <!-- Núcleo Cristalino 3D com o Símbolo Vetorial ALRIS -->
+        <div id="scroll3DCoreCube" class="relative w-16 h-16 rounded-2xl bg-[#0c1322]/95 border border-cyan-400/60 shadow-[0_0_30px_rgba(34,211,238,0.45)] flex items-center justify-center p-2.5 backdrop-blur-md">
+          <svg viewBox="0 0 64 64" class="w-full h-full drop-shadow-[0_0_8px_rgba(56,189,248,0.6)]" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 48 L26 15 C28.5 9.5 34.5 9.5 37 15 L44 31" stroke="url(#alrisGrad1)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M14 50 C20 50 28 38 35 31 C41 25 52 27 53 36 C54 43 49 47 46 49 L47 55 L40 51 C35 52 28 49 26 42 C25 36 29 30 33 28" stroke="url(#alrisGrad1)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+      <span id="scroll3DStageLabel" class="mt-1.5 px-2.5 py-0.5 rounded-full bg-[#0c1322]/90 text-cyan-300 border border-cyan-400/30 font-mono font-bold text-[9px] uppercase tracking-wider shadow-md">
+        ALRIS 3D • Tour Ativo
+      </span>
+    </div>
+    
+    <!-- Navbar Oficial ALRIS com as Cores da Nova Logotipo (#0c1322 + Ciano/Azul/Violeta) -->
+    <header class="h-18 py-3 bg-[#0c1322] text-white px-6 lg:px-12 flex items-center justify-between border-b border-slate-800/80 sticky top-0 z-40 shrink-0 shadow-lg">
+      <div class="flex items-center gap-3.5 cursor-pointer group" onclick="goToView('landing')">
+        <!-- Logotipo Oficial ALRIS (Símbolo Vetorial A + Balão Ciano/Violeta + Tipografia ALRIS) -->
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-2xl bg-[#111b30] border border-cyan-400/30 shadow-md shadow-indigo-500/20 flex items-center justify-center p-1.5">
+            <svg viewBox="0 0 64 64" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="alrisGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#22d3ee" />
+                  <stop offset="55%" stop-color="#3b82f6" />
+                  <stop offset="100%" stop-color="#8b5cf6" />
+                </linearGradient>
+              </defs>
+              <!-- Traço em A arredondado + Balão de Atendimento entrelaçado -->
+              <path d="M12 48 L26 15 C28.5 9.5 34.5 9.5 37 15 L44 31" stroke="url(#alrisGrad1)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M14 50 C20 50 28 38 35 31 C41 25 52 27 53 36 C54 43 49 47 46 49 L47 55 L40 51 C35 52 28 49 26 42 C25 36 29 30 33 28" stroke="url(#alrisGrad1)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xl font-black tracking-widest text-white leading-none">ALR<span class="text-cyan-400">I</span>S</span>
+              <span class="text-[9px] bg-gradient-to-r from-cyan-500/20 to-purple-500/20 text-cyan-300 font-extrabold px-2 py-0.5 rounded-full border border-cyan-400/30">IA</span>
+            </div>
+            <p class="text-[10px] text-blue-300/80 font-bold tracking-[0.16em] uppercase mt-0.5">CANAL DE ATENDIMENTO</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Links de Âncora da Própria Página Inicial -->
+      <nav class="hidden md:flex items-center gap-8 text-xs font-bold text-slate-300">
+        <a href="#prints-reais" class="hover:text-cyan-400 transition">Tour Visual</a>
+        <a href="#como-funciona" class="hover:text-cyan-400 transition">Como Funciona</a>
+        <a href="#recursos" class="hover:text-cyan-400 transition">Recursos</a>
+        <a href="#planos" class="hover:text-cyan-400 transition">Planos Mensais</a>
+      </nav>
+
+      <!-- Botões de Login (Sou Admin / Sou Equipe c/ Código) e Teste com Gradiente ALRIS -->
+      <div class="flex items-center gap-3">
+        <button onclick="goToView('login')" class="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white border border-white/15 font-extrabold text-xs transition flex items-center gap-2">
+          <i class="fa-solid fa-arrow-right-to-bracket text-cyan-400"></i> Entrar (Admin / Equipe)
+        </button>
+        <a href="#planos" class="hidden sm:flex px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white font-extrabold text-xs shadow-lg shadow-indigo-500/30 transition items-center gap-1.5">
+          Começar Agora &rarr;
+        </a>
+      </div>
+    </header>
+
+    <!-- 1.1 HERO SECTION COM CORES VIBRANTES DA MARCA ALRIS & ANIMAÇÃO 3D -->
+    <section class="bg-gradient-to-br from-[#eef6ff] via-[#f5f3ff] to-[#ecfeff] text-slate-900 pt-14 pb-16 px-6 lg:px-12 relative overflow-hidden shrink-0 border-b border-indigo-100">
+      <!-- Luzes coloridas suaves da marca ALRIS (Ciano #22d3ee, Azul #3b82f6 e Violeta #8b5cf6) -->
+      <div class="absolute -top-24 left-10 w-96 h-72 bg-cyan-400/20 rounded-full blur-[100px] pointer-events-none"></div>
+      <div class="absolute top-12 right-12 w-96 h-72 bg-purple-500/20 rounded-full blur-[110px] pointer-events-none"></div>
+
+      <div class="max-w-5xl mx-auto text-center relative z-10">
+        <!-- Pílula Superior Colorida da Marca -->
+        <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/90 border border-cyan-300/80 text-xs font-extrabold text-indigo-900 mb-6 shadow-sm backdrop-blur-md">
+          <span class="w-2 h-2 rounded-full bg-gradient-to-r from-cyan-400 to-purple-600 animate-ping"></span>
+          <span>ALRIS • Canal de Atendimento, Ligação VoIP, WhatsApp, Kanban & Copiloto IA</span>
+        </div>
+
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.1] text-slate-950 max-w-4xl mx-auto">
+          Seu Canal de Atendimento Inteligente para <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600">Gerenciar Equipes e Converter Vendas com IA</span>
+        </h1>
+
+        <p class="mt-5 text-sm sm:text-base text-slate-600 leading-relaxed font-normal max-w-2xl mx-auto">
+          Centralize sua operação na <strong>ALRIS</strong> com login isolado para <strong>Administrador</strong> e acesso rápido por <strong>Código de Convite para a Equipe</strong>. Organize clientes em colunas Kanban e atenda com nosso Copiloto de IA que escuta a chamada e monitora o sentimento ao vivo.
+        </p>
+
+        <!-- CTAs Principais Sóbrios e Elegantes -->
+        <div class="mt-8 flex flex-wrap items-center justify-center gap-3.5">
+          <button onclick="goToView('login'); switchLoginMode('admin');" class="px-7 py-4 rounded-2xl bg-[#0c1322] hover:bg-slate-800 text-white font-extrabold text-sm shadow-lg shadow-slate-900/15 transition flex items-center gap-2.5">
+            <i class="fa-solid fa-building-user text-cyan-400"></i> Acessar Painel (Sou Administrador)
+          </button>
+
+          <button onclick="goToView('login'); switchLoginMode('team');" class="px-6 py-4 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-sm shadow-md shadow-blue-600/20 transition flex items-center gap-2">
+            <i class="fa-solid fa-ticket"></i> Entrar com Código de Equipe
+          </button>
+
+          <a href="#planos" class="px-6 py-4 rounded-2xl bg-white hover:bg-slate-50 border border-slate-300 text-slate-800 font-bold text-sm transition flex items-center gap-2 shadow-sm">
+            <i class="fa-solid fa-credit-card text-blue-600"></i> Ver Planos & Preços
+          </a>
+        </div>
+
+        <!-- Badges de Confiança -->
+        <div class="mt-7 flex flex-wrap items-center justify-center gap-6 text-xs text-slate-500 font-semibold">
+          <span class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-blue-600"></i> Login Admin & Código de Equipe</span>
+          <span class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-blue-600"></i> Ligação Normal no PC + WhatsApp</span>
+          <span class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-blue-600"></i> Telemetria & Sentimento ao Vivo</span>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 1.2 SEÇÃO ESTILO PERISKOPE: VITRINE COM OS PRINTS REAIS DAS PÁGINAS QUE CRIAMOS AQUI -->
+    <section id="prints-reais" class="py-20 px-6 max-w-6xl mx-auto space-y-20">
+      <div class="text-center max-w-3xl mx-auto">
+        <span class="text-xs font-extrabold text-indigo-700 uppercase tracking-widest bg-indigo-50 px-3.5 py-1.5 rounded-full border border-indigo-200">
+          Interfaces Reais da Plataforma ALRIS
+        </span>
+        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mt-3">
+          Veja por Dentro as Telas do Sistema que Você Vai Usar
+        </h2>
+        <p class="text-sm text-slate-600 mt-2">
+          Confira abaixo os prints reais das páginas da <strong>ALRIS — Canal de Atendimento</strong> criadas para o seu administrador e sua equipe.
+        </p>
+      </div>
+
+      <!-- Bloco Visual 1: Console de Atendimento ao Vivo + Telemetria & Sentimento -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+        <div class="lg:col-span-5 space-y-4">
+          <span class="px-3 py-1 rounded-full bg-cyan-50 text-cyan-800 border border-cyan-200 font-extrabold text-[11px] uppercase">
+            1. Console de Atendimento & Copiloto IA
+          </span>
+          <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-tight">
+            Atendimento ao Vivo por Voz e WhatsApp com Telemetria de Conversão
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            Ao abrir o atendimento de um cliente, sua equipe conta com o perfil completo do lead, controle de chamada no topo, transcrição em tempo real, sugestões instantâneas do Copiloto IA e o gráfico de sentimento da conversa ao vivo.
+          </p>
+          <ul class="space-y-2 text-xs text-slate-700 font-semibold pt-1">
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check-circle text-blue-600"></i> Principal Dor do cliente extraída automaticamente pela IA</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check-circle text-indigo-600"></i> 3 abordagens prontas para contornar objeções na hora</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check-circle text-purple-600"></i> Anel de probabilidade de conversão e envio de contrato no WhatsApp</li>
+          </ul>
+          <div class="pt-2">
+            <button onclick="goToView('login')" class="px-5 py-3 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white font-extrabold text-xs shadow-md transition">
+              Testar Console Ao Vivo Agora &rarr;
+            </button>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7">
+          <div class="rounded-2xl bg-[#0c1322] p-2.5 shadow-2xl border border-indigo-200">
+            <img src="prints/print-callcenter-3d.png" alt="Print Real Console de Atendimento ALRIS" class="w-full h-auto rounded-xl">
+          </div>
+        </div>
+      </div>
+
+      <!-- Bloco Visual 2: Quadro Kanban de Processos com os Clientes -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+        <div class="lg:col-span-7 order-2 lg:order-1">
+          <div class="rounded-2xl bg-[#0c1322] p-2.5 shadow-2xl border border-indigo-200">
+            <img src="prints/print-kanban-alris.png" alt="Print Real Quadro Kanban de Processos com Clientes ALRIS" class="w-full h-auto rounded-xl">
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 space-y-4 order-1 lg:order-2">
+          <span class="px-3 py-1 rounded-full bg-purple-100 text-purple-800 border border-purple-200 font-extrabold text-[11px] uppercase">
+            2. Gestão de Processos & Pipeline de Clientes
+          </span>
+          <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-tight">
+            Acompanhe Cada Cliente em Todas as Etapas do Processo no Kanban
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            Visualize e organize todos os seus clientes em 4 etapas claras: <strong>1. Entrada & Triagem</strong>, <strong>2. Proposta & Negociação</strong>, <strong>3. Desenvolvimento</strong> e <strong>4. Entregue (Go-Live)</strong>. Basta clicar em qualquer card para abrir a conversa e o histórico daquele cliente.
+          </p>
+          <ul class="space-y-2 text-xs text-slate-700 font-semibold pt-1">
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check-circle text-blue-600"></i> Cards 100% clicáveis da triagem até a entrega final e pós-venda</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check-circle text-indigo-600"></i> Controle de responsável, SLA de atendimento e progresso do projeto</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check-circle text-purple-600"></i> Equipe sincronizada por código de convite (<code class="bg-slate-100 px-1.5 py-0.5 rounded font-mono font-bold text-indigo-700">ALRIS-8842-TEAM</code>)</li>
+          </ul>
+          <div class="pt-2 flex flex-wrap gap-2">
+            <button onclick="goToView('login'); switchLoginMode('admin');" class="px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs shadow-md transition">
+              Acessar Quadro de Processos
+            </button>
+            <button onclick="goToView('login'); switchLoginMode('team');" class="px-4 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-extrabold text-xs border border-slate-300 transition">
+              Entrar como Equipe
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1.3 COMO FUNCIONA O APLICATIVO (PASSO A PASSO SEQUENCIAL) -->
+    <section id="como-funciona" class="py-16 px-6 max-w-6xl mx-auto border-t border-slate-200">
+      <div class="text-center max-w-3xl mx-auto mb-12">
+        <span class="text-xs font-extrabold text-blue-700 uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
+          Jornada Dentro da ALRIS
+        </span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-3">
+          Como Funciona o Fluxo de Trabalho?
+        </h2>
+        <p class="text-sm text-slate-600 mt-2">
+          Uma experiência limpa e sequencial: você faz login, visualiza seus processos no Kanban e abre o atendimento inteligente de qualquer etapa com um clique.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm relative">
+          <div class="w-10 h-10 rounded-xl bg-cyan-600 text-white font-black text-sm flex items-center justify-center mb-4 shadow">1</div>
+          <h3 class="text-base font-bold text-slate-900 mb-2">Login Admin ou Código</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            O administrador entra com seu e-mail corporativo e libera o código da empresa para a equipe entrar rapidamente sem burocracia.
+          </p>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm relative">
+          <div class="w-10 h-10 rounded-xl bg-blue-600 text-white font-black text-sm flex items-center justify-center mb-4 shadow">2</div>
+          <h3 class="text-base font-bold text-slate-900 mb-2">Kanban 100% Clicável</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Crie chamados com Raio-X por link ou clique em qualquer card (inclusive em <strong>Desenvolvimento</strong> e <strong>Entregue</strong>) para abrir a conversa do cliente.
+          </p>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm relative">
+          <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white font-black text-sm flex items-center justify-center mb-4 shadow">3</div>
+          <h3 class="text-base font-bold text-slate-900 mb-2">Ligue & Monitore em 3D</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Inicie uma <strong>Ligação Normal</strong> no computador ou pelo <strong>WhatsApp</strong> com gráfico 3D de sentimento ao vivo e 3 sugestões do que falar.
+          </p>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm relative">
+          <div class="w-10 h-10 rounded-xl bg-purple-600 text-white font-black text-sm flex items-center justify-center mb-4 shadow">4</div>
+          <h3 class="text-base font-bold text-slate-900 mb-2">Envio de Contrato no Whats</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Quando o cliente aceita a proposta, basta clicar no botão de fechamento para disparar o contrato pronto no WhatsApp dele e avançar o projeto.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 1.4 RECURSOS DA PLATAFORMA -->
+    <section id="recursos" class="py-16 px-6 bg-slate-50 border-y border-slate-200">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center max-w-3xl mx-auto mb-12">
+          <span class="text-xs font-extrabold text-purple-700 uppercase tracking-widest bg-purple-50 px-3 py-1 rounded-full border border-purple-200">
+            Diferenciais Tecnológicos ALRIS
+          </span>
+          <h2 class="text-3xl font-extrabold text-slate-900 mt-3">
+            Ferramentas Criadas para Multiplicar seus Fechamentos
+          </h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm">
+            <div class="w-12 h-12 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center text-xl mb-4 border border-cyan-200">
+              <i class="fa-solid fa-ear-listen"></i>
+            </div>
+            <h3 class="text-base font-bold text-slate-900 mb-2">Escuta Ativa com Google Gemini</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              Transcreve a fala do cliente ao vivo e detecta pausas, hesitações e objeções de preço ou prazo no exato segundo em que acontecem.
+            </p>
+          </div>
+
+          <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm">
+            <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl mb-4 border border-blue-200">
+              <i class="fa-solid fa-chart-column"></i>
+            </div>
+            <h3 class="text-base font-bold text-slate-900 mb-2">Gráfico 3D de Sentimento Clean</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              Acompanhe a probabilidade de fechamento subindo ou caindo de 0% a 100% em barras 3D modernas com alerta visual quando a venda entra em risco.
+            </p>
+          </div>
+
+          <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm">
+            <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-xl mb-4 border border-purple-200">
+              <i class="fa-solid fa-sliders"></i>
+            </div>
+            <h3 class="text-base font-bold text-slate-900 mb-2">Playbooks & Argumentos Dinâmicos</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              Alterne com 1 clique entre argumentos de parcelamento em 3x sem juros, garantia de alta velocidade ou escopo enxuto para converter na hora.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1.5 PLANOS DE ASSINATURA MENSAL COM ESTRATÉGIA ATUALIZADA E PÁGINA DE PAGAMENTO -->
+    <section id="planos" class="py-16 px-6 bg-white border-b border-slate-200">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center max-w-3xl mx-auto mb-12">
+          <span class="text-xs font-extrabold text-indigo-700 uppercase tracking-widest bg-indigo-50 px-3 py-1 rounded-full border border-indigo-200">
+            Planos & Checkout Transparente ALRIS
+          </span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-3">
+            Escolha o Plano Ideal para o Tamanho da Sua Equipe
+          </h2>
+          <p class="text-sm text-slate-600 mt-2">
+            Ao selecionar qualquer plano abaixo, você abre nossa <strong>Página de Pagamento Segura (Pix QR Code ou Cartão)</strong> com liberação automática das vagas da equipe.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+          
+          <!-- Plano 1: Starter -->
+          <div class="bg-slate-50 rounded-3xl p-7 border border-slate-200 shadow-sm flex flex-col justify-between">
+            <div>
+              <span class="text-xs font-extrabold text-cyan-700 uppercase tracking-wider">Plano Starter</span>
+              <h3 class="text-xl font-extrabold text-slate-900 mt-1">Individual & Autônomo</h3>
+              <p class="text-xs text-slate-500 mt-1">Ideal para começar com 1 canal de atendimento e Kanban completo.</p>
+              <div class="my-6 flex items-baseline gap-1">
+                <span class="text-sm font-bold text-slate-500">R$</span>
+                <span class="text-4xl font-black text-slate-900 mono">149</span>
+                <span class="text-xs text-slate-500 font-semibold">/mês</span>
+              </div>
+              <ul class="space-y-3 text-xs text-slate-700 border-t border-slate-200 pt-5">
+                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-600"></i> <strong>1 Usuário (Admin)</strong> ativo</li>
+                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-600"></i> 1 Canal WhatsApp conectado</li>
+                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-600"></i> Quadro Kanban de Processos ilimitado</li>
+                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-600"></i> Raio-X de Clientes por Link Social</li>
+                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-600"></i> Envio de Contrato rápido no WhatsApp</li>
+              </ul>
+            </div>
+            <button onclick="openPaymentCheckout('Plano Starter', '149,00', 1)" class="mt-8 w-full py-3.5 rounded-xl bg-white hover:bg-slate-100 text-slate-900 border border-slate-300 font-extrabold text-xs transition shadow-sm flex items-center justify-center gap-2">
+              <i class="fa-solid fa-lock text-blue-600"></i> Selecionar Starter & Ir p/ Pagamento
+            </button>
+          </div>
+
+          <!-- Plano 2: Growth / Pro Team (Nas Cores da Logo ALRIS) -->
+          <div class="bg-[#0c1322] text-white rounded-3xl p-7 border-2 border-cyan-400 shadow-2xl flex flex-col justify-between relative transform md:-translate-y-2">
+            <span class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 text-white font-black text-[10px] uppercase tracking-wider px-4 py-1 rounded-full shadow">
+              Mais Popular • Equipe & IA
+            </span>
+            <div>
+              <span class="text-xs font-bold text-cyan-400 uppercase tracking-wider">Plano Pro Growth</span>
+              <h3 class="text-xl font-extrabold text-white mt-1">Equipes & Copiloto Ao Vivo</h3>
+              <p class="text-xs text-slate-300 mt-1">Acesso por código para a equipe e IA escutando chamadas em tempo real.</p>
+              <div class="my-6 flex items-baseline gap-1">
+                <span class="text-sm font-bold text-slate-300">R$</span>
+                <span class="text-4xl font-black text-white mono">299</span>
+                <span class="text-xs text-slate-300 font-semibold">/mês</span>
+              </div>
+              <ul class="space-y-3 text-xs text-slate-200 border-t border-slate-800 pt-5">
+                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-cyan-400"></i> <strong>Até 5 Membros na Equipe</strong> via Código</li>
+                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-cyan-400"></i> <strong>Copiloto Gemini ao Vivo</strong> nas chamadas</li>
+                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-cyan-400"></i> <strong>Gráfico 3D de Sentimento</strong> e Alerta de Risco</li>
+                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-cyan-400"></i> Sugestões automáticas de quebra de objeção</li>
+                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-cyan-400"></i> Ligação Normal no PC + WhatsApp Integrado</li>
+              </ul>
+            </div>
+            <button onclick="openPaymentCheckout('Plano Pro Growth', '299,00', 5)" class="mt-8 w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white font-extrabold text-xs shadow-lg shadow-indigo-500/30 transition flex items-center justify-center gap-2">
+              <i class="fa-solid fa-credit-card"></i> Fazer Upgrade p/ Pro (Página de Pagamento)
+            </button>
+          </div>
+
+          <!-- Plano 3: Scale / Enterprise -->
+          <div class="bg-slate-50 rounded-3xl p-7 border border-slate-200 shadow-sm flex flex-col justify-between">
+            <div>
+              <span class="text-xs font-extrabold text-purple-600 uppercase tracking-wider">Plano Enterprise Scale</span>
+              <h3 class="text-xl font-extrabold text-slate-900 mt-1">Operação Ilimitada</h3>
+              <p class="text-xs text-slate-500 mt-1">Para agências e centrais com múltiplos operadores e canais.</p>
+              <div class="my-6 flex items-baseline gap-1">
+                <span class="text-sm font-bold text-slate-500">R$</span>
+                <span class="text-4xl font-black text-slate-900 mono">699</span>
+                <span class="text-xs text-slate-500 font-semibold">/mês</span>
+              </div>
+              <ul class="space-y-3 text-xs text-slate-700 border-t border-slate-200 pt-5">
+                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-purple-600"></i> <strong>Membros Ilimitados</strong> com Código de Equipe</li>
+                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-purple-600"></i> Múltiplos WhatsApps & Ramais VoIP</li>
+                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-purple-600"></i> Motor <strong>Gemini 4 Argon</strong> Dedicado</li>
+                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-purple-600"></i> Playbooks customizados & API Aberta</li>
+                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-purple-600"></i> Gerente de Conta & SLA VIP</li>
+              </ul>
+            </div>
+            <button onclick="openPaymentCheckout('Plano Enterprise Scale', '699,00', 99)" class="mt-8 w-full py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs transition shadow-sm flex items-center justify-center gap-2">
+              <i class="fa-solid fa-crown text-purple-400"></i> Selecionar Enterprise & Ir p/ Pagamento
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Rodapé Público ALRIS -->
+    <footer class="bg-[#0c1322] text-slate-400 py-8 px-6 text-xs mt-auto border-t border-slate-800">
+      <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <img src="prints/logo-alris.jpg" alt="ALRIS Logo" class="h-8 w-auto rounded-md border border-cyan-500/30">
+          <span class="font-black text-white tracking-wider">ALRIS • CANAL DE ATENDIMENTO</span>
+          <span>• © 2026 Todos os direitos reservados.</span>
+        </div>
+        <button onclick="goToView('login')" class="text-cyan-400 hover:underline font-bold">
+          Acessar Portal (Sou Administrador / Sou Equipe com Código) &rarr;
+        </button>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- ====================================================================== -->
+  <!-- ETAPA 2: PÁGINA DE LOGIN & ASSINATURA (ACESSO AO PAINEL INTERNO ALRIS) -->
+  <!-- ====================================================================== -->
+  <div id="view-login" class="hidden flex-1 flex flex-col bg-gradient-to-br from-[#0c1322] via-[#121d38] to-[#0f172a] overflow-y-auto">
+    
+    <!-- Topo da Tela de Login com Botão de Voltar para a Página Inicial -->
+    <div class="p-6 flex items-center justify-between max-w-6xl w-full mx-auto">
+      <button onclick="goToView('landing')" class="text-xs font-bold text-slate-300 hover:text-white flex items-center gap-2 bg-white/10 px-4 py-2 rounded-xl border border-white/10 transition">
+        <i class="fa-solid fa-arrow-left"></i> Voltar para a Página Inicial
+      </button>
+      <span class="text-xs text-cyan-300 font-semibold"><i class="fa-solid fa-shield-halved mr-1"></i> Ambiente Criptografado SSL • ALRIS</span>
+    </div>
+
+    <div class="flex-1 flex items-center justify-center p-4">
+      <div class="bg-white w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-12 border border-slate-200">
+        
+        <!-- Lado Esquerdo: Resumo do Acesso ALRIS -->
+        <div class="md:col-span-5 bg-[#0c1322] text-white p-8 flex flex-col justify-between border-r border-slate-800">
+          <div>
+            <div class="flex items-center gap-3 mb-6">
+              <img src="prints/logo-alris.jpg" alt="ALRIS Canal de Atendimento" class="h-11 w-auto rounded-xl border border-cyan-400/30 shadow-md shadow-indigo-500/20">
+              <div>
+                <span class="font-black text-base tracking-wider block">ALR<span class="text-cyan-400">I</span>S</span>
+                <span class="text-[10px] text-cyan-300 uppercase tracking-widest font-bold block">Canal de Atendimento</span>
+              </div>
+            </div>
+
+            <div id="selectedPlanBanner" class="hidden mb-4 p-3 rounded-xl bg-cyan-500/20 border border-cyan-400/40 text-xs">
+              <span class="text-[10px] font-bold text-cyan-300 uppercase block">Plano Selecionado:</span>
+              <strong id="selectedPlanText" class="text-white text-sm">Plano Pro Growth - R$ 299/mês</strong>
+            </div>
+
+            <h2 class="text-2xl font-extrabold leading-snug mb-3">
+              Entre para Acessar seu Canal de Atendimento
+            </h2>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Após o login, você será direcionado ao <strong>Quadro Kanban da Equipe</strong>, onde poderá criar novos chamados e clicar em qualquer cliente para abrir o <strong>Atendimento ao Vivo com IA</strong>.
+            </p>
+          </div>
+
+          <div class="space-y-2.5 pt-6 border-t border-slate-800 text-xs">
+            <div class="flex items-center gap-2 text-cyan-400 font-semibold">
+              <i class="fa-solid fa-circle-check"></i>
+              <span>Fluxo Sequencial: Login &rarr; Kanban &rarr; Call IA</span>
+            </div>
+            <div class="flex items-center gap-2 text-purple-300 font-semibold">
+              <i class="fa-solid fa-users"></i>
+              <span>Acesso Isolado p/ Administrador e Equipe</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lado Direito: Seletor Administrador vs Equipe por Código -->
+        <div class="md:col-span-7 p-8 text-xs text-slate-800">
+          
+          <!-- Abas de Escolha: Administrador vs Equipe (Código) -->
+          <div class="grid grid-cols-2 gap-2 p-1 bg-slate-100 rounded-2xl border border-slate-200 mb-6">
+            <button type="button" onclick="switchLoginMode('admin')" id="btnModeAdmin" class="py-2.5 px-3 rounded-xl font-extrabold text-xs bg-blue-600 text-white shadow-sm transition flex items-center justify-center gap-1.5">
+              <i class="fa-solid fa-building-user"></i> Sou Administrador
+            </button>
+            <button type="button" onclick="switchLoginMode('team')" id="btnModeTeam" class="py-2.5 px-3 rounded-xl font-bold text-xs text-slate-600 hover:text-slate-900 transition flex items-center justify-center gap-1.5">
+              <i class="fa-solid fa-ticket"></i> Sou Equipe (Código)
+            </button>
+          </div>
+
+          <!-- MODO 1: LOGIN DO ADMINISTRADOR (DONO DA EMPRESA) -->
+          <div id="loginBoxAdmin">
+            <div class="mb-5">
+              <h3 class="text-lg font-extrabold text-slate-900">Acesso do Administrador da Empresa</h3>
+              <p class="text-xs text-slate-500 mt-0.5">Gerencie seu plano mensal, crie seu código de convite e monitore sua equipe:</p>
+            </div>
+
+            <form onsubmit="handleAdminLogin(event)" class="space-y-3.5">
+              <div>
+                <label class="block font-bold text-slate-700 mb-1">Nome da Sua Empresa *</label>
+                <input type="text" id="adminCompanyInput" required value="Agência Rafael Tech" placeholder="Ex: Minha Agência Web" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 font-semibold focus:outline-none focus:border-blue-600">
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label class="block font-bold text-slate-700 mb-1">Seu Nome (Admin) *</label>
+                  <input type="text" id="adminNameInput" required value="Rafael" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 focus:outline-none focus:border-blue-600">
+                </div>
+                <div>
+                  <label class="block font-bold text-slate-700 mb-1">E-mail Corporativo *</label>
+                  <input type="email" id="loginEmail" required value="rafael@alris.com.br" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 focus:outline-none focus:border-blue-600">
+                </div>
+              </div>
+
+              <div>
+                <label class="block font-bold text-slate-700 mb-1">Senha do Administrador *</label>
+                <input type="password" id="loginPass" required value="12345678" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 focus:outline-none focus:border-blue-600">
+              </div>
+
+              <button type="submit" class="w-full bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white font-extrabold text-sm py-3.5 rounded-xl shadow-lg shadow-indigo-600/20 transition flex items-center justify-center gap-2">
+                <i class="fa-solid fa-lock-open"></i> Entrar como Administrador
+              </button>
+            </form>
+
+            <!-- BOTÃO CONTA DEMO DO ADMINISTRADOR (1 CLIQUE) + CONFIRMAÇÃO DE E-MAIL -->
+            <div class="mt-4 pt-4 border-t border-slate-200 space-y-2">
+              <button type="button" onclick="loginDemoAdmin()" class="w-full py-3 px-4 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-900 border-2 border-indigo-400 font-extrabold text-xs transition flex items-center justify-center gap-2 shadow-sm">
+                <i class="fa-solid fa-bolt text-indigo-600"></i> Acessar Conta Demo Administrador (1 Clique)
+              </button>
+              <button type="button" onclick="sendConfirmationEmailDemo()" id="btnEmailConfirm" class="w-full py-2 px-3 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold text-[11px] transition flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-envelope-circle-check text-blue-600"></i> Enviar Link de Confirmação p/ E-mail Corporativo
+              </button>
+            </div>
+          </div>
+
+          <!-- MODO 2: ACESSO DA EQUIPE (APENAS COM CÓDIGO DE CONVITE!) -->
+          <div id="loginBoxTeam" class="hidden">
+            <div class="mb-5">
+              <span class="text-[10px] font-extrabold uppercase bg-purple-50 text-purple-700 px-2.5 py-0.5 rounded-full border border-purple-200">
+                Acesso Rápido de Funcionário
+              </span>
+              <h3 class="text-lg font-extrabold text-slate-900 mt-1.5">Entrar na Equipe com Código</h3>
+              <p class="text-xs text-slate-500 mt-0.5">Cole o código fornecido pelo administrador da sua empresa para entrar no Kanban:</p>
+            </div>
+
+            <form onsubmit="handleTeamCodeLogin(event)" class="space-y-3.5">
+              <div>
+                <label class="block font-bold text-slate-700 mb-1">Código de Acesso da Empresa *</label>
+                <input type="text" id="teamCodeInput" required value="ALRIS-8842-TEAM" placeholder="Ex: ALRIS-8842-TEAM" class="w-full bg-[#0c1322] text-cyan-300 border-2 border-indigo-500 rounded-xl px-4 py-3 font-mono text-base font-black tracking-widest uppercase text-center focus:outline-none">
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label class="block font-bold text-slate-700 mb-1">Seu Nome *</label>
+                  <input type="text" id="memberLoginName" required value="Lucas Torres" placeholder="Ex: Lucas Torres" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 focus:outline-none focus:border-blue-600">
+                </div>
+                <div>
+                  <label class="block font-bold text-slate-700 mb-1">Sua Função na Equipe</label>
+                  <select id="memberLoginRole" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2.5 text-slate-800 font-semibold focus:outline-none focus:border-blue-600">
+                    <option value="Vendas & Atendimento">Vendas & Atendimento</option>
+                    <option value="Design UI/UX">Design UI/UX</option>
+                    <option value="Desenvolvedor">Desenvolvedor</option>
+                  </select>
+                </div>
+              </div>
+
+              <button type="submit" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-extrabold text-sm py-3.5 rounded-xl shadow-lg shadow-purple-600/20 transition flex items-center justify-center gap-2">
+                <i class="fa-solid fa-users"></i> Validar Código e Entrar na Equipe
+              </button>
+            </form>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================== -->
+  <!-- AMBIENTE RESTRITO (APARECE SOMENTE APÓS O LOGIN!)                      -->
+  <!-- ====================================================================== -->
+  <div id="workspace-shell" class="hidden flex-1 flex flex-col overflow-hidden">
+    
+    <!-- Topbar Exclusiva do Ambiente Logado (ULTRA-FLUIDA, 100% VISÍVEL SEM CORTES) -->
+    <header class="h-16 bg-[#0b1120] text-white px-4 flex items-center justify-between border-b border-slate-800 shrink-0 select-none shadow-md z-40 gap-2">
+      
+      <!-- Esquerda: Logo ALRIS Vetorial + Pílula Unificada de Equipe e Convite -->
+      <div class="flex items-center gap-2.5 shrink-0">
+        <div class="flex items-center gap-2 cursor-pointer group" onclick="goToView('kanban')" title="Ir para o Quadro Kanban">
+          <div class="w-8 h-8 rounded-xl bg-[#131d33] border border-cyan-400/30 flex items-center justify-center p-1 shadow-sm shrink-0">
+            <svg viewBox="0 0 64 64" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="alrisGradTop" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#22d3ee" />
+                  <stop offset="55%" stop-color="#3b82f6" />
+                  <stop offset="100%" stop-color="#8b5cf6" />
+                </linearGradient>
+              </defs>
+              <path d="M12 48 L26 15 C28.5 9.5 34.5 9.5 37 15 L44 31" stroke="url(#alrisGradTop)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M14 50 C20 50 28 38 35 31 C41 25 52 27 53 36 C54 43 49 47 46 49 L47 55 L40 51 C35 52 28 49 26 42 C25 36 29 30 33 28" stroke="url(#alrisGradTop)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="leading-none">
+            <div class="flex items-center gap-1.5">
+              <span class="text-sm font-black tracking-widest text-white">ALR<span class="text-cyan-400">I</span>S</span>
+              <span id="topPlanBadge" class="text-[8px] bg-cyan-500/15 text-cyan-300 font-bold px-1.5 py-0.5 rounded border border-cyan-400/30 whitespace-nowrap">STARTER (1/1)</span>
+            </div>
+            <span class="text-[7px] text-slate-400 font-semibold tracking-wider uppercase block mt-0.5">CANAL DE ATENDIMENTO</span>
+          </div>
+        </div>
+
+        <!-- Pílula Unificada e Elegante: Equipe Ativa + Botão Convidar c/ Código -->
+        <div class="hidden md:flex items-center bg-[#141d30] rounded-full p-1 pl-2.5 border border-slate-700/70 gap-1.5 whitespace-nowrap">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+          <span class="text-slate-300 font-semibold text-[10px]">Equipe (<span id="teamCountLabel">1/1</span>)</span>
+          <div id="activeTeamAvatars" class="flex items-center -space-x-1">
+            <span class="w-5 h-5 rounded-full bg-blue-600 text-white font-bold text-[9px] flex items-center justify-center ring-1 ring-slate-900" title="Rafael (Você) - Online">RC</span>
+          </div>
+          <button onclick="openTeamInviteModal()" class="px-2 py-0.5 rounded-full bg-blue-600/20 hover:bg-blue-600/35 text-cyan-300 border border-cyan-400/30 text-[10px] font-bold transition flex items-center gap-1" title="Convidar membro por código de acesso">
+            <i class="fa-solid fa-user-plus text-[8px]"></i> Código
+          </button>
+        </div>
+      </div>
+
+      <!-- Centro: Cápsula Horizontal Limpa de Atendimento Ao Vivo -->
+      <div class="hidden lg:flex items-center bg-[#141d30] border border-slate-700/80 rounded-full px-2.5 py-1 gap-2 shadow-inner whitespace-nowrap">
+        <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-200 pr-2 border-r border-slate-700/80">
+          <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span>
+          <span id="topCallTimerText" class="mono text-[10px]">Em Atendimento • 04:12</span>
+        </div>
+
+        <div class="flex items-center gap-1">
+          <button onclick="toggleRealMicrophone()" id="realMicBtn" class="px-2 py-0.5 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-[10px] transition flex items-center gap-1">
+            <i class="fa-solid fa-microphone text-cyan-400 text-[9px]"></i> <span id="realMicText">Microfone</span>
+          </button>
+          <button onclick="toggleCallRecording()" id="btnRecordCall" class="px-2 py-0.5 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-[10px] transition flex items-center gap-1">
+            <span id="recordDot" class="w-1.5 h-1.5 rounded-full bg-slate-400"></span> <span id="recordBtnText">Gravar</span>
+          </button>
+          <button onclick="endActiveCall()" id="btnEndCallTop" class="px-2.5 py-0.5 rounded-full bg-rose-600 hover:bg-rose-500 text-white font-bold text-[10px] transition flex items-center gap-1 shadow-sm">
+            <i class="fa-solid fa-phone-slash text-[8px]"></i> Encerrar
+          </button>
+        </div>
+      </div>
+
+      <!-- Direita: Busca Funcional + "+ Novo Chamado" + Perfil Rafael (ADM) 100% Visíveis -->
+      <div class="flex items-center gap-1.5 shrink-0 relative">
+        <!-- Barra de Busca Elegante que filtra os cards do Kanban em tempo real -->
+        <div class="hidden xl:flex items-center bg-[#141d30] focus-within:bg-[#19243b] focus-within:border-cyan-400/50 border border-slate-700/70 rounded-full px-3 py-1 text-xs text-slate-200 w-40 transition">
+          <i class="fa-solid fa-magnifying-glass text-slate-400 mr-1.5 text-[10px]"></i>
+          <input type="text" id="kanbanSearchInput" oninput="filterKanbanCards(this.value)" placeholder="Buscar chamado..." class="bg-transparent border-none focus:outline-none text-[10px] text-white placeholder-slate-400 w-full">
+        </div>
+
+        <!-- Botão "+ Novo Chamado" -->
+        <button onclick="openNewTicketModal()" class="px-3 py-1.5 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-[10px] shadow-md transition flex items-center gap-1 whitespace-nowrap">
+          <i class="fa-solid fa-plus text-[9px]"></i> Novo Chamado
+        </button>
+
+        <!-- Botão de Perfil Rafael (ADM) Unificado -->
+        <div class="relative flex items-center">
+          <button onclick="toggleProfileDropdown()" id="profileMenuBtn" class="flex items-center gap-1.5 bg-[#141d30] hover:bg-slate-800 pl-1 pr-2.5 py-1 rounded-full border border-slate-700/70 transition whitespace-nowrap">
+            <span id="navAvatar" class="w-6 h-6 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-600 text-white font-bold text-[9px] flex items-center justify-center shadow">RC</span>
+            <span id="navUserName" class="text-[10px] font-semibold text-slate-200">Rafael (ADM)</span>
+            <i class="fa-solid fa-chevron-down text-[8px] text-slate-400"></i>
+          </button>
+
+          <!-- MENU SUSPENSO DO PERFIL (Junta Upgrade, API Gemini, Convite de Equipe e Sair) -->
+          <div id="profileDropdown" class="hidden absolute right-0 top-11 mt-1 w-64 bg-white text-slate-800 rounded-2xl shadow-2xl border border-slate-200 py-2 z-50 text-xs">
+            <div class="px-4 py-2.5 border-b border-slate-100">
+              <strong class="text-slate-900 block text-sm" id="dropUserName">Rafael (Administrador)</strong>
+              <span class="text-[11px] text-slate-500 block" id="dropPlanInfo">Plano Atual: Starter (Limite 1 membro)</span>
+            </div>
+
+            <div class="py-1">
+              <button onclick="toggleProfileDropdown(); openUpgradeModal();" class="w-full px-4 py-2.5 text-left hover:bg-amber-50 flex items-center justify-between font-bold text-amber-700 transition">
+                <span class="flex items-center gap-2.5"><i class="fa-solid fa-crown text-amber-500 w-4"></i> Fazer Upgrade de Plano</span>
+                <span class="text-[9px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-extrabold">PRO</span>
+              </button>
+
+              <button onclick="toggleProfileDropdown(); openTeamInviteModal();" class="w-full px-4 py-2.5 text-left hover:bg-slate-50 flex items-center gap-2.5 font-semibold text-slate-700 transition">
+                <i class="fa-solid fa-users-gear text-blue-600 w-4"></i> Equipe & Código de Convite
+              </button>
+
+              <button onclick="toggleProfileDropdown(); openApiModal();" class="w-full px-4 py-2.5 text-left hover:bg-slate-50 flex items-center justify-between font-semibold text-slate-700 transition">
+                <span class="flex items-center gap-2.5"><i class="fa-solid fa-key text-cyan-600 w-4"></i> Configurar API Gemini</span>
+                <span id="apiStatusText" class="text-[9px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded font-bold">Padrão</span>
+              </button>
+            </div>
+
+            <div class="pt-1 border-t border-slate-100">
+              <button onclick="toggleProfileDropdown(); goToView('landing');" class="w-full px-4 py-2.5 text-left hover:bg-rose-50 flex items-center gap-2.5 font-bold text-rose-600 transition">
+                <i class="fa-solid fa-right-from-bracket w-4"></i> Sair da Conta
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </header>
+
+    <!-- ====================================================================== -->
+    <!-- ETAPA 3: PAINEL DE PROCESSOS (KANBAN) — TELA PRINCIPAL PÓS-LOGIN       -->
+    <!-- Clicando em qualquer card daqui, você abre o Atendimento ao Vivo dele! -->
+    <!-- ====================================================================== -->
+    <div id="view-kanban" class="flex-1 flex flex-col overflow-hidden bg-[#f4f6fa]">
+      
+      <div class="h-14 bg-white border-b border-slate-200 px-6 flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-3">
+          <h2 class="text-sm font-extrabold text-slate-800 flex items-center gap-2">
+            <i class="fa-solid fa-diagram-project text-blue-600"></i> Quadro de Processos (Kanban)
+          </h2>
+          <span class="text-xs bg-blue-50 text-blue-700 border border-blue-200 px-2.5 py-0.5 rounded-full font-bold">
+            Clique em um card para abrir o Atendimento ao Vivo & IA
+          </span>
+        </div>
+
+        <div class="text-xs text-slate-500 hidden md:block">
+          <i class="fa-solid fa-circle-info text-blue-500 mr-1"></i> Todos os chamados criados aparecem automaticamente na Coluna 1
+        </div>
+      </div>
+
+      <!-- Colunas do Kanban (4 Colunas Responsivas Sem Corte) -->
+      <div class="flex-1 p-5 overflow-x-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 custom-scroll">
+
+        <!-- Coluna 1: Entrada & Triagem -->
+        <div class="flex flex-col bg-slate-100/90 rounded-2xl p-3 border border-slate-200 min-w-0">
+          <div class="flex items-center justify-between pb-2.5 mb-3 border-b border-slate-200 font-bold text-xs text-slate-700">
+            <span class="flex items-center gap-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span> 1. Entrada & Triagem
+            </span>
+            <span class="bg-slate-200 text-slate-600 px-2 py-0.5 rounded-full text-[10px]">2</span>
+          </div>
+
+          <div id="colCards-1" class="space-y-3 flex-1 overflow-y-auto custom-scroll pr-1">
+            
+            <!-- Card 1: AutoMotors -->
+            <div onclick="openClientAttendance('Eduardo Costa', 'AutoMotors Veículos', '5511987654321', '@automotors.veiculos', '48 Carros no Pátio', 'O site atual demora 7 segundos para carregar as fotos dos 48 carros e não tem filtro de parcelas no celular. Os 38k seguidores do Instagram chegam na página e desistem da compra.')" class="pipefy-card rounded-xl p-3.5 cursor-pointer border-l-4 border-l-blue-600">
+              <div class="flex justify-between items-start mb-2">
+                <span class="text-[10px] font-extrabold uppercase bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-200">AutoMotors Veículos</span>
+                <span class="text-[10px] text-amber-600 font-bold"><i class="fa-solid fa-clock"></i> SLA: 1h</span>
+              </div>
+              <h4 class="font-bold text-xs text-slate-900">Eduardo Costa — Site de Estoque</h4>
+              <p class="text-[11px] text-slate-500 mt-1">Dor identificada: Lentidão de fotos no 4G e falta de filtro.</p>
+              <div class="mt-3 pt-2.5 border-t border-slate-100 flex justify-between items-center text-[11px]">
+                <span class="text-slate-400">Resp: <strong>Lucas Torres</strong></span>
+                <span class="bg-blue-600 text-white px-2.5 py-1 rounded-lg font-bold text-[10px] shadow-sm">
+                  <i class="fa-solid fa-headset mr-1"></i> Fazer Atendimento &rarr;
+                </span>
+              </div>
+            </div>
+
+            <!-- Card 2: Imobiliária Prime -->
+            <div onclick="openClientAttendance('Roberto Almeida', 'Imobiliária Prime', '5511999887766', '@imobiliariaprime.sp', '120 Imóveis Alto Padrão', 'Lançamento de condomínio em 20 dias sem landing page dedicada. Os anúncios do Instagram estão jogando para o link geral e perdendo 60% dos leads.')" class="pipefy-card rounded-xl p-3.5 cursor-pointer border-l-4 border-l-cyan-600">
+              <div class="flex justify-between items-start mb-2">
+                <span class="text-[10px] font-extrabold uppercase bg-cyan-50 text-cyan-700 px-2 py-0.5 rounded border border-cyan-200">Imobiliária Prime</span>
+                <span class="text-[10px] text-emerald-600 font-bold">Novo Lead</span>
+              </div>
+              <h4 class="font-bold text-xs text-slate-900">Roberto Almeida — Landing Page</h4>
+              <p class="text-[11px] text-slate-500 mt-1">Dor identificada: Anúncios sem página de alta conversão.</p>
+              <div class="mt-3 pt-2.5 border-t border-slate-100 flex justify-between items-center text-[11px]">
+                <span class="text-slate-400">Resp: <strong>Rafael</strong></span>
+                <span class="bg-blue-600 text-white px-2.5 py-1 rounded-lg font-bold text-[10px] shadow-sm">
+                  <i class="fa-solid fa-headset mr-1"></i> Fazer Atendimento &rarr;
+                </span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Coluna 2: Proposta & Briefing IA -->
+        <div class="flex flex-col bg-slate-100/90 rounded-2xl p-3 border border-slate-200 min-w-0">
+          <div class="flex items-center justify-between pb-2.5 mb-3 border-b border-slate-200 font-bold text-xs text-slate-700">
+            <span class="flex items-center gap-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-indigo-500"></span> 2. Proposta & Negociação
+            </span>
+            <span class="bg-slate-200 text-slate-600 px-2 py-0.5 rounded-full text-[10px]">1</span>
+          </div>
+
+          <div class="space-y-3 flex-1 overflow-y-auto custom-scroll pr-1">
+            <div onclick="openClientAttendance('Dra. Camila Rocha', 'Clínica OdontoViva', '5511977665544', '@odontoviva.clinica', '4 Consultórios', 'Pacientes reclamam que não conseguem agendar avaliação pelo celular e o botão de WhatsApp atual está quebrado.')" class="pipefy-card rounded-xl p-3.5 cursor-pointer border-l-4 border-l-indigo-600">
+              <div class="flex justify-between items-start mb-2">
+                <span class="text-[10px] font-extrabold uppercase bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded border border-indigo-200">Clínica OdontoViva</span>
+                <span class="text-[10px] text-emerald-600 font-bold font-mono">R$ 4.200</span>
+              </div>
+              <h4 class="font-bold text-xs text-slate-900">Dra. Camila — Portal Odontológico</h4>
+              <p class="text-[11px] text-slate-500 mt-1">IA gerou escopo e roteiro de quebra de objeção.</p>
+              <div class="mt-3 pt-2.5 border-t border-slate-100 flex justify-between items-center text-[11px]">
+                <span class="text-slate-400">Resp: <strong>Mariana Alves</strong></span>
+                <span class="bg-indigo-600 text-white px-2.5 py-1 rounded-lg font-bold text-[10px] shadow-sm">
+                  <i class="fa-solid fa-headset mr-1"></i> Retomar Call &rarr;
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Coluna 3: Em Desenvolvimento -->
+        <div class="flex flex-col bg-slate-100/90 rounded-2xl p-3 border border-slate-200 min-w-0">
+          <div class="flex items-center justify-between pb-2.5 mb-3 border-b border-slate-200 font-bold text-xs text-slate-700">
+            <span class="flex items-center gap-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-purple-500"></span> 3. Desenvolvimento
+            </span>
+            <span class="bg-slate-200 text-slate-600 px-2 py-0.5 rounded-full text-[10px]">1</span>
+          </div>
+
+          <div class="space-y-3 flex-1 overflow-y-auto custom-scroll pr-1">
+            <div onclick="openClientAttendance('Dr. Henrique Martins', 'Advocacia Martins', '5511966554433', '@advocaciamartins.sp', 'Portal Jurídico Trabalhista', 'Projeto em produção (85% concluído). Cliente solicitou alinhamento na chamada sobre o botão de plantão trabalhista no WhatsApp e validação final do layout mobile.')" class="pipefy-card rounded-xl p-3.5 cursor-pointer border-l-4 border-l-purple-600">
+              <div class="flex justify-between items-start mb-2">
+                <span class="text-[10px] font-extrabold uppercase bg-purple-50 text-purple-700 px-2 py-0.5 rounded border border-purple-200">Advocacia Martins</span>
+                <span class="text-[10px] text-purple-700 font-bold">85% Pronto</span>
+              </div>
+              <h4 class="font-bold text-xs text-slate-900">Dr. Henrique — Portal Jurídico</h4>
+              <p class="text-[11px] text-slate-500 mt-1">Contrato assinado. Carlos programando em Next.js.</p>
+              <div class="mt-3 pt-2.5 border-t border-slate-100 flex justify-between items-center text-[11px]">
+                <span class="text-slate-400">Dev: <strong>Carlos Prado</strong></span>
+                <span class="bg-purple-600 text-white px-2.5 py-1 rounded-lg font-bold text-[10px] shadow-sm">
+                  <i class="fa-solid fa-headset mr-1"></i> Abrir Conversa &rarr;
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Coluna 4: Homologado & Entregue -->
+        <div class="flex flex-col bg-slate-100/90 rounded-2xl p-3 border border-slate-200 min-w-0">
+          <div class="flex items-center justify-between pb-2.5 mb-3 border-b border-slate-200 font-bold text-xs text-slate-700">
+            <span class="flex items-center gap-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> 4. Entregue (Go-Live)
+            </span>
+            <span class="bg-slate-200 text-slate-600 px-2 py-0.5 rounded-full text-[10px]">1</span>
+          </div>
+
+          <div class="space-y-3 flex-1 overflow-y-auto custom-scroll pr-1">
+            <div onclick="openClientAttendance('Chef Marcos Lima', 'Restaurante Sabor', '5511955443322', '@restaurantesabor.sp', 'Cardápio Digital & Reservas', 'Site 100% entregue com domínio apontado e SSL ativo. Atendimento focado em pós-venda, acompanhamento de reservas pelo WhatsApp e renovação de manutenção mensal.')" class="pipefy-card rounded-xl p-3.5 cursor-pointer border-l-4 border-l-emerald-600">
+              <div class="flex justify-between items-start mb-2">
+                <span class="text-[10px] font-extrabold uppercase bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded border border-emerald-200">Restaurante Sabor</span>
+                <span class="text-[10px] text-emerald-600 font-bold"><i class="fa-solid fa-check"></i> No Ar (100%)</span>
+              </div>
+              <h4 class="font-bold text-xs text-slate-900">Chef Marcos — Cardápio Digital</h4>
+              <p class="text-[11px] text-slate-500 mt-1">Domínio apontado e SSL ativo com sucesso.</p>
+              <div class="mt-3 pt-2.5 border-t border-slate-100 flex justify-between items-center text-[11px]">
+                <span class="text-slate-400">Pós-Venda</span>
+                <span class="bg-emerald-600 text-white px-2.5 py-1 rounded-lg font-bold text-[10px] shadow-sm">
+                  <i class="fa-solid fa-headset mr-1"></i> Abrir Pós-Venda &rarr;
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ====================================================================== -->
+    <!-- ETAPA 4: ATENDIMENTO AO VIVO & IA (LAYOUT EXATO DA IMAGEM ALRIS)       -->
+    <!-- ====================================================================== -->
+    <div id="view-callcenter" class="hidden flex-1 flex flex-col overflow-hidden bg-[#f8fafc] text-slate-800">
+      
+      <!-- Sub-header Limpo: Voltar ao Kanban à esquerda | Canal de Voz Criptografado à direita -->
+      <div class="h-14 bg-white border-b border-slate-200/80 px-6 flex items-center justify-between shrink-0 text-xs">
+        <button onclick="goToView('kanban')" class="px-3.5 py-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 font-semibold text-xs transition flex items-center gap-2 border border-slate-200 shadow-sm">
+          <i class="fa-solid fa-arrow-left text-slate-500"></i> Voltar ao Kanban
+        </button>
+
+        <span class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 font-semibold border border-emerald-200/80 flex items-center gap-1.5 text-[11px]">
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Canal de Voz Criptografado
+        </span>
+      </div>
+
+      <!-- 3 Colunas com Títulos Externos Exatamente como na Imagem -->
+      <div class="flex-1 grid grid-cols-12 overflow-y-auto lg:overflow-hidden px-6 py-4 gap-5">
+        
+        <!-- ================================================================== -->
+        <!-- COLUNA ESQUERDA (3 cols): PERFIL DO LEAD & CONTEXTO                -->
+        <!-- ================================================================== -->
+        <div class="col-span-12 lg:col-span-3 flex flex-col overflow-hidden">
+          <h2 class="text-sm font-bold text-slate-800 mb-2.5 shrink-0">Perfil do Lead & Contexto</h2>
+
+          <div class="flex-1 bg-white rounded-2xl p-5 border border-slate-200/90 text-xs flex flex-col justify-between shadow-sm overflow-y-auto custom-scroll">
+            <div class="space-y-4">
+              
+              <!-- Cabeçalho do Lead: Avatar Circular + Nome + Badge Ligação Ativa + Botões Compactos Telefone e WhatsApp -->
+              <div class="flex items-start justify-between gap-2 pb-4 border-b border-slate-100">
+                <div class="flex items-center gap-3">
+                  <div class="relative shrink-0">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-400 via-blue-500 to-indigo-600 text-white font-bold flex items-center justify-center text-base shadow-sm" id="liveAvatar">
+                      ED
+                    </div>
+                    <span class="w-3 h-3 rounded-full bg-emerald-500 border-2 border-white absolute bottom-0 right-0"></span>
+                  </div>
+                  <div>
+                    <h3 class="font-bold text-slate-900 text-sm leading-tight" id="liveCardName">Eduardo Costa</h3>
+                    <p class="text-[11px] text-slate-500 font-medium mt-0.5" id="liveCardCompany">AutoMotors Veículos</p>
+                    <div class="flex items-center gap-1.5 mt-0.5">
+                      <span class="text-[11px] text-slate-400 font-mono" id="liveCardPhone">+55 (11) 98765-4321</span>
+                      <button type="button" onclick="copyClientPhone()" id="btnCopyCardPhone" title="Copiar número para a área de transferência" class="px-1.5 py-0.5 rounded bg-slate-100 hover:bg-blue-50 text-slate-600 hover:text-blue-600 border border-slate-200 text-[9px] font-bold transition flex items-center gap-1">
+                        <i class="fa-regular fa-copy"></i> Copiar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Direita do Topo do Card: Pílula Ligação Ativa + 2 Botões Quadrados de Ícone -->
+                <div class="flex flex-col items-end gap-2 shrink-0">
+                  <span id="callActiveBadge" class="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold text-[10px]">
+                    Ligação Ativa
+                  </span>
+                  <div class="flex items-center gap-1.5">
+                    <button onclick="startNormalPhoneCall()" id="btnNormalCall" title="Ligação Normal (VoIP no PC)" class="w-8 h-8 rounded-lg bg-slate-50 hover:bg-blue-50 text-slate-600 hover:text-blue-600 border border-slate-200 flex items-center justify-center transition shadow-sm">
+                      <i class="fa-solid fa-phone text-xs"></i>
+                    </button>
+                    <button onclick="startWhatsAppCall()" id="btnWhatsCall" title="Ligar / Abrir WhatsApp" class="w-8 h-8 rounded-lg bg-slate-50 hover:bg-emerald-50 text-slate-600 hover:text-emerald-600 border border-slate-200 flex items-center justify-center transition shadow-sm">
+                      <i class="fa-brands fa-whatsapp text-sm"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Mini-Cards em Grade: Origem, Porte e Valor Sugerido -->
+              <div class="grid grid-cols-2 gap-2.5">
+                <div class="p-2.5 rounded-xl bg-slate-50/80 border border-slate-200/70">
+                  <span class="text-[10px] text-slate-400 block mb-0.5">Origem</span>
+                  <strong class="text-slate-800 text-[11px] truncate block" id="liveCardChannel">@automotors.veiculos</strong>
+                </div>
+                <div class="p-2.5 rounded-xl bg-slate-50/80 border border-slate-200/70">
+                  <span class="text-[10px] text-slate-400 block mb-0.5">Porte</span>
+                  <strong class="text-slate-800 text-[11px] truncate block" id="liveCardInventory">48 Carros no Pátio</strong>
+                </div>
+                <div class="col-span-2 p-2.5 rounded-xl bg-slate-50/80 border border-slate-200/70">
+                  <span class="text-[10px] text-slate-400 block mb-0.5">Valor Sugerido</span>
+                  <strong class="text-slate-900 text-xs font-extrabold">R$ 4.500 (3x R$ 1.500)</strong>
+                </div>
+              </div>
+
+              <!-- PRINCIPAL DOR (EXTRAÍDA PELA IA) com Barra Lateral Azul/Ciano Exata da Imagem -->
+              <div class="p-3.5 rounded-xl bg-[#f1f5f9]/90 border border-slate-200/80 border-l-4 border-l-blue-500">
+                <span class="text-[10px] font-extrabold text-slate-800 uppercase tracking-wider block mb-1.5">
+                  PRINCIPAL DOR (EXTRAÍDA PELA IA)
+                </span>
+                <p id="liveCardPain" class="text-[11px] text-slate-600 leading-relaxed">
+                  "O site atual demora 7 segundos para carregar as fotos dos 48 carros e não tem filtro de parcelas no celular. Os 38k seguidores do Instagram chegam na página e desistem da compra."
+                </p>
+              </div>
+
+              <!-- CHECKLIST DO ATENDIMENTO (2/3 CONCLUÍDO) + BARRA DE PROGRESSO 66% -->
+              <div class="pt-1">
+                <div class="flex items-center justify-between mb-1.5">
+                  <span id="checklistTitleText" class="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider">
+                    CHECKLIST DO ATENDIMENTO (2/3 CONCLUÍDO)
+                  </span>
+                </div>
+
+                <!-- Barra de Progresso Ciano -> Violeta + 66% -->
+                <div class="flex items-center gap-2.5 mb-3">
+                  <div class="flex-1 bg-slate-100 h-2 rounded-full overflow-hidden">
+                    <div id="checklistProgressBar" class="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 h-full rounded-full transition-all duration-300" style="width: 66%;"></div>
+                  </div>
+                  <span id="checklistPercentText" class="text-[11px] font-bold text-slate-500">66%</span>
+                </div>
+
+                <div class="space-y-2 text-[11px] text-slate-700">
+                  <label class="flex items-center gap-2.5 cursor-pointer select-none">
+                    <input type="checkbox" checked onchange="updateChecklistProgress()" class="chk-item w-4 h-4 rounded text-cyan-500 focus:ring-0">
+                    <span>Confirmar dor mapeada no link</span>
+                  </label>
+                  <label class="flex items-center gap-2.5 cursor-pointer select-none">
+                    <input type="checkbox" checked onchange="updateChecklistProgress()" class="chk-item w-4 h-4 rounded text-cyan-500 focus:ring-0">
+                    <span>Apresentar solução mobile & WhatsApp</span>
+                  </label>
+                  <label class="flex items-center gap-2.5 cursor-pointer select-none">
+                    <input type="checkbox" id="chkClosing" onchange="updateChecklistProgress()" class="chk-item w-4 h-4 rounded text-cyan-500 focus:ring-0">
+                    <span class="text-slate-500">Contornar objeção e enviar contrato</span>
+                  </label>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- ================================================================== -->
+        <!-- COLUNA CENTRAL (5 cols): ESCUTA ATIVA & TRANSCRIÇÃO DA CHAMADA     -->
+        <!-- ================================================================== -->
+        <div class="col-span-12 lg:col-span-5 flex flex-col overflow-hidden">
+          <h2 class="text-sm font-bold text-slate-800 mb-2.5 shrink-0">Escuta Ativa & Transcrição da Chamada</h2>
+
+          <div class="flex-1 bg-white rounded-2xl p-5 border border-slate-200/90 flex flex-col justify-between text-xs shadow-sm overflow-hidden">
+            
+            <!-- Topo Interno da Transcrição -->
+            <div class="pb-3 border-b border-slate-100 flex items-center justify-between shrink-0">
+              <span class="font-bold text-slate-800 text-xs">
+                Escuta Ativa & Transcrição da Chamada
+              </span>
+              <span id="listeningBadge" class="px-3 py-1 rounded-full bg-indigo-50 text-indigo-600 border border-indigo-200/80 font-bold text-[10px] flex items-center gap-1.5">
+                <i class="fa-solid fa-sparkles text-indigo-500"></i> Copiloto IA Ativo
+              </span>
+            </div>
+
+            <!-- Balões de Conversa Estilo Chat Alinhados Direita (Operador) / Esquerda (Cliente) -->
+            <div id="transcriptBox" class="flex-1 overflow-y-auto py-2 space-y-2.5 custom-scroll pr-1 min-h-[175px]">
+              
+              <!-- Mensagem do Operador (Alinhada à Direita) -->
+              <div class="flex flex-col items-end">
+                <span class="text-[10px] font-bold text-slate-600 mb-0.5">Operador (Sua Equipe)</span>
+                <div class="max-w-[92%] px-3.5 py-2.5 rounded-2xl rounded-tr-sm bg-[#eef4ff] border border-blue-100 text-slate-800 leading-snug">
+                  "Analisamos o perfil da sua empresa e vimos um potencial enorme para aumentar os agendamentos e vendas pelo celular integrando direto com o WhatsApp..."
+                </div>
+                <span class="text-[9px] text-slate-400 mt-0.5 font-mono">03:45</span>
+              </div>
+
+              <!-- Mensagem do Cliente (Alinhada à Esquerda) -->
+              <div class="flex flex-col items-start">
+                <span class="text-[10px] font-bold text-slate-600 mb-0.5" id="transcriptClientLabel">Cliente (Eduardo)</span>
+                <div class="max-w-[92%] px-3.5 py-2.5 rounded-2xl rounded-tl-sm bg-white border border-slate-200 text-slate-800 leading-snug shadow-sm">
+                  "Gostei da ideia, mas me passaram um orçamento de R$ 2.000 em outro lugar e achei o valor de R$ 4.500 um pouco pesado para fechar hoje."
+                </div>
+                <span class="text-[9px] text-slate-400 mt-0.5 font-mono">04:02</span>
+              </div>
+
+            </div>
+
+            <!-- CARD DE SUGESTÃO DA IA COM BORDA GRADIENTE CIANO-VIOLETA (IDÊNTICO À IMAGEM) -->
+            <div id="aiSuggestionPanel" class="my-1.5 p-[2px] rounded-2xl bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 shrink-0 shadow-md">
+              <div class="bg-[#f8fbff] rounded-[14px] p-3 space-y-2">
+                <div class="flex items-center justify-between">
+                  <span id="aiAlertTitle" class="text-[11px] font-extrabold text-slate-900 uppercase flex items-center gap-1.5">
+                    <i class="fa-solid fa-wand-magic-sparkles text-cyan-500"></i> SUGESTÃO DA IA: O QUE FALAR AGORA
+                  </span>
+                  <span id="aiAlertBadge" class="text-[10px] bg-amber-100 text-amber-800 border border-amber-200 px-2.5 py-0.5 rounded-md font-bold">
+                    Contorno de Preço
+                  </span>
+                </div>
+
+                <p id="pitchLine" class="text-[11px] text-slate-700 leading-snug">
+                  "Compreendo perfeitamente! A diferença é que um site barato demora 7 segundos para abrir e faz você perder clientes todo dia. Se o nosso site salvar <strong>apenas UMA venda</strong> neste mês, ele já se pagou 5 vezes. Vamos fechar em <strong>3x de R$ 1.500 sem juros</strong> para colocar no ar já na próxima semana?"
+                </p>
+
+                <!-- Pílulas das 3 Abordagens + Botão "Usar resposta ↗" em uma linha limpa -->
+                <div class="flex flex-wrap items-center justify-between gap-1 pt-0.5">
+                  <div class="flex flex-wrap items-center gap-1">
+                    <button type="button" onclick="changePitch('parcelado')" id="btnPitch1" class="px-2 py-1 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold text-[10px] shadow-sm transition">
+                      1. Parcelar 3x (Recomendado)
+                    </button>
+                    <button type="button" onclick="changePitch('garantia')" id="btnPitch2" class="px-2 py-1 rounded-full bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 font-semibold text-[10px] transition">
+                      2. Garantia Velocidade
+                    </button>
+                    <button type="button" onclick="changePitch('mvp')" id="btnPitch3" class="px-2 py-1 rounded-full bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 font-semibold text-[10px] transition">
+                      3. Escopo R$ 3.200
+                    </button>
+                  </div>
+
+                  <button type="button" onclick="applyAiSuggestionToCall()" class="bg-[#6366f1] hover:bg-indigo-500 text-white font-bold text-[10px] px-2.5 py-1 rounded-lg transition shadow-sm flex items-center gap-1 shrink-0">
+                    Usar resposta <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Barra Inferior com Ícone de Microfone + Input + Botão "Analisar" Roxo/Índigo -->
+            <form onsubmit="analyzeCustomCustomerSpeech(event)" class="pt-1 flex items-center gap-2 shrink-0">
+              <div class="flex-1 flex items-center bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus-within:border-indigo-500">
+                <i class="fa-solid fa-microphone text-slate-400 mr-2.5 text-xs cursor-pointer hover:text-indigo-600" onclick="toggleRealMicrophone()" title="Falar no microfone"></i>
+                <input 
+                  type="text" 
+                  id="customSpeechInput" 
+                  placeholder="Digite ou fale o que o cliente disse para a IA analisar ao vivo..." 
+                  class="w-full bg-transparent text-xs text-slate-800 focus:outline-none"
+                >
+              </div>
+              <button type="submit" id="btnAnalyzeSpeech" class="bg-[#6366f1] hover:bg-indigo-500 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition shrink-0 shadow-sm">
+                Analisar
+              </button>
+            </form>
+
+          </div>
+        </div>
+
+        <!-- ================================================================== -->
+        <!-- COLUNA DIREITA (4 cols): TELEMETRIA & CONVERSÃO                    -->
+        <!-- ================================================================== -->
+        <div class="col-span-12 lg:col-span-4 flex flex-col overflow-hidden">
+          <h2 class="text-sm font-bold text-slate-800 mb-2.5 shrink-0">Telemetria & Conversão</h2>
+
+          <div class="flex-1 flex flex-col justify-between gap-3.5 overflow-y-auto custom-scroll">
+            
+            <!-- Card 1: TELEMETRIA DE CONVERSÃO com Anel Circular 54% (Donut SVG) -->
+            <div class="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-sm">
+              <span class="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider block mb-3">
+                TELEMETRIA DE CONVERSÃO
+              </span>
+
+              <div class="flex items-center gap-5">
+                <!-- Medidor Anel Circular (SVG Ring Gauge) Ciano -> Índigo -->
+                <div class="relative w-20 h-20 flex items-center justify-center shrink-0">
+                  <svg class="w-20 h-20 -rotate-90" viewBox="0 0 80 80">
+                    <defs>
+                      <linearGradient id="ringGradAlris" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#22d3ee" />
+                        <stop offset="50%" stop-color="#3b82f6" />
+                        <stop offset="100%" stop-color="#8b5cf6" />
+                      </linearGradient>
+                    </defs>
+                    <circle cx="40" cy="40" r="32" stroke="#e2e8f0" stroke-width="7" fill="none" />
+                    <circle id="probRingCircle" cx="40" cy="40" r="32" stroke="url(#ringGradAlris)" stroke-width="7" fill="none" stroke-linecap="round" stroke-dasharray="201" stroke-dashoffset="92" class="transition-all duration-700" />
+                  </svg>
+                  <span id="probNumber" class="absolute text-lg font-extrabold text-blue-600">54%</span>
+                </div>
+
+                <div>
+                  <h4 class="text-sm font-bold text-slate-900">Probabilidade de Conversão</h4>
+                  <span id="probStatus" class="inline-block mt-1.5 px-2.5 py-0.5 rounded-md text-[10px] font-extrabold uppercase bg-amber-100 text-amber-800 border border-amber-200">
+                    ZONA DE ATENÇÃO
+                  </span>
+                  <div class="hidden"><div id="probBar"></div></div>
+                  <span id="softphoneStatusLine" class="text-[10px] text-slate-400 block mt-1.5">
+                    Softphone WebRTC & IA Conectados
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 2: ANÁLISE DE SENTIMENTO DA CALL (Gráfico de Onda Suave c/ Ponto Brilhante "↗ 78% Positivo") -->
+            <div class="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-sm flex-1 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-3">
+                  <span class="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider">
+                    ANÁLISE DE SENTIMENTO DA CALL
+                  </span>
+                  <span id="sentimentTrendBadge" class="text-[10px] text-emerald-700 font-bold flex items-center gap-1 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                    <i class="fa-solid fa-arrow-trend-up text-[9px]"></i> Recuperando
+                  </span>
+                </div>
+
+                <!-- Gráfico de Curva Suave Colorida Idêntico à Imagem (Positivo / Neutro / Negativo | Início, Escopo, Objeção, IA, Agora Ao Vivo) -->
+                <div class="relative pt-2 pb-1">
+                  <!-- Tooltip Escura Flutuante sobre o Ponto Final -->
+                  <div id="waveTooltipBadge" class="absolute right-2 top-1 bg-[#0f172a] text-white text-[10px] font-bold px-2.5 py-1 rounded-lg shadow-lg flex items-center gap-1 z-10">
+                    <i class="fa-solid fa-arrow-trend-up text-cyan-400 text-[9px]"></i> <span id="live3DScoreCurrent">78% Positivo</span>
+                  </div>
+
+                  <div class="flex items-center">
+                    <!-- Eixo Y: Positivo, Neutro, Negativo -->
+                    <div class="flex flex-col justify-between h-32 text-[9px] text-slate-400 font-medium pr-2 select-none">
+                      <span>Positivo</span>
+                      <span>Neutro</span>
+                      <span>Negativo</span>
+                    </div>
+
+                    <!-- Área SVG da Onda Multicolorida (Verde/Ciano -> Amarelo/Laranja -> Roxo/Azul) -->
+                    <div class="flex-1 h-32 relative">
+                      <svg viewBox="0 0 320 120" class="w-full h-full overflow-visible">
+                        <defs>
+                          <linearGradient id="waveStrokeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#10b981" />
+                            <stop offset="30%" stop-color="#14b8a6" />
+                            <stop offset="58%" stop-color="#f59e0b" />
+                            <stop offset="80%" stop-color="#6366f1" />
+                            <stop offset="100%" stop-color="#3b82f6" />
+                          </linearGradient>
+                          <linearGradient id="waveAreaGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#6366f1" stop-opacity="0.22" />
+                            <stop offset="100%" stop-color="#6366f1" stop-opacity="0.0" />
+                          </linearGradient>
+                        </defs>
+
+                        <!-- Linhas horizontais pontilhadas -->
+                        <line x1="0" y1="20" x2="310" y2="20" stroke="#f1f5f9" stroke-width="1" />
+                        <line x1="0" y1="60" x2="310" y2="60" stroke="#e2e8f0" stroke-dasharray="3 3" stroke-width="1" />
+                        <line x1="0" y1="100" x2="310" y2="100" stroke="#f1f5f9" stroke-width="1" />
+
+                        <!-- Área Preenchida sob a Curva -->
+                        <path id="sentimentWaveArea" d="M 10,85 C 45,55 65,40 90,40 C 125,40 145,75 170,78 C 195,82 220,96 245,86 C 270,74 290,45 305,25 L 305,105 L 10,105 Z" fill="url(#waveAreaGrad)" />
+
+                        <!-- Linha da Curva Suave -->
+                        <path id="sentimentWavePath" d="M 10,85 C 45,55 65,40 90,40 C 125,40 145,75 170,78 C 195,82 220,96 245,86 C 270,74 290,45 305,25" fill="none" stroke="url(#waveStrokeGrad)" stroke-width="3" stroke-linecap="round" />
+
+                        <!-- Pontos dos Marcos da Call -->
+                        <circle cx="90" cy="40" r="4" fill="#10b981" stroke="#ffffff" stroke-width="1.5" />
+                        <circle cx="170" cy="78" r="4" fill="#f59e0b" stroke="#ffffff" stroke-width="1.5" />
+                        <circle cx="245" cy="86" r="4" fill="#ef4444" stroke="#ffffff" stroke-width="1.5" />
+
+                        <!-- Ponto Atual Ao Vivo com Halo Pulsante -->
+                        <circle id="waveLiveHalo" cx="305" cy="25" r="9" fill="#3b82f6" fill-opacity="0.25" />
+                        <circle id="waveLiveDot" cx="305" cy="25" r="5" fill="#3b82f6" stroke="#ffffff" stroke-width="2" />
+                      </svg>
+                    </div>
+                  </div>
+
+                  <!-- Eixo X: Início, Escopo, Objeção, IA, Agora Ao Vivo -->
+                  <div class="flex justify-between text-[10px] text-slate-400 font-medium pl-11 pr-1 mt-1">
+                    <span>Início</span>
+                    <span>Escopo</span>
+                    <span>Objeção</span>
+                    <span>IA</span>
+                    <span class="text-slate-700 font-bold text-right leading-tight">Agora<br><span class="text-[9px] text-slate-400 font-normal">Ao Vivo</span></span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Mini Cards Inferiores: Tom de Voz & Retorno p/ Cliente -->
+              <div class="grid grid-cols-2 gap-2.5 my-3">
+                <div class="p-3 rounded-xl bg-slate-50/90 border border-slate-200/80">
+                  <span class="text-[10px] text-slate-400 block">Tom de Voz</span>
+                  <strong id="clientTone" class="text-slate-800 text-xs font-bold block mt-0.5">
+                    Cauteloso / Negociador
+                  </strong>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-50/90 border border-slate-200/80">
+                  <span class="text-[10px] text-slate-400 block">Retorno p/ Cliente</span>
+                  <strong class="text-slate-800 text-xs font-bold block mt-0.5">Payback em 15 dias</strong>
+                </div>
+              </div>
+
+              <!-- Botão Verde de Enviar Contrato pelo WhatsApp -->
+              <button onclick="sendWhatsAppContract()" class="w-full bg-[#10b981] hover:bg-emerald-500 text-white font-bold text-xs py-3.5 rounded-xl transition shadow-md flex items-center justify-center gap-2">
+                <i class="fa-brands fa-whatsapp text-sm"></i> Fechar Venda & Enviar Contrato no WhatsApp
+              </button>
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- PÁGINA / MODAL DE UPGRADE & ASSINATURA MENSAL (CHECKOUT) -->
+  <!-- ======================================================== -->
+  <div id="upgradeModal" class="hidden fixed inset-0 bg-slate-900/75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-4xl rounded-3xl border border-slate-200 shadow-2xl p-6 sm:p-8 relative text-xs max-h-[92vh] overflow-y-auto">
+      <button onclick="closeUpgradeModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 text-xl">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <!-- ETAPA 1 DO MODAL: SELEÇÃO DOS 3 PLANOS -->
+      <div id="upgradeStepPlans">
+        <div class="text-center max-w-xl mx-auto mb-6">
+          <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-extrabold text-[10px] uppercase tracking-wider border border-emerald-300">
+            <i class="fa-solid fa-crown mr-1"></i> Upgrade de Conta & Assinatura Mensal
+          </span>
+          <h3 class="text-2xl font-extrabold text-slate-900 mt-2">Escolha seu Plano e Vá para a Página de Pagamento</h3>
+          <p class="text-xs text-slate-500 mt-1">Selecione Starter, Pro Growth ou Enterprise Scale para abrir o checkout seguro via Pix ou Cartão:</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <!-- Starter -->
+          <div class="p-5 rounded-2xl border border-slate-200 bg-slate-50 flex flex-col justify-between">
+            <div>
+              <span class="text-[10px] font-bold text-emerald-700 uppercase">Plano Starter</span>
+              <div class="text-2xl font-black text-slate-900 mono my-2">R$ 149<span class="text-xs font-normal text-slate-500">/mês</span></div>
+              <ul class="space-y-1.5 text-[11px] text-slate-600 mt-3">
+                <li><i class="fa-solid fa-check text-emerald-600 mr-1"></i> 1 Operador (Admin) Conectado</li>
+                <li><i class="fa-solid fa-check text-emerald-600 mr-1"></i> 1 Número de WhatsApp Integrado</li>
+                <li><i class="fa-solid fa-check text-emerald-600 mr-1"></i> Kanban de Processos Ilimitado</li>
+                <li><i class="fa-solid fa-check text-emerald-600 mr-1"></i> Raio-X por Link Social</li>
+              </ul>
+            </div>
+            <button onclick="openPaymentCheckout('Plano Starter', '149,00', 1)" class="mt-5 w-full py-2.5 rounded-xl bg-white hover:bg-slate-100 text-slate-800 border border-slate-300 font-extrabold transition flex items-center justify-center gap-1.5">
+              <i class="fa-solid fa-credit-card text-emerald-600"></i> Selecionar Starter &rarr;
+            </button>
+          </div>
+
+          <!-- Pro Growth -->
+          <div class="p-5 rounded-2xl border-2 border-[#00a859] bg-[#071a12] text-white flex flex-col justify-between shadow-lg relative">
+            <span class="absolute -top-2.5 right-4 bg-emerald-400 text-slate-950 font-black text-[9px] uppercase px-2.5 py-0.5 rounded-full">
+              Mais Escolhido
+            </span>
+            <div>
+              <span class="text-[10px] font-bold text-emerald-400 uppercase">Plano Pro Growth</span>
+              <div class="text-2xl font-black text-white mono my-2">R$ 299<span class="text-xs font-normal text-slate-300">/mês</span></div>
+              <ul class="space-y-1.5 text-[11px] text-slate-200 mt-3">
+                <li><i class="fa-solid fa-check text-emerald-400 mr-1"></i> Até 5 Membros com Código</li>
+                <li><i class="fa-solid fa-check text-emerald-400 mr-1"></i> Copiloto Gemini ao Vivo nas Calls</li>
+                <li><i class="fa-solid fa-check text-emerald-400 mr-1"></i> Gráfico 3D de Sentimento & Risco</li>
+                <li><i class="fa-solid fa-check text-emerald-400 mr-1"></i> Disparo de Contrato no WhatsApp</li>
+              </ul>
+            </div>
+            <button onclick="openPaymentCheckout('Plano Pro Growth', '299,00', 5)" class="mt-5 w-full py-2.5 rounded-xl bg-[#00a859] hover:bg-emerald-500 text-white font-extrabold transition shadow flex items-center justify-center gap-1.5">
+              <i class="fa-solid fa-lock"></i> Fazer Upgrade p/ Pro &rarr;
+            </button>
+          </div>
+
+          <!-- Enterprise Scale -->
+          <div class="p-5 rounded-2xl border border-slate-200 bg-slate-50 flex flex-col justify-between">
+            <div>
+              <span class="text-[10px] font-bold text-blue-600 uppercase">Plano Enterprise Scale</span>
+              <div class="text-2xl font-black text-slate-900 mono my-2">R$ 699<span class="text-xs font-normal text-slate-500">/mês</span></div>
+              <ul class="space-y-1.5 text-[11px] text-slate-600 mt-3">
+                <li><i class="fa-solid fa-check text-emerald-600 mr-1"></i> Membros Ilimitados na Equipe</li>
+                <li><i class="fa-solid fa-check text-emerald-600 mr-1"></i> Múltiplos WhatsApps & VoIP</li>
+                <li><i class="fa-solid fa-check text-emerald-600 mr-1"></i> Motor Gemini 4 Argon Dedicado</li>
+                <li><i class="fa-solid fa-check text-emerald-600 mr-1"></i> Playbooks Customizados & API</li>
+              </ul>
+            </div>
+            <button onclick="openPaymentCheckout('Plano Enterprise Scale', '699,00', 99)" class="mt-5 w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-extrabold transition flex items-center justify-center gap-1.5">
+              <i class="fa-solid fa-crown text-amber-400"></i> Fazer Upgrade Enterprise &rarr;
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ETAPA 2 DO MODAL: PÁGINA DE PAGAMENTO COMPLETA (PIX QR CODE + CARTÃO DE CRÉDITO) -->
+      <div id="upgradeStepCheckout" class="hidden">
+        <div class="flex items-center justify-between pb-4 mb-5 border-b border-slate-200">
+          <button type="button" onclick="backToPlanSelection()" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs flex items-center gap-1.5">
+            <i class="fa-solid fa-arrow-left"></i> Voltar aos Planos
+          </button>
+          <span class="text-xs font-extrabold text-emerald-700 flex items-center gap-1.5 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+            <i class="fa-solid fa-shield-halved"></i> Checkout Seguro 256-bit SSL
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          
+          <!-- Resumo do Pedido (Coluna Esquerda - 5 cols) -->
+          <div class="lg:col-span-5 bg-slate-900 text-white rounded-2xl p-5 flex flex-col justify-between border border-slate-800">
+            <div>
+              <span class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">Resumo da Assinatura</span>
+              <h4 id="checkoutPlanTitle" class="text-xl font-black text-white mt-1">Plano Pro Growth</h4>
+              <div class="my-4 pb-4 border-b border-slate-800 flex items-baseline gap-1">
+                <span class="text-sm text-slate-400 font-bold">R$</span>
+                <span id="checkoutPlanPrice" class="text-4xl font-black text-emerald-400 mono">299,00</span>
+                <span class="text-xs text-slate-400">/mês</span>
+              </div>
+
+              <div class="space-y-2.5 text-xs text-slate-300">
+                <div class="flex justify-between">
+                  <span class="text-slate-400">Limite de Equipe Ativa:</span>
+                  <strong id="checkoutPlanSeats" class="text-white">Até 5 membros</strong>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-slate-400">Código de Convite da Empresa:</span>
+                  <strong class="text-emerald-400 mono">CONV-8842-TEAM</strong>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-slate-400">Liberação do Painel & IA:</span>
+                  <strong class="text-white">Imediata após confirmação</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-slate-800 text-[11px] text-slate-400 space-y-1">
+              <div class="flex items-center gap-2 text-emerald-300 font-bold">
+                <i class="fa-solid fa-bolt"></i> Ativação Automática de Vagas
+              </div>
+              <p>Assim que você confirmar o pagamento ao lado, o limite da sua equipe e o Copiloto Gemini 3D são atualizados na hora.</p>
+            </div>
+          </div>
+
+          <!-- Escolha do Método de Pagamento: Pix vs Cartão (Coluna Direita - 7 cols) -->
+          <div class="lg:col-span-7 flex flex-col justify-between">
+            
+            <!-- Abas Pix Instantâneo vs Cartão de Crédito -->
+            <div>
+              <div class="grid grid-cols-2 gap-2 p-1 bg-slate-100 rounded-2xl border border-slate-200 mb-4">
+                <button type="button" onclick="switchPaymentTab('pix')" id="tabBtnPix" class="py-2.5 px-3 rounded-xl font-extrabold text-xs bg-[#00a859] text-white shadow-sm transition flex items-center justify-center gap-1.5">
+                  <i class="fa-brands fa-pix"></i> Pagar com Pix (Imediato)
+                </button>
+                <button type="button" onclick="switchPaymentTab('card')" id="tabBtnCard" class="py-2.5 px-3 rounded-xl font-bold text-xs text-slate-600 hover:text-slate-900 transition flex items-center justify-center gap-1.5">
+                  <i class="fa-regular fa-credit-card"></i> Cartão de Crédito
+                </button>
+              </div>
+
+              <!-- ABA 1: PAGAMENTO VIA PIX QR CODE -->
+              <div id="paymentTabPix" class="space-y-4">
+                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row items-center gap-4">
+                  <!-- QR Code Visual Gerado em SVG -->
+                  <div class="w-32 h-32 bg-white p-2 rounded-xl border-2 border-emerald-500 shrink-0 flex items-center justify-center shadow-sm">
+                    <svg viewBox="0 0 100 100" class="w-full h-full text-slate-900" fill="currentColor">
+                      <rect x="5" y="5" width="28" height="28" fill="none" stroke="currentColor" stroke-width="6"/>
+                      <rect x="13" y="13" width="12" height="12"/>
+                      <rect x="67" y="5" width="28" height="28" fill="none" stroke="currentColor" stroke-width="6"/>
+                      <rect x="75" y="13" width="12" height="12"/>
+                      <rect x="5" y="67" width="28" height="28" fill="none" stroke="currentColor" stroke-width="6"/>
+                      <rect x="13" y="75" width="12" height="12"/>
+                      <rect x="42" y="10" width="8" height="8"/><rect x="52" y="18" width="8" height="8"/>
+                      <rect x="42" y="28" width="16" height="8"/><rect x="40" y="42" width="20" height="20" fill="#00a859"/>
+                      <rect x="10" y="44" width="18" height="8"/><rect x="68" y="44" width="22" height="8"/>
+                      <rect x="42" y="68" width="10" height="18"/><rect x="62" y="66" width="12" height="12"/>
+                      <rect x="78" y="74" width="14" height="18"/><rect x="58" y="84" width="16" height="10"/>
+                    </svg>
+                  </div>
+                  <div class="space-y-2 flex-1">
+                    <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-extrabold text-[10px] uppercase">
+                      Liberação em 3 Segundos
+                    </span>
+                    <h5 class="font-extrabold text-sm text-slate-900">Escaneie o QR Code ou use o Pix Copia e Cola</h5>
+                    <p class="text-[11px] text-slate-500 leading-relaxed">
+                      Abra o aplicativo do seu banco, escolha pagar via Pix com QR Code ou copie o código abaixo:
+                    </p>
+                    <div class="flex items-center gap-1.5">
+                      <input type="text" id="pixCopyInput" readonly value="00020126580014BR.GOV.BCB.PIX0136convertefy-saas-pagamento-instantaneo5204000053039865802BR5915CONVERTEFY SAAS6009SAO PAULO62070503***6304E2A1" class="flex-1 bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-[10px] font-mono text-slate-600">
+                      <button type="button" onclick="copyPixCode()" id="btnCopyPix" class="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-bold text-[11px] shrink-0">
+                        <i class="fa-regular fa-copy"></i> Copiar Pix
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <button type="button" onclick="processFinalPayment('Pix Instantâneo')" id="btnConfirmPixPay" class="w-full py-3.5 rounded-xl bg-[#00a859] hover:bg-emerald-600 text-white font-extrabold text-sm shadow-lg shadow-emerald-600/25 transition flex items-center justify-center gap-2">
+                  <i class="fa-solid fa-circle-check"></i> Já Paguei via Pix — Ativar Meu Plano Agora
+                </button>
+              </div>
+
+              <!-- ABA 2: PAGAMENTO VIA CARTÃO DE CRÉDITO -->
+              <form id="paymentTabCard" onsubmit="event.preventDefault(); processFinalPayment('Cartão de Crédito');" class="hidden space-y-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label class="block font-bold text-slate-700 mb-1">Nome Impresso no Cartão *</label>
+                    <input type="text" required value="RAFAEL ADM CONVERTEFY" placeholder="Como está no cartão" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 font-semibold uppercase focus:outline-none focus:border-emerald-600">
+                  </div>
+                  <div>
+                    <label class="block font-bold text-slate-700 mb-1">CPF ou CNPJ do Titular *</label>
+                    <input type="text" required value="12.345.678/0001-99" placeholder="000.000.000-00" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 font-mono focus:outline-none focus:border-emerald-600">
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block font-bold text-slate-700 mb-1">Número do Cartão de Crédito *</label>
+                  <div class="relative">
+                    <input type="text" required value="4532 •••• •••• 8842" placeholder="0000 0000 0000 0000" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2 text-slate-800 font-mono focus:outline-none focus:border-emerald-600">
+                    <div class="absolute right-3 top-2 flex items-center gap-1.5 text-slate-400 text-sm">
+                      <i class="fa-brands fa-cc-visa text-blue-700"></i>
+                      <i class="fa-brands fa-cc-mastercard text-amber-600"></i>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block font-bold text-slate-700 mb-1">Validade (MM/AA) *</label>
+                    <input type="text" required value="12/30" placeholder="MM/AA" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 font-mono focus:outline-none focus:border-emerald-600">
+                  </div>
+                  <div>
+                    <label class="block font-bold text-slate-700 mb-1">Código CVV *</label>
+                    <input type="password" required value="884" maxlength="4" placeholder="123" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 font-mono focus:outline-none focus:border-emerald-600">
+                  </div>
+                </div>
+
+                <button type="submit" id="btnConfirmCardPay" class="w-full py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-sm shadow-lg shadow-blue-600/20 transition flex items-center justify-center gap-2 mt-2">
+                  <i class="fa-solid fa-lock"></i> Confirmar Pagamento no Cartão e Ativar Plano
+                </button>
+              </form>
+            </div>
+
+            <!-- Recibo de Confirmação Pós-Pagamento -->
+            <div id="checkoutBox" class="mt-4 p-3.5 rounded-2xl bg-slate-100 border border-slate-200 flex flex-wrap items-center justify-between gap-3">
+              <div class="flex items-center gap-2.5">
+                <i class="fa-solid fa-lock text-emerald-600 text-base"></i>
+                <span class="text-[11px] text-slate-600 font-semibold">Pagamento processado com criptografia bancária e nota fiscal automática.</span>
+              </div>
+              <span id="currentPlanStatus" class="px-2.5 py-1 rounded-lg bg-white border border-slate-300 font-bold text-slate-700 text-[11px]">
+                Aguardando Confirmação
+              </span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: CONVITE DE EQUIPE POR CÓDIGO & LIMITE DO PLANO    -->
+  <!-- ======================================================== -->
+  <div id="teamInviteModal" class="hidden fixed inset-0 bg-slate-900/75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-lg rounded-3xl border border-slate-200 shadow-2xl p-6 relative text-xs">
+      <button onclick="closeTeamInviteModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 text-lg">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="flex items-center gap-3 pb-3 border-b border-slate-100 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg font-bold">
+          <i class="fa-solid fa-users-gear"></i>
+        </div>
+        <div>
+          <h3 class="text-base font-bold text-slate-900">Gerenciar Equipe Ativa & Código de Convite</h3>
+          <p class="text-xs text-slate-500">Convide funcionários usando o código exclusivo da sua empresa</p>
+        </div>
+      </div>
+
+      <!-- Status do Limite do Plano -->
+      <div id="teamPlanAlertBox" class="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 mb-4 flex items-center justify-between gap-3">
+        <div>
+          <span class="text-[10px] font-extrabold text-amber-800 uppercase block" id="teamModalPlanTitle">Plano Atual: Starter (1 de 1 vaga usada)</span>
+          <p class="text-[11px] text-amber-700 mt-0.5" id="teamModalPlanDesc">Para liberar até 5 membros simultâneos por código, faça upgrade para o Plano Pro.</p>
+        </div>
+        <button onclick="closeTeamInviteModal(); openUpgradeModal();" id="teamModalUpgradeBtn" class="px-3 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-[11px] shrink-0 shadow-sm">
+          <i class="fa-solid fa-crown mr-1"></i> Fazer Upgrade
+        </button>
+      </div>
+
+      <!-- Código de Acesso Exclusivo para Convite -->
+      <div class="p-4 rounded-2xl bg-[#0c1322] text-white mb-4 border border-slate-800">
+        <div class="flex items-center justify-between mb-1.5">
+          <span class="text-[10px] font-bold text-cyan-300 uppercase tracking-wider">Código de Acesso ALRIS para Convidar Equipe:</span>
+          <span class="text-[10px] text-cyan-400 font-mono">● Ativo</span>
+        </div>
+        <div class="flex items-center justify-between bg-slate-950 p-3 rounded-xl border border-slate-800">
+          <span id="teamInviteCodeDisplay" class="mono text-lg font-black tracking-widest text-white">ALRIS-8842-TEAM</span>
+          <button onclick="copyInviteCode()" id="btnCopyCode" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold text-xs transition flex items-center gap-1.5">
+            <i class="fa-regular fa-copy"></i> Copiar Código
+          </button>
+        </div>
+        <p class="text-[11px] text-slate-400 mt-2">
+          Envie este código para o seu funcionário. Na tela de login, basta ele inserir o código para entrar direto no quadro Kanban da sua empresa!
+        </p>
+      </div>
+
+      <!-- Adicionar / Simular Entrada de Funcionário com o Código -->
+      <form onsubmit="addTeamMemberWithCode(event)" class="space-y-3 pt-2 border-t border-slate-100">
+        <label class="block font-bold text-slate-700">Adicionar Colaborador à Equipe Ativa Agora:</label>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+          <input type="text" id="newMemberName" required placeholder="Nome (ex: Lucas Torres)" class="sm:col-span-2 bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:border-blue-600">
+          <select id="newMemberRole" class="bg-slate-50 border border-slate-300 rounded-xl px-2.5 py-2 text-slate-800 font-semibold">
+            <option value="Vendas">Vendas</option>
+            <option value="Design">Design</option>
+            <option value="Dev">Dev</option>
+          </select>
+        </div>
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" onclick="closeTeamInviteModal()" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-600 font-semibold">Fechar</button>
+          <button type="submit" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-sm flex items-center gap-1.5">
+            <i class="fa-solid fa-user-plus"></i> Vincular Colaborador
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: CONEXÃO REAL COM A API DO GOOGLE GEMINI           -->
+  <!-- ======================================================== -->
+  <div id="apiModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-md rounded-2xl border border-slate-200 shadow-2xl p-6 relative text-xs">
+      <button onclick="closeApiModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 text-lg">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="flex items-center gap-3 pb-3 border-b border-slate-100 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg font-bold">
+          <i class="fa-solid fa-key"></i>
+        </div>
+        <div>
+          <h3 class="text-base font-bold text-slate-900">Conexão Real — Google Gemini API</h3>
+          <p class="text-xs text-slate-500">Conecta o painel diretamente ao motor oficial da Google</p>
+        </div>
+      </div>
+
+      <div class="space-y-3">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Chave de API (Google AI Studio)</label>
+          <input type="password" id="geminiApiKeyInput" placeholder="AIzaSy..." class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-800 font-mono focus:outline-none focus:border-blue-500">
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Modelo Selecionado</label>
+          <select id="geminiModelSelect" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-800 font-semibold">
+            <option value="gemini-2.5-flash">Gemini 2.5 / 3.8 Flash (Ultra-rápido para Calls ao Vivo)</option>
+            <option value="gemini-2.5-pro">Gemini Pro / Argon (Raciocínio Profundo de Vendas)</option>
+          </select>
+        </div>
+
+        <div class="pt-3 border-t border-slate-100 flex justify-end gap-2">
+          <button onclick="closeApiModal()" class="px-4 py-2 rounded-lg bg-slate-100 text-slate-600 font-semibold">Fechar</button>
+          <button onclick="saveApiKey()" class="px-5 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-sm">Salvar Conexão</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: NOVO CHAMADO COM CAMPOS DE NOME, LINK E BIO (IA) -->
+  <!-- ======================================================== -->
+  <div id="newTicketModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-lg rounded-2xl border border-slate-200 shadow-2xl p-6 relative">
+      
+      <button onclick="closeNewTicketModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 text-lg">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="flex items-center gap-3 pb-3 border-b border-slate-100 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg font-bold">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+        </div>
+        <div>
+          <h3 class="text-base font-bold text-slate-900">Novo Chamado / Lead com IA</h3>
+          <p class="text-xs text-slate-500">Informe os dados ou o link para o Gemini extrair a dor do cliente</p>
+        </div>
+      </div>
+
+      <form id="newTicketForm" onsubmit="handleCreateTicket(event)" class="space-y-3.5 text-xs">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Nome do Cliente ou Decisor *</label>
+            <input type="text" id="ticketName" required placeholder="Ex: Roberto Silva" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-800 focus:outline-none focus:border-blue-500">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">WhatsApp do Cliente</label>
+            <input type="text" id="ticketPhone" placeholder="Ex: 5511987654321" value="5511987654321" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-800 focus:outline-none focus:border-blue-500">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Nome da Empresa & Segmento *</label>
+          <input type="text" id="ticketCompany" required placeholder="Ex: Imobiliária Prime (Imóveis)" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-800 focus:outline-none focus:border-blue-500">
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Link do Instagram, Facebook ou Site Atual</label>
+          <input type="text" id="ticketLink" placeholder="Ex: instagram.com/imobiliariaprime" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-800 focus:outline-none focus:border-blue-500">
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Biografia do Perfil ou Informações que o Cliente Falou</label>
+          <textarea id="ticketBio" rows="3" placeholder="Cole a bio da rede social ou anotações do cliente..." class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-800 focus:outline-none focus:border-blue-500"></textarea>
+        </div>
+
+        <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
+          <button type="button" onclick="closeNewTicketModal()" class="px-4 py-2 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-semibold transition">
+            Cancelar
+          </button>
+          <button type="submit" id="btnCreateTicket" class="px-5 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold transition flex items-center gap-1.5 shadow-sm">
+            <i class="fa-solid fa-sparkles"></i> Analisar com IA & Adicionar ao Kanban
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: CENTRAL DE DISCADOR VOIP & CHAMADA WHATSAPP PC    -->
+  <!-- ======================================================== -->
+  <div id="voipDialerModal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-md rounded-3xl border border-slate-200 shadow-2xl p-6 relative text-xs">
+      <button onclick="closeVoipDialerModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 text-lg">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="flex items-center gap-3 pb-3 border-b border-slate-100 mb-4">
+        <div class="w-11 h-11 rounded-2xl bg-blue-600 text-white flex items-center justify-center text-lg font-bold shadow">
+          <i class="fa-solid fa-phone-volume"></i>
+        </div>
+        <div>
+          <h3 class="text-base font-extrabold text-slate-900">Discador de Voz & Telefonia ALRIS</h3>
+          <p class="text-[11px] text-slate-500">Conectado ao cliente: <strong id="dialerClientName" class="text-slate-800">Eduardo Costa</strong></p>
+        </div>
+      </div>
+
+      <!-- Visor do Número com Botão de Copiar Rápido -->
+      <div class="p-3.5 rounded-2xl bg-[#0b1120] text-white mb-4 flex items-center justify-between border border-slate-800">
+        <div>
+          <span class="text-[9px] text-cyan-400 font-bold uppercase tracking-wider block">Número do Cliente (Pronto p/ Discar):</span>
+          <span id="dialerPhoneDisplay" class="mono text-lg font-black text-white">+5511987654321</span>
+        </div>
+        <button type="button" onclick="copyClientPhone()" id="btnCopyModalPhone" class="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition flex items-center gap-1.5 shadow">
+          <i class="fa-regular fa-copy"></i> Copiar Número
+        </button>
+      </div>
+
+      <!-- 3 Formas de Ligar Mesmo Sem Aplicativo Instalado no PC -->
+      <div class="space-y-2.5">
+        <button type="button" onclick="copyClientPhone()" class="w-full p-3 rounded-2xl bg-blue-50 hover:bg-blue-100 border border-blue-200 text-left transition flex items-center justify-between group">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center text-sm shrink-0">
+              <i class="fa-solid fa-copy"></i>
+            </div>
+            <div>
+              <strong class="text-slate-900 block text-xs">1. Sem App no PC? Copiar Número e Ligar pelo Celular (Viva-Voz)</strong>
+              <span class="text-[10px] text-slate-600">Disque no seu celular no viva-voz • O Microfone do PC escuta a conversa e a IA analisa ao vivo!</span>
+            </div>
+          </div>
+          <span class="text-[10px] font-extrabold text-blue-700 bg-white px-2 py-1 rounded-lg border border-blue-200 shrink-0">Recomendado</span>
+        </button>
+
+        <button type="button" onclick="startWhatsAppCall(); closeVoipDialerModal();" class="w-full p-3 rounded-2xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-left transition flex items-center justify-between group">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-base shrink-0">
+              <i class="fa-brands fa-whatsapp"></i>
+            </div>
+            <div>
+              <strong class="text-slate-900 block text-xs">2. Abrir Conversa Direto no WhatsApp Web (Navegador)</strong>
+              <span class="text-[10px] text-slate-600">Abre web.whatsapp.com direto no navegador sem pedir aplicativo externo</span>
+            </div>
+          </div>
+          <i class="fa-solid fa-arrow-up-right-from-square text-emerald-600"></i>
+        </button>
+
+        <button type="button" onclick="triggerSystemTelCall()" class="w-full p-2.5 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-left transition flex items-center justify-between group">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-xl bg-slate-200 text-slate-700 flex items-center justify-center text-xs shrink-0">
+              <i class="fa-solid fa-headset"></i>
+            </div>
+            <div>
+              <strong class="text-slate-700 block text-[11px]">3. Já tem Discador SIP / Softphone instalado? (Usar protocolo tel:)</strong>
+              <span class="text-[10px] text-slate-500">Aciona aplicativos externos como Zoiper, MicroSIP ou KDE Connect</span>
+            </div>
+          </div>
+          <i class="fa-solid fa-chevron-right text-slate-400"></i>
+        </button>
+      </div>
+
+      <div class="mt-4 pt-3 border-t border-slate-100 flex justify-end">
+        <button type="button" onclick="closeVoipDialerModal()" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs">
+          Continuar Atendimento com IA Ativa
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let sentimentChart = null;
+    let recognition = null;
+    let isListeningMic = false;
+    let activeClientPhone = "5511987654321";
+    let currentPlanLimit = 1;
+    let currentPlanName = "Starter";
+    let activeTeamMembers = [
+      { name: "Rafael (Você)", initials: "RC", role: "ADM", color: "bg-blue-600" }
+    ];
+    let pcCallTimerInterval = null;
+    let pcCallSeconds = 0;
+
+    function toggleProfileDropdown() {
+      const drop = document.getElementById('profileDropdown');
+      if (drop) drop.classList.toggle('hidden');
+    }
+
+    function openTeamInviteModal() {
+      document.getElementById('teamInviteModal').classList.remove('hidden');
+    }
+
+    function closeTeamInviteModal() {
+      document.getElementById('teamInviteModal').classList.add('hidden');
+    }
+
+    function copyInviteCode() {
+      const code = document.getElementById('teamInviteCodeDisplay').innerText;
+      if (navigator.clipboard) navigator.clipboard.writeText(code);
+      const btn = document.getElementById('btnCopyCode');
+      btn.innerHTML = `<i class="fa-solid fa-check"></i> Copiado!`;
+      setTimeout(() => {
+        btn.innerHTML = `<i class="fa-regular fa-copy"></i> Copiar Código`;
+      }, 2000);
+    }
+
+    function handleLandingScroll3D(container) {
+      const companion = document.getElementById('scroll3DCompanion');
+      const cube = document.getElementById('scroll3DCoreCube');
+      const label = document.getElementById('scroll3DStageLabel');
+      const planosSection = document.getElementById('planos');
+      if (!companion || !container || !planosSection) return;
+
+      const scrollTop = container.scrollTop;
+      const planosTop = planosSection.offsetTop - 420;
+
+      // Desce acompanhando o scroll e desaparece suavemente ao chegar na seção de Planos
+      if (scrollTop >= planosTop) {
+        companion.style.opacity = '0';
+        companion.style.transform = `translateY(${Math.min(scrollTop * 0.18, 220)}px) scale(0.75)`;
+        return;
+      }
+
+      companion.style.opacity = '1';
+      const translateY = Math.min(scrollTop * 0.22, 260);
+      const rotY = (scrollTop * 0.35) % 360;
+      const rotX = Math.sin(scrollTop * 0.01) * 18;
+
+      companion.style.transform = `translateY(${translateY}px)`;
+      if (cube) {
+        cube.style.transform = `rotateY(${rotY}deg) rotateX(${rotX}deg)`;
+      }
+
+      if (label) {
+        if (scrollTop < 250) {
+          label.innerText = "ALRIS 3D • Início";
+        } else if (scrollTop < 900) {
+          label.innerText = "ALRIS 3D • Tour Visual";
+        } else if (scrollTop < 1450) {
+          label.innerText = "ALRIS 3D • Fluxo Kanban";
+        } else {
+          label.innerText = "ALRIS 3D • Recursos IA";
+        }
+      }
+    }
+
+    function filterKanbanCards(query) {
+      const q = (query || '').toLowerCase().trim();
+      const cards = document.querySelectorAll('#view-kanban .pipefy-card');
+      cards.forEach(card => {
+        const text = card.innerText.toLowerCase();
+        card.style.display = (!q || text.includes(q)) ? '' : 'none';
+      });
+    }
+
+    function renderTeamBar() {
+      const container = document.getElementById('activeTeamAvatars');
+      const countLabel = document.getElementById('teamCountLabel');
+      const limitStr = currentPlanLimit > 20 ? '∞' : currentPlanLimit;
+      if (countLabel) countLabel.innerText = `${activeTeamMembers.length}/${limitStr}`;
+
+      if (container) {
+        container.innerHTML = activeTeamMembers.map(m => `
+          <span class="w-5 h-5 rounded-full ${m.color} text-white font-bold text-[9px] flex items-center justify-center ring-1 ring-slate-900" title="${m.name} (${m.role}) - Online">${m.initials}</span>
+        `).join('');
+      }
+    }
+
+    function addTeamMemberWithCode(e) {
+      e.preventDefault();
+      if (activeTeamMembers.length >= currentPlanLimit) {
+        alert(`Seu plano atual (${currentPlanName}) permite até ${currentPlanLimit} membro(s) ativo(s). Faça o Upgrade para o Plano Pro ou Enterprise para liberar mais vagas com o código de convite!`);
+        closeTeamInviteModal();
+        openUpgradeModal();
+        return;
+      }
+
+      const name = document.getElementById('newMemberName').value.trim();
+      const role = document.getElementById('newMemberRole').value;
+      if (!name) return;
+
+      const colors = ['bg-emerald-600', 'bg-purple-600', 'bg-amber-600', 'bg-cyan-600', 'bg-indigo-600'];
+      const color = colors[activeTeamMembers.length % colors.length];
+      const initials = name.split(' ').map(p => p[0]).join('').substring(0, 2).toUpperCase();
+
+      activeTeamMembers.push({ name, initials, role, color });
+      renderTeamBar();
+
+      document.getElementById('newMemberName').value = '';
+      document.getElementById('teamModalPlanTitle').innerText = `Plano Atual: ${currentPlanName} (${activeTeamMembers.length} de ${currentPlanLimit > 20 ? 'Ilimitadas' : currentPlanLimit} vagas usadas)`;
+    }
+
+    // Navegação Hierárquica Sequencial:
+    // 1. 'landing' (Pública) -> 2. 'login' (Autenticação) -> 3. 'kanban' (Workspace) -> 4. 'callcenter' (Atendimento do Card)
+    function goToView(view) {
+      const landing = document.getElementById('view-landing');
+      const login = document.getElementById('view-login');
+      const shell = document.getElementById('workspace-shell');
+      const kanban = document.getElementById('view-kanban');
+      const callcenter = document.getElementById('view-callcenter');
+      const breadcrumb = document.getElementById('workspaceBreadcrumb');
+
+      landing.classList.add('hidden');
+      login.classList.add('hidden');
+      shell.classList.add('hidden');
+      kanban.classList.add('hidden');
+      callcenter.classList.add('hidden');
+
+      if (view === 'landing') {
+        landing.classList.remove('hidden');
+      } else if (view === 'login') {
+        login.classList.remove('hidden');
+      } else if (view === 'kanban') {
+        shell.classList.remove('hidden');
+        kanban.classList.remove('hidden');
+        if (breadcrumb) breadcrumb.innerText = "Etapa Atual: Quadro Kanban de Processos";
+      } else if (view === 'callcenter') {
+        shell.classList.remove('hidden');
+        callcenter.classList.remove('hidden');
+        if (breadcrumb) breadcrumb.innerText = "Etapa Atual: Atendimento ao Vivo & Copiloto IA";
+        setTimeout(initSentimentChart, 50);
+      }
+    }
+
+    let selectedCheckoutPlanName = "Plano Pro Growth";
+    let selectedCheckoutPlanPrice = "299,00";
+    let selectedCheckoutPlanSeats = 5;
+
+    function openPaymentCheckout(planName, priceStr, seatsLimit) {
+      selectedCheckoutPlanName = planName;
+      selectedCheckoutPlanPrice = priceStr;
+      selectedCheckoutPlanSeats = seatsLimit;
+
+      document.getElementById('upgradeModal').classList.remove('hidden');
+      document.getElementById('upgradeStepPlans').classList.add('hidden');
+      document.getElementById('upgradeStepCheckout').classList.remove('hidden');
+
+      document.getElementById('checkoutPlanTitle').innerText = planName;
+      document.getElementById('checkoutPlanPrice').innerText = priceStr;
+      document.getElementById('checkoutPlanSeats').innerText = seatsLimit > 20 ? 'Ilimitados (∞)' : `Até ${seatsLimit} membro(s)`;
+    }
+
+    function backToPlanSelection() {
+      document.getElementById('upgradeStepCheckout').classList.add('hidden');
+      document.getElementById('upgradeStepPlans').classList.remove('hidden');
+    }
+
+    function switchPaymentTab(tab) {
+      const pixBox = document.getElementById('paymentTabPix');
+      const cardBox = document.getElementById('paymentTabCard');
+      const btnPix = document.getElementById('tabBtnPix');
+      const btnCard = document.getElementById('tabBtnCard');
+
+      if (tab === 'pix') {
+        pixBox.classList.remove('hidden');
+        cardBox.classList.add('hidden');
+        btnPix.className = "py-2.5 px-3 rounded-xl font-extrabold text-xs bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-sm transition flex items-center justify-center gap-1.5";
+        btnCard.className = "py-2.5 px-3 rounded-xl font-bold text-xs text-slate-600 hover:text-slate-900 transition flex items-center justify-center gap-1.5";
+      } else {
+        pixBox.classList.add('hidden');
+        cardBox.classList.remove('hidden');
+        btnCard.className = "py-2.5 px-3 rounded-xl font-extrabold text-xs bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-sm transition flex items-center justify-center gap-1.5";
+        btnPix.className = "py-2.5 px-3 rounded-xl font-bold text-xs text-slate-600 hover:text-slate-900 transition flex items-center justify-center gap-1.5";
+      }
+    }
+
+    function copyPixCode() {
+      const pixInput = document.getElementById('pixCopyInput');
+      if (navigator.clipboard && pixInput) navigator.clipboard.writeText(pixInput.value);
+      const btn = document.getElementById('btnCopyPix');
+      btn.innerHTML = `<i class="fa-solid fa-check text-cyan-400"></i> Copiado!`;
+      setTimeout(() => {
+        btn.innerHTML = `<i class="fa-regular fa-copy"></i> Copiar Pix`;
+      }, 2000);
+    }
+
+    function processFinalPayment(methodLabel) {
+      const btnPix = document.getElementById('btnConfirmPixPay');
+      const btnCard = document.getElementById('btnConfirmCardPay');
+      if (btnPix) btnPix.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Validando Pagamento (${methodLabel})...`;
+      if (btnCard) btnCard.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Processando Cartão...`;
+
+      setTimeout(() => {
+        confirmSubscriptionUpgrade(`${selectedCheckoutPlanName} (R$ ${selectedCheckoutPlanPrice}/mês via ${methodLabel})`);
+        if (btnPix) btnPix.innerHTML = `<i class="fa-solid fa-circle-check"></i> Pagamento Aprovado — Plano Ativo!`;
+        if (btnCard) btnCard.innerHTML = `<i class="fa-solid fa-circle-check"></i> Assinatura Ativada no Cartão!`;
+      }, 650);
+    }
+
+    function selectPlan(planName) {
+      if (planName.includes('Starter')) {
+        openPaymentCheckout('Plano Starter', '149,00', 1);
+      } else if (planName.includes('Enterprise')) {
+        openPaymentCheckout('Plano Enterprise Scale', '699,00', 99);
+      } else {
+        openPaymentCheckout('Plano Pro Growth', '299,00', 5);
+      }
+    }
+
+    function switchLoginMode(mode) {
+      const boxAdmin = document.getElementById('loginBoxAdmin');
+      const boxTeam = document.getElementById('loginBoxTeam');
+      const btnAdmin = document.getElementById('btnModeAdmin');
+      const btnTeam = document.getElementById('btnModeTeam');
+
+      if (mode === 'admin') {
+        boxAdmin.classList.remove('hidden');
+        boxTeam.classList.add('hidden');
+        btnAdmin.className = "py-2.5 px-3 rounded-xl font-extrabold text-xs bg-blue-600 text-white shadow-sm transition flex items-center justify-center gap-1.5";
+        btnTeam.className = "py-2.5 px-3 rounded-xl font-bold text-xs text-slate-600 hover:text-slate-900 transition flex items-center justify-center gap-1.5";
+      } else {
+        boxAdmin.classList.add('hidden');
+        boxTeam.classList.remove('hidden');
+        btnTeam.className = "py-2.5 px-3 rounded-xl font-extrabold text-xs bg-purple-600 text-white shadow-sm transition flex items-center justify-center gap-1.5";
+        btnAdmin.className = "py-2.5 px-3 rounded-xl font-bold text-xs text-slate-600 hover:text-slate-900 transition flex items-center justify-center gap-1.5";
+      }
+    }
+
+    function handleAdminLogin(e) {
+      if (e) e.preventDefault();
+      const company = document.getElementById('adminCompanyInput') ? document.getElementById('adminCompanyInput').value.trim() : "Agência Rafael Tech";
+      const adminName = document.getElementById('adminNameInput') ? document.getElementById('adminNameInput').value.trim() : "Rafael";
+      const initials = adminName.substring(0, 2).toUpperCase();
+
+      document.getElementById('navAvatar').innerText = initials;
+      document.getElementById('navUserName').innerText = `${adminName} (ADM)`;
+      if (document.getElementById('dropUserName')) {
+        document.getElementById('dropUserName').innerText = `${adminName} — ${company}`;
+      }
+      renderTeamBar();
+      goToView('kanban');
+    }
+
+    function loginDemoAdmin() {
+      // Conta Demo Administrador já com Plano Pro (5 vagas liberadas e equipe ativa para demonstração)
+      currentPlanName = "Pro Growth (Demo)";
+      currentPlanLimit = 5;
+      activeTeamMembers = [
+        { name: "Rafael (Admin Demo)", initials: "RC", role: "ADM", color: "bg-blue-600" },
+        { name: "Lucas Torres", initials: "LT", role: "Vendas", color: "bg-cyan-600" },
+        { name: "Mariana Alves", initials: "MA", role: "Design", color: "bg-purple-600" }
+      ];
+      document.getElementById('navAvatar').innerText = "RC";
+      document.getElementById('navUserName').innerText = "Rafael (ADM Demo)";
+      if (document.getElementById('topPlanBadge')) {
+        document.getElementById('topPlanBadge').className = "text-[10px] bg-cyan-500/20 text-cyan-300 font-bold px-2 py-0.5 rounded border border-cyan-400/30";
+        document.getElementById('topPlanBadge').innerText = "PRO DEMO (3/5)";
+      }
+      if (document.getElementById('dropPlanInfo')) {
+        document.getElementById('dropPlanInfo').innerText = "Plano: Pro Growth Demo (Até 5 membros)";
+      }
+      renderTeamBar();
+      goToView('kanban');
+    }
+
+    function sendConfirmationEmailDemo() {
+      const email = document.getElementById('loginEmail') ? document.getElementById('loginEmail').value : "rafael@alris.com.br";
+      const btn = document.getElementById('btnEmailConfirm');
+      btn.className = "w-full py-2 px-3 rounded-lg bg-cyan-100 text-cyan-900 border border-cyan-300 font-bold text-[11px] transition flex items-center justify-center gap-1.5";
+      btn.innerHTML = `<i class="fa-solid fa-check-double"></i> Link de Confirmação Enviado para ${email}!`;
+    }
+
+    function handleTeamCodeLogin(e) {
+      if (e) e.preventDefault();
+      const code = document.getElementById('teamCodeInput').value.trim().toUpperCase();
+      const memberName = document.getElementById('memberLoginName').value.trim() || "Colaborador";
+      const memberRole = document.getElementById('memberLoginRole').value;
+      const initials = memberName.split(' ').map(p => p[0]).join('').substring(0, 2).toUpperCase();
+
+      if (!code.startsWith('ALRIS-') && !code.startsWith('CONV-')) {
+        alert('Código inválido! Use o código fornecido pelo Administrador (ex: ALRIS-8842-TEAM).');
+        return;
+      }
+
+      // Garante vaga para demonstração quando entra via código
+      if (currentPlanLimit < 5) {
+        currentPlanLimit = 5;
+        currentPlanName = "Pro Growth";
+      }
+
+      const exists = activeTeamMembers.some(m => m.name.toLowerCase() === memberName.toLowerCase());
+      if (!exists) {
+        activeTeamMembers.push({ name: memberName, initials, role: memberRole, color: "bg-purple-600" });
+      }
+
+      document.getElementById('navAvatar').innerText = initials;
+      document.getElementById('navUserName').innerText = `${memberName} (Equipe)`;
+      if (document.getElementById('dropUserName')) {
+        document.getElementById('dropUserName').innerText = `${memberName} — ${memberRole}`;
+      }
+      if (document.getElementById('topPlanBadge')) {
+        document.getElementById('topPlanBadge').className = "text-[10px] bg-cyan-500/20 text-cyan-300 font-bold px-2 py-0.5 rounded border border-cyan-400/30";
+        document.getElementById('topPlanBadge').innerText = `CÓDIGO: ${code}`;
+      }
+      renderTeamBar();
+      goToView('kanban');
+    }
+
+    function handleUserLogin(e) {
+      handleAdminLogin(e);
+    }
+
+    function quickLogin(name, initials) {
+      loginDemoAdmin();
+    }
+
+    let isRecordingCall = false;
+
+    function toggleCallRecording() {
+      isRecordingCall = !isRecordingCall;
+      const dot = document.getElementById('recordDot');
+      const txt = document.getElementById('recordBtnText');
+      if (isRecordingCall) {
+        if (dot) dot.className = "w-2 h-2 rounded-full bg-rose-500 animate-ping";
+        if (txt) txt.innerText = "Gravando...";
+      } else {
+        if (dot) dot.className = "w-2 h-2 rounded-full bg-slate-400";
+        if (txt) txt.innerText = "Gravar";
+      }
+    }
+
+    function endActiveCall() {
+      if (pcCallTimerInterval) {
+        clearInterval(pcCallTimerInterval);
+        pcCallTimerInterval = null;
+      }
+      if (isListeningMic && recognition) {
+        recognition.stop();
+        isListeningMic = false;
+      }
+      const timerTxt = document.getElementById('topCallTimerText');
+      if (timerTxt) timerTxt.innerText = "Chamada Finalizada";
+      const badge = document.getElementById('callActiveBadge');
+      if (badge) {
+        badge.className = "px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200 font-bold text-[10px]";
+        badge.innerText = "Encerrada";
+      }
+    }
+
+    function updateChecklistProgress() {
+      const checks = document.querySelectorAll('.chk-item');
+      let done = 0;
+      checks.forEach(c => { if (c.checked) done++; });
+      const total = checks.length || 3;
+      const pct = Math.round((done / total) * 100);
+      const titleEl = document.getElementById('checklistTitleText');
+      const barEl = document.getElementById('checklistProgressBar');
+      const pctEl = document.getElementById('checklistPercentText');
+      if (titleEl) titleEl.innerText = `CHECKLIST DO ATENDIMENTO (${done}/${total} CONCLUÍDO)`;
+      if (barEl) barEl.style.width = `${pct}%`;
+      if (pctEl) pctEl.innerText = `${pct}%`;
+    }
+
+    // Abre o Atendimento ao Vivo específico do Card clicado no Kanban
+    function openClientAttendance(name, company, phone, channel, inventory, pain) {
+      activeClientPhone = phone.replace(/\D/g, '') || "5511987654321";
+      document.getElementById('liveCardName').innerText = name;
+      document.getElementById('liveCardCompany').innerText = company;
+      document.getElementById('liveCardPhone').innerText = phone.startsWith('+') ? phone : `+${phone}`;
+      document.getElementById('liveCardChannel').innerText = channel;
+      document.getElementById('liveCardInventory').innerText = inventory;
+      document.getElementById('liveCardPain').innerText = `"${pain}"`;
+      document.getElementById('liveAvatar').innerText = name.substring(0, 2).toUpperCase();
+      const firstName = name.split(' ')[0];
+      const lbl = document.getElementById('transcriptClientLabel');
+      if (lbl) lbl.innerText = `Cliente (${firstName})`;
+
+      const badge = document.getElementById('callActiveBadge');
+      if (badge) {
+        badge.className = "px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold text-[10px]";
+        badge.innerText = "Ligação Ativa";
+      }
+
+      goToView('callcenter');
+    }
+
+    function copyClientPhone() {
+      const formatted = `+${activeClientPhone}`;
+      if (navigator.clipboard) navigator.clipboard.writeText(formatted);
+      const b1 = document.getElementById('btnCopyCardPhone');
+      const b2 = document.getElementById('btnCopyModalPhone');
+      if (b1) {
+        b1.innerHTML = `<i class="fa-solid fa-check text-emerald-600"></i> Copiado!`;
+        setTimeout(() => { b1.innerHTML = `<i class="fa-regular fa-copy"></i> Copiar`; }, 2000);
+      }
+      if (b2) {
+        b2.innerHTML = `<i class="fa-solid fa-check"></i> Número Copiado!`;
+        setTimeout(() => { b2.innerHTML = `<i class="fa-regular fa-copy"></i> Copiar Número`; }, 2000);
+      }
+    }
+
+    function closeVoipDialerModal() {
+      const m = document.getElementById('voipDialerModal');
+      if (m) m.classList.add('hidden');
+    }
+
+    function triggerSystemTelCall() {
+      window.location.href = `tel:+${activeClientPhone}`;
+      closeVoipDialerModal();
+    }
+
+    function startNormalPhoneCall() {
+      const name = document.getElementById('liveCardName').innerText;
+      const phone = activeClientPhone;
+      const btn = document.getElementById('btnNormalCall');
+      const softLine = document.getElementById('softphoneStatusLine');
+      const timerTxt = document.getElementById('topCallTimerText');
+
+      const dName = document.getElementById('dialerClientName');
+      const dPhone = document.getElementById('dialerPhoneDisplay');
+      if (dName) dName.innerText = name;
+      if (dPhone) dPhone.innerText = `+${phone}`;
+      const modal = document.getElementById('voipDialerModal');
+      if (modal) modal.classList.remove('hidden');
+
+      if (!pcCallTimerInterval) {
+        pcCallSeconds = 252;
+        btn.className = "w-8 h-8 rounded-lg bg-blue-600 text-white border border-blue-700 flex items-center justify-center transition shadow-sm animate-pulse";
+
+        pcCallTimerInterval = setInterval(() => {
+          pcCallSeconds++;
+          const mins = String(Math.floor(pcCallSeconds / 60)).padStart(2, '0');
+          const secs = String(pcCallSeconds % 60).padStart(2, '0');
+          if (timerTxt) timerTxt.innerText = `Em Atendimento • ${mins}:${secs}`;
+          if (softLine) softLine.innerText = `VoIP WebRTC Conectado (${mins}:${secs})`;
+        }, 1000);
+      }
+      
+      if (!isListeningMic) toggleRealMicrophone();
+
+      const box = document.getElementById('transcriptBox');
+      box.innerHTML += `
+        <div class="p-2.5 rounded-xl bg-blue-50 border border-blue-200 text-center text-[11px] font-bold text-blue-800">
+          <i class="fa-solid fa-headset mr-1"></i> Central VoIP & Microfone IA ativados para ${name} (+${phone})!
+        </div>
+      `;
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function startWhatsAppCall() {
+      const name = document.getElementById('liveCardName').innerText;
+      const phone = activeClientPhone;
+      const btn = document.getElementById('btnWhatsCall');
+
+      btn.className = "w-8 h-8 rounded-lg bg-emerald-600 text-white border border-emerald-700 flex items-center justify-center transition shadow-sm";
+
+      if (!isListeningMic) toggleRealMicrophone();
+
+      const msgText = `Olá ${name}, tudo bem? Estou entrando em contato sobre o novo site da sua empresa!`;
+      const webUrl = `https://web.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(msgText)}`;
+
+      const box = document.getElementById('transcriptBox');
+      box.innerHTML += `
+        <div class="p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-center text-[11px] font-bold text-emerald-800">
+          <i class="fa-brands fa-whatsapp mr-1"></i> WhatsApp Web aberto diretamente no navegador para ${name} (+${phone}) — IA escutando em tempo real...
+        </div>
+      `;
+      box.scrollTop = box.scrollHeight;
+      window.open(webUrl, '_blank');
+    }
+
+    function sendWhatsAppContract() {
+      const name = document.getElementById('liveCardName').innerText;
+      const company = document.getElementById('liveCardCompany').innerText;
+      const phone = activeClientPhone;
+
+      const chkClose = document.getElementById('chkClosing');
+      if (chkClose) {
+        chkClose.checked = true;
+        updateChecklistProgress();
+      }
+
+      simulateEvent('positive_close');
+
+      const msg = `Olá ${name}! Conforme conversamos na ligação, segue a proposta oficial e o contrato para o novo site de alta conversão da *${company}*:\n\n✅ Layout Mobile Ultrarrápido (abertura < 1s)\n✅ Integração Direta com WhatsApp e Instagram\n✅ Condição aprovada: 3x sem juros\n\n👉 *Clique aqui para assinar digitalmente e confirmar:* https://alris.com.br/contrato/${encodeURIComponent(company.toLowerCase().replace(/\s+/g, '-'))}`;
+
+      window.open(`https://web.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    function openUpgradeModal() {
+      document.getElementById('upgradeModal').classList.remove('hidden');
+    }
+
+    function closeUpgradeModal() {
+      document.getElementById('upgradeModal').classList.add('hidden');
+    }
+
+    function confirmSubscriptionUpgrade(planName) {
+      if (planName.includes('Pro')) {
+        currentPlanLimit = 5;
+        currentPlanName = "Pro Team";
+        if (activeTeamMembers.length < 3) {
+          activeTeamMembers = [
+            { name: "Rafael (Você)", initials: "RC", role: "ADM", color: "bg-blue-600" },
+            { name: "Lucas Torres", initials: "LT", role: "Vendas", color: "bg-emerald-600" },
+            { name: "Mariana Alves", initials: "MA", role: "Design", color: "bg-purple-600" }
+          ];
+        }
+      } else if (planName.includes('Enterprise')) {
+        currentPlanLimit = 99;
+        currentPlanName = "Enterprise";
+      } else {
+        currentPlanLimit = 1;
+        currentPlanName = "Starter";
+      }
+
+      renderTeamBar();
+      const limitStr = currentPlanLimit > 20 ? '∞' : currentPlanLimit;
+      if (document.getElementById('topPlanBadge')) {
+        document.getElementById('topPlanBadge').className = "text-[10px] bg-emerald-500/20 text-emerald-300 font-bold px-2 py-0.5 rounded border border-emerald-400/30";
+        document.getElementById('topPlanBadge').innerText = `${currentPlanName.toUpperCase()} (${activeTeamMembers.length}/${limitStr})`;
+      }
+      if (document.getElementById('dropPlanInfo')) {
+        document.getElementById('dropPlanInfo').innerText = `Plano Atual: ${currentPlanName} (Limite ${limitStr} membros)`;
+      }
+      if (document.getElementById('teamModalPlanTitle')) {
+        document.getElementById('teamModalPlanTitle').innerText = `Plano Atual: ${currentPlanName} (${activeTeamMembers.length} de ${limitStr} vagas usadas)`;
+      }
+
+      const box = document.getElementById('checkoutBox');
+      box.className = "p-4 rounded-2xl bg-emerald-50 border-2 border-emerald-400 flex flex-wrap items-center justify-between gap-4";
+      box.innerHTML = `
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-lg">
+            <i class="fa-solid fa-check-double"></i>
+          </div>
+          <div>
+            <strong class="text-emerald-950 block text-sm">Assinatura Confirmada: ${planName}!</strong>
+            <span class="text-xs text-emerald-700">Limite de equipe atualizado (${limitStr} vagas) e código de convite CONV-8842-TEAM liberado!</span>
+          </div>
+        </div>
+        <button onclick="closeUpgradeModal()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs shadow">
+          Continuar Usando Painel &rarr;
+        </button>
+      `;
+    }
+
+    function openApiModal() {
+      const savedKey = localStorage.getItem('APEX_GEMINI_KEY') || '';
+      document.getElementById('geminiApiKeyInput').value = savedKey;
+      document.getElementById('apiModal').classList.remove('hidden');
+    }
+
+    function closeApiModal() {
+      document.getElementById('apiModal').classList.add('hidden');
+    }
+
+    function saveApiKey() {
+      const key = document.getElementById('geminiApiKeyInput').value.trim();
+      const model = document.getElementById('geminiModelSelect').value;
+      const statusTxt = document.getElementById('apiStatusText');
+      if (key) {
+        localStorage.setItem('APEX_GEMINI_KEY', key);
+        localStorage.setItem('APEX_GEMINI_MODEL', model);
+        if (statusTxt) {
+          statusTxt.innerText = 'Ativa';
+          statusTxt.className = 'text-[9px] bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded font-extrabold';
+        }
+      } else {
+        localStorage.removeItem('APEX_GEMINI_KEY');
+        if (statusTxt) {
+          statusTxt.innerText = 'Padrão';
+          statusTxt.className = 'text-[9px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded font-bold';
+        }
+      }
+      closeApiModal();
+    }
+
+    async function callRealGeminiAPI(customerSpeech) {
+      const apiKey = localStorage.getItem('APEX_GEMINI_KEY');
+      const model = localStorage.getItem('APEX_GEMINI_MODEL') || 'gemini-2.5-flash';
+      const clientCompany = document.getElementById('liveCardCompany').innerText;
+
+      if (apiKey) {
+        try {
+          const prompt = `Você é um Copiloto de Vendas em tempo real falando com o cliente da empresa "${clientCompany}".
+O cliente acabou de dizer: "${customerSpeech}"
+Responda APENAS com um objeto JSON válido:
+{
+  "probabilidade": <numero de 10 a 98>,
+  "status_curto": "<ex: Objeção de Preço | Dúvida de Prazo | Sinal de Compra | Risco de Perda>",
+  "tom_cliente": "<ex: Cauteloso | Interessado | Resistente | Decidido>",
+  "sugestao_fala": "<frase persuasiva e direta que o vendedor deve falar agora para converter o cliente>"
+}`;
+          const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: prompt }] }],
+              generationConfig: { responseMimeType: "application/json" }
+            })
+          });
+          if (resp.ok) {
+            const data = await resp.json();
+            const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+            if (rawText) return JSON.parse(rawText);
+          }
+        } catch (err) {
+          console.warn('Fallback local:', err);
+        }
+      }
+
+      const lower = customerSpeech.toLowerCase();
+      if (lower.includes('caro') || lower.includes('preço') || lower.includes('valor') || lower.includes('desconto')) {
+        return {
+          probabilidade: 38,
+          status_curto: 'Área de Risco: Preço',
+          tom_cliente: 'Resistente a Preço',
+          sugestao_fala: `"Entendo sua cautela com o investimento. Mas pense comigo: um site lento faz você perder clientes todos os dias. Se parcelarmos em 3x sem juros e o novo site te trouxer apenas 1 cliente novo nesta semana, o projeto já se paga sozinho. Vamos fechar assim?"`
+        };
+      } else if (lower.includes('pensar') || lower.includes('sócio') || lower.includes('depois')) {
+        return {
+          probabilidade: 44,
+          status_curto: 'Risco: Adiamento',
+          tom_cliente: 'Indeciso / Adiando',
+          sugestao_fala: `"Claro! Qual é a principal dúvida que você e seu sócio ainda têm? Se eu liberar um bônus de 30 dias de suporte VIP e hospedagem gratuita para fecharmos hoje, ajuda vocês a baterem o martelo?"`
+        };
+      } else if (lower.includes('fechar') || lower.includes('gostei') || lower.includes('manda') || lower.includes('contrato')) {
+        return {
+          probabilidade: 95,
+          status_curto: 'Venda Convertida!',
+          tom_cliente: 'Decidido / Pronto',
+          sugestao_fala: `"Excelente decisão! Já estou clicando aqui para enviar o contrato e o link no seu WhatsApp agora mesmo!"`
+        };
+      } else {
+        return {
+          probabilidade: 68,
+          status_curto: 'Em Negociação Ativa',
+          tom_cliente: 'Analítico / Avaliando',
+          sugestao_fala: `"Perfeito! Nós entregamos o projeto 100% adaptado para celular, integrado ao WhatsApp e puxando os dados do seu Instagram automaticamente. Prefere fazer em 3x sem juros ou à vista com desconto?"`
+        };
+      }
+    }
+
+    async function analyzeCustomCustomerSpeech(e) {
+      if (e) e.preventDefault();
+      const input = document.getElementById('customSpeechInput');
+      const speech = input.value.trim();
+      if (!speech) return;
+
+      const btn = document.getElementById('btnAnalyzeSpeech');
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i>`;
+
+      const box = document.getElementById('transcriptBox');
+      const clientName = document.getElementById('liveCardName').innerText.split(' ')[0];
+      box.innerHTML += `
+        <div class="flex flex-col items-start">
+          <span class="text-[10px] font-bold text-slate-600 mb-1">Cliente (${clientName})</span>
+          <div class="max-w-[90%] p-3.5 rounded-2xl rounded-tl-sm bg-white border border-slate-200 text-slate-800 leading-relaxed shadow-sm">
+            "${speech}"
+          </div>
+          <span class="text-[10px] text-slate-400 mt-1 font-mono">Agora</span>
+        </div>
+      `;
+      box.scrollTop = box.scrollHeight;
+      input.value = '';
+
+      const result = await callRealGeminiAPI(speech);
+
+      document.getElementById('pitchLine').innerHTML = result.sugestao_fala;
+      document.getElementById('aiAlertBadge').innerText = `${result.status_curto}`;
+      document.getElementById('clientTone').innerText = result.tom_cliente;
+
+      const color = result.probabilidade < 45 ? '#e11d48' : (result.probabilidade < 75 ? '#d97706' : '#059669');
+      const bg = result.probabilidade < 45 ? 'rgba(225, 29, 72, 0.15)' : (result.probabilidade < 75 ? 'rgba(217, 119, 6, 0.15)' : 'rgba(5, 150, 105, 0.15)');
+      updateTelemetry(result.probabilidade, result.status_curto, color, bg, 'Fala Real');
+
+      btn.innerHTML = `Analisar`;
+    }
+
+    function toggleRealMicrophone() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        alert('Use a barra de texto abaixo da transcrição para testar qualquer frase no seu navegador!');
+        return;
+      }
+
+      const btn = document.getElementById('realMicBtn');
+      const txt = document.getElementById('realMicText');
+
+      if (isListeningMic && recognition) {
+        recognition.stop();
+        isListeningMic = false;
+        if (btn) btn.className = "px-2.5 py-1 rounded-lg bg-[#232f49] hover:bg-slate-700 text-slate-200 border border-slate-600/60 font-semibold text-[10px] transition flex items-center gap-1.5";
+        if (txt) txt.innerText = "Microfone";
+        return;
+      }
+
+      recognition = new SpeechRecognition();
+      recognition.lang = 'pt-BR';
+      recognition.continuous = true;
+      recognition.interimResults = false;
+
+      recognition.onstart = () => {
+        isListeningMic = true;
+        if (btn) btn.className = "px-2.5 py-1 rounded-lg bg-cyan-600 text-white font-bold text-[10px] transition flex items-center gap-1.5 animate-pulse shadow";
+        if (txt) txt.innerText = "Ouvindo...";
+      };
+
+      recognition.onresult = (event) => {
+        const lastResult = event.results[event.results.length - 1];
+        if (lastResult.isFinal) {
+          document.getElementById('customSpeechInput').value = lastResult[0].transcript;
+          analyzeCustomCustomerSpeech();
+        }
+      };
+
+      recognition.onerror = () => {
+        isListeningMic = false;
+        if (txt) txt.innerText = "Microfone";
+      };
+
+      recognition.start();
+    }
+
+    function initSentimentChart() {
+      // Gráfico de onda SVG dinâmico já renderizado diretamente no DOM
+    }
+
+    function changePitch(mode) {
+      const pitch = document.getElementById('pitchLine');
+      const b1 = document.getElementById('btnPitch1');
+      const b2 = document.getElementById('btnPitch2');
+      const b3 = document.getElementById('btnPitch3');
+      const activeCls = "px-2.5 py-1 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold text-[10px] shadow-sm transition";
+      const idleCls = "px-2.5 py-1 rounded-full bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 font-semibold text-[10px] transition";
+
+      if (b1) b1.className = mode === 'parcelado' ? activeCls : idleCls;
+      if (b2) b2.className = mode === 'garantia' ? activeCls : idleCls;
+      if (b3) b3.className = mode === 'mvp' ? activeCls : idleCls;
+
+      if (mode === 'parcelado') {
+        pitch.innerHTML = `"Compreendo perfeitamente! A diferença é que um site barato demora 7 segundos para abrir e faz você perder clientes todo dia. Se o nosso site salvar <strong>apenas UMA venda</strong> neste mês, ele já se pagou 5 vezes. Vamos fechar em <strong>3x de R$ 1.500 sem juros</strong> para colocar no ar já na próxima semana?"`;
+      } else if (mode === 'garantia') {
+        pitch.innerHTML = `"Colocamos em contrato a garantia de <strong>nota acima de 95 no Google PageSpeed</strong>. Seu site vai abrir em menos de 1 segundo no 4G de qualquer cliente."`;
+      } else if (mode === 'mvp') {
+        pitch.innerHTML = `"Se preferir começar mais enxuto, lançamos a <strong>Versão Essencial + Botão WhatsApp por R$ 3.200</strong> em 7 dias úteis!"`;
+      }
+    }
+
+    function applyAiSuggestionToCall() {
+      const pitchText = document.getElementById('pitchLine').innerText;
+      const box = document.getElementById('transcriptBox');
+      box.innerHTML += `
+        <div class="flex flex-col items-end">
+          <span class="text-[10px] font-bold text-slate-600 mb-1">Operador (Sua Equipe)</span>
+          <div class="max-w-[90%] p-3.5 rounded-2xl rounded-tr-sm bg-[#eef4ff] border border-blue-100 text-slate-800 leading-relaxed">
+            ${pitchText}
+          </div>
+          <span class="text-[10px] text-slate-400 mt-1 font-mono">Agora</span>
+        </div>
+      `;
+      box.scrollTop = box.scrollHeight;
+      updateTelemetry(78, 'RECUPERANDO • POSITIVO', '#2563eb', 'rgba(37, 99, 235, 0.15)', 'Sugestão IA');
+    }
+
+    function simulateEvent(type) {
+      if (type === 'objection_price') {
+        document.getElementById('customSpeechInput').value = "Olha, achei o valor muito caro, acima de R$ 3.000 não consigo pagar.";
+      } else if (type === 'objection_time') {
+        document.getElementById('customSpeechInput').value = "Vou pensar com meu sócio e semana que vem te dou um retorno.";
+      } else if (type === 'positive_close') {
+        document.getElementById('customSpeechInput').value = "Gostei da proposta parcelada em 3x! Vamos fechar, pode mandar o contrato.";
+      }
+      analyzeCustomCustomerSpeech();
+    }
+
+    function updateTelemetry(score, label, colorHex, bgRgba, chartLabel) {
+      const num = document.getElementById('probNumber');
+      const status = document.getElementById('probStatus');
+      const ring = document.getElementById('probRingCircle');
+      const score3d = document.getElementById('live3DScoreCurrent');
+      const trendBadge = document.getElementById('sentimentTrendBadge');
+      const waveDot = document.getElementById('waveLiveDot');
+      const waveHalo = document.getElementById('waveLiveHalo');
+      const wavePath = document.getElementById('sentimentWavePath');
+      const waveArea = document.getElementById('sentimentWaveArea');
+
+      if (num) num.innerText = score + '%';
+      if (status) status.innerText = label.toUpperCase();
+
+      // Atualiza o anel SVG (circunferência = 201)
+      if (ring) {
+        const circumference = 201;
+        const offset = Math.round(circumference - (score / 100) * circumference);
+        ring.setAttribute('stroke-dashoffset', offset);
+      }
+
+      // Atualiza o ponto final da curva SVG (y entre 18 e 95)
+      const endY = Math.max(18, Math.min(95, Math.round(110 - (score / 100) * 90)));
+      if (waveDot) waveDot.setAttribute('cy', endY);
+      if (waveHalo) waveHalo.setAttribute('cy', endY);
+      if (wavePath) {
+        wavePath.setAttribute('d', `M 10,85 C 45,55 65,40 90,40 C 125,40 145,75 170,78 C 195,82 220,96 245,86 C 270,74 290,45 305,${endY}`);
+      }
+      if (waveArea) {
+        waveArea.setAttribute('d', `M 10,85 C 45,55 65,40 90,40 C 125,40 145,75 170,78 C 195,82 220,96 245,86 C 270,74 290,45 305,${endY} L 305,105 L 10,105 Z`);
+      }
+
+      if (score < 45) {
+        if (num) num.className = "absolute text-lg font-extrabold text-rose-600";
+        if (status) status.className = "inline-block mt-1.5 px-2.5 py-0.5 rounded-md text-[10px] font-extrabold uppercase bg-rose-100 text-rose-800 border border-rose-200";
+        if (score3d) score3d.innerText = `${score}% Risco`;
+        if (trendBadge) {
+          trendBadge.className = "text-[10px] text-rose-700 font-bold flex items-center gap-1 bg-rose-50 px-2.5 py-0.5 rounded-full border border-rose-200";
+          trendBadge.innerHTML = `<i class="fa-solid fa-arrow-trend-down text-[9px]"></i> Em Queda`;
+        }
+      } else if (score < 75) {
+        if (num) num.className = "absolute text-lg font-extrabold text-blue-600";
+        if (status) status.className = "inline-block mt-1.5 px-2.5 py-0.5 rounded-md text-[10px] font-extrabold uppercase bg-amber-100 text-amber-800 border border-amber-200";
+        if (score3d) score3d.innerText = `${score}% Atenção`;
+        if (trendBadge) {
+          trendBadge.className = "text-[10px] text-amber-700 font-bold flex items-center gap-1 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200";
+          trendBadge.innerHTML = `<i class="fa-solid fa-scale-balanced text-[9px]"></i> Negociando`;
+        }
+      } else {
+        if (num) num.className = "absolute text-lg font-extrabold text-emerald-600";
+        if (status) status.className = "inline-block mt-1.5 px-2.5 py-0.5 rounded-md text-[10px] font-extrabold uppercase bg-emerald-100 text-emerald-800 border border-emerald-200";
+        if (score3d) score3d.innerText = `${score}% Positivo`;
+        if (trendBadge) {
+          trendBadge.className = "text-[10px] text-emerald-700 font-bold flex items-center gap-1 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200";
+          trendBadge.innerHTML = `<i class="fa-solid fa-arrow-trend-up text-[9px]"></i> Recuperando`;
+        }
+      }
+    }
+
+    function openNewTicketModal() {
+      document.getElementById('newTicketModal').classList.remove('hidden');
+    }
+
+    function closeNewTicketModal() {
+      document.getElementById('newTicketModal').classList.add('hidden');
+    }
+
+    function handleCreateTicket(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnCreateTicket');
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> IA Analisando Perfil...`;
+
+      const name = document.getElementById('ticketName').value;
+      const phone = document.getElementById('ticketPhone') ? document.getElementById('ticketPhone').value : "5511987654321";
+      const company = document.getElementById('ticketCompany').value;
+      const link = document.getElementById('ticketLink').value || "Sem link informado";
+      const bio = document.getElementById('ticketBio').value || "Cliente procurando orçamento rápido.";
+
+      setTimeout(() => {
+        const painText = `${bio} — Diagnóstico Gemini: O cliente necessita de site rápido com captação direta no WhatsApp e versão mobile otimizada.`;
+
+        const cardsContainer = document.getElementById('colCards-1');
+        const newCard = document.createElement('div');
+        newCard.className = "pipefy-card rounded-xl p-3.5 cursor-pointer border-l-4 border-l-emerald-500";
+        newCard.onclick = () => openClientAttendance(name, company, phone, link, 'Mapeado via IA', painText);
+        newCard.innerHTML = `
+          <div class="flex justify-between items-start mb-2">
+            <span class="text-[10px] font-extrabold uppercase bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded border border-emerald-200">${company}</span>
+            <span class="text-[10px] text-emerald-600 font-bold">Novo</span>
+          </div>
+          <h4 class="font-bold text-xs text-slate-900">${name} — Criação de Site</h4>
+          <p class="text-[11px] text-slate-500 mt-1 line-clamp-2">${bio}</p>
+          <div class="mt-3 pt-2.5 border-t border-slate-100 flex justify-between items-center text-[11px]">
+            <span class="text-slate-400 truncate max-w-[120px]">${link}</span>
+            <span class="bg-blue-600 text-white px-2.5 py-1 rounded-lg font-bold text-[10px] shadow-sm">
+              <i class="fa-solid fa-headset mr-1"></i> Fazer Atendimento &rarr;
+            </span>
+          </div>
+        `;
+        cardsContainer.prepend(newCard);
+
+        btn.innerHTML = `<i class="fa-solid fa-sparkles"></i> Analisar com IA & Adicionar ao Kanban`;
+        closeNewTicketModal();
+        goToView('kanban');
+      }, 600);
+    }
+
+    window.onload = function() {
+      const statusTxt = document.getElementById('apiStatusText');
+      if (localStorage.getItem('APEX_GEMINI_KEY') && statusTxt) {
+        statusTxt.innerText = 'Ativa';
+        statusTxt.className = 'text-[9px] bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded font-extrabold';
+      }
+    };
+  </script>
+</body>
+</html>
