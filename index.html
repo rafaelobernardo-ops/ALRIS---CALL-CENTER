@@ -127,17 +127,17 @@
         <!-- Frame Atual do Vídeo 3D Ocupando 100% da Tela -->
         <img 
           id="fullScreenFrameImg" 
-          src="frames/frame_000.jpg" 
+          src="frames/frame_000.jpg?v=capa1" 
           alt="ALRIS 3D Scroll Animation" 
           class="w-full h-full object-cover object-center select-none pointer-events-none"
         >
-        <!-- Vinheta Cinematográfica Suave para Leitura Perfeita dos Textos -->
-        <div class="absolute inset-0 bg-gradient-to-b from-[#060a12]/70 via-[#060a12]/35 to-[#060a12]/80 pointer-events-none"></div>
+        <!-- Vinheta Cinematográfica Suave para Leitura Perfeita dos Textos e Destaque da Iluminação -->
+        <div class="absolute inset-0 bg-gradient-to-b from-[#060a12]/60 via-[#060a12]/20 to-[#060a12]/75 pointer-events-none"></div>
 
-        <!-- Barra Discreta de Progresso dos 480 Frames no Canto Inferior -->
+        <!-- Barra Discreta de Progresso dos 144 Frames no Canto Inferior -->
         <div class="absolute bottom-6 right-6 z-20 hidden sm:flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-slate-950/75 border border-cyan-400/30 backdrop-blur-md text-[10px] font-mono text-cyan-300">
           <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
-          <span id="frameCounterBadge">FRAME 000 / 479 • ROLE O SCROLL</span>
+          <span id="frameCounterBadge">FRAME 000 / 143 • ROLE O SCROLL</span>
         </div>
       </div>
 
@@ -1757,20 +1757,18 @@
       }, 2000);
     }
 
-    const TOTAL_3D_FRAMES = 480;
+    const TOTAL_3D_FRAMES = 144;
+    const FRAME_CACHE_VER = 'capa1';
     const preloaded3DFrames = [];
-    // Sequência customizada de frames:
-    // Parte 1 (frames 000..150): Teclado -> Surgimento do Robô -> Entrada na mente neural/chip do robô
-    // Parte 2 (frames 244..479): Pula a arena das IAs trabalhando (151..243) e já abre direto o Gráfico 3D de Análise de Sentimento!
+    // Sequência completa de 144 frames (000..143) do vídeo capa.mp4:
     const activeFrameSequence = [];
-    for (let i = 0; i <= 150; i++) activeFrameSequence.push(i);
-    for (let i = 244; i < TOTAL_3D_FRAMES; i++) activeFrameSequence.push(i);
+    for (let i = 0; i < TOTAL_3D_FRAMES; i++) activeFrameSequence.push(i);
 
     function preloadAll3DFrames() {
       activeFrameSequence.forEach(idx => {
         const img = new Image();
         const num = String(idx).padStart(3, '0');
-        img.src = `frames/frame_${num}.jpg`;
+        img.src = `frames/frame_${num}.jpg?v=${FRAME_CACHE_VER}`;
         preloaded3DFrames.push(img);
       });
     }
@@ -1786,24 +1784,14 @@
       const maxScroll = Math.max(1, planosSection.offsetTop - window.innerHeight * 0.9);
       const rawProgress = Math.max(0, Math.min(1, scrollTop / maxScroll));
 
-      // Mais frames no início antes do robô surgir (primeiros 40% do scroll dedicados à transição suave do teclado ao robô e mente neural)
-      let seqIndex = 0;
       const totalSeq = activeFrameSequence.length;
-      if (rawProgress < 0.45) {
-        const p1 = Math.pow(rawProgress / 0.45, 1.25);
-        seqIndex = Math.round(p1 * 150);
-      } else {
-        const p2 = (rawProgress - 0.45) / 0.55;
-        seqIndex = 151 + Math.round(p2 * (totalSeq - 152));
-      }
-
-      seqIndex = Math.max(0, Math.min(totalSeq - 1, seqIndex));
+      const seqIndex = Math.max(0, Math.min(totalSeq - 1, Math.round(rawProgress * (totalSeq - 1))));
       const frameNumber = activeFrameSequence[seqIndex];
       const numStr = String(frameNumber).padStart(3, '0');
 
-      frameImg.src = `frames/frame_${numStr}.jpg`;
+      frameImg.src = `frames/frame_${numStr}.jpg?v=${FRAME_CACHE_VER}`;
       if (badge) {
-        badge.innerText = `CENA 3D • ${Math.round(rawProgress * 100)}%`;
+        badge.innerText = `FRAME ${numStr} / 143 • ${Math.round(rawProgress * 100)}%`;
       }
     }
 
