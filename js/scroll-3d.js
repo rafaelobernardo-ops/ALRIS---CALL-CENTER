@@ -19,6 +19,20 @@ const TOTAL_3D_FRAMES = 144;
         const ctx = canvas.getContext('2d', { alpha: false });
         if (ctx) {
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          
+          // Efeito de color grade cinematográfico para transformar a iluminação amarela em azul vibrante
+          // Aplica blend mode 'color'/'screen' com gradiente azul ciano call center nas áreas de luz
+          ctx.save();
+          ctx.globalCompositeOperation = 'color';
+          ctx.fillStyle = 'rgba(0, 140, 255, 0.65)';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          
+          // Reforço de iluminação azul nas altas luzes
+          ctx.globalCompositeOperation = 'screen';
+          ctx.fillStyle = 'rgba(14, 165, 233, 0.25)';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.restore();
+
           lastDrawnSeqIndex = seqIndex;
         }
       }
