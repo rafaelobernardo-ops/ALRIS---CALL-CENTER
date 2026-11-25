@@ -67,14 +67,13 @@
 <body class="h-full flex flex-col bg-[#f4f6fa] text-slate-800 antialiased selection:bg-indigo-600 selection:text-white">
 
   <!-- ====================================================================== -->
-  <!-- ETAPA 1: PÁGINA INICIAL PÚBLICA (PALETA ALRIS + LAYOUT PERISKOPE)      -->
+  <!-- ETAPA 1: PÁGINA INICIAL PÚBLICA (VÍDEO 3D EM TELA CHEIA NO SCROLL)     -->
   <!-- ====================================================================== -->
-  <div id="view-landing" class="flex-1 overflow-y-auto bg-white relative">
+  <div id="view-landing" onscroll="handleFullScreenFrameScroll(this)" class="flex-1 overflow-y-auto bg-[#060a12] relative">
     
-    <!-- Navbar Oficial ALRIS com as Cores da Nova Logotipo (#0c1322 + Ciano/Azul/Violeta) -->
-    <header class="h-18 py-3 bg-[#0c1322] text-white px-6 lg:px-12 flex items-center justify-between border-b border-slate-800/80 sticky top-0 z-40 shrink-0 shadow-lg">
+    <!-- Navbar Oficial ALRIS com Efeito Translúcido sobre o Vídeo 3D -->
+    <header class="h-18 py-3 bg-[#060a12]/80 backdrop-blur-xl text-white px-6 lg:px-12 flex items-center justify-between border-b border-white/10 sticky top-0 z-50 shrink-0">
       <div class="flex items-center gap-3.5 cursor-pointer group" onclick="goToView('landing')">
-        <!-- Logotipo Oficial ALRIS (Símbolo Vetorial A + Balão Ciano/Violeta + Tipografia ALRIS) -->
         <div class="flex items-center gap-3">
           <div class="w-11 h-11 rounded-2xl bg-[#111b30] border border-cyan-400/30 shadow-md shadow-indigo-500/20 flex items-center justify-center p-1.5">
             <svg viewBox="0 0 64 64" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -85,7 +84,6 @@
                   <stop offset="100%" stop-color="#8b5cf6" />
                 </linearGradient>
               </defs>
-              <!-- Traço em A arredondado + Balão de Atendimento entrelaçado -->
               <path d="M12 48 L26 15 C28.5 9.5 34.5 9.5 37 15 L44 31" stroke="url(#alrisGrad1)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
               <path d="M14 50 C20 50 28 38 35 31 C41 25 52 27 53 36 C54 43 49 47 46 49 L47 55 L40 51 C35 52 28 49 26 42 C25 36 29 30 33 28" stroke="url(#alrisGrad1)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
@@ -102,13 +100,13 @@
 
       <!-- Links de Âncora da Própria Página Inicial -->
       <nav class="hidden md:flex items-center gap-8 text-xs font-bold text-slate-300">
-        <a href="#prints-reais" class="hover:text-cyan-400 transition">Tour Visual</a>
+        <a href="#experiencia-3d" class="hover:text-cyan-400 transition">Experiência 3D</a>
         <a href="#como-funciona" class="hover:text-cyan-400 transition">Como Funciona</a>
         <a href="#recursos" class="hover:text-cyan-400 transition">Recursos</a>
         <a href="#planos" class="hover:text-cyan-400 transition">Planos Mensais</a>
       </nav>
 
-      <!-- Botões de Login (Sou Admin / Sou Equipe c/ Código) e Teste com Gradiente ALRIS -->
+      <!-- Botões de Login (Sou Admin / Sou Equipe c/ Código) e Teste -->
       <div class="flex items-center gap-3">
         <button onclick="goToView('login')" class="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white border border-white/15 font-extrabold text-xs transition flex items-center gap-2">
           <i class="fa-solid fa-arrow-right-to-bracket text-cyan-400"></i> Entrar (Admin / Equipe)
@@ -119,131 +117,109 @@
       </div>
     </header>
 
-    <!-- 1.1 HERO SECTION COM CORES VIBRANTES DA MARCA ALRIS & ANIMAÇÃO 3D -->
-    <section class="bg-gradient-to-br from-[#eef6ff] via-[#f5f3ff] to-[#ecfeff] text-slate-900 pt-14 pb-16 px-6 lg:px-12 relative overflow-hidden shrink-0 border-b border-indigo-100">
-      <!-- Luzes coloridas suaves da marca ALRIS (Ciano #22d3ee, Azul #3b82f6 e Violeta #8b5cf6) -->
-      <div class="absolute -top-24 left-10 w-96 h-72 bg-cyan-400/20 rounded-full blur-[100px] pointer-events-none"></div>
-      <div class="absolute top-12 right-12 w-96 h-72 bg-purple-500/20 rounded-full blur-[110px] pointer-events-none"></div>
+    <!-- ==================================================================== -->
+    <!-- PALCO 3D EM TELA CHEIA (200 FRAMES REAIS SINCRONIZADOS COM O SCROLL) -->
+    <!-- ==================================================================== -->
+    <div id="experiencia-3d" class="relative w-full">
 
-      <div class="max-w-5xl mx-auto text-center relative z-10">
-        <!-- Pílula Superior Colorida da Marca -->
-        <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/90 border border-cyan-300/80 text-xs font-extrabold text-indigo-900 mb-6 shadow-sm backdrop-blur-md">
-          <span class="w-2 h-2 rounded-full bg-gradient-to-r from-cyan-400 to-purple-600 animate-ping"></span>
-          <span>ALRIS • Canal de Atendimento, Ligação VoIP, WhatsApp, Kanban & Copiloto IA</span>
-        </div>
+      <!-- TELA CHEIA FIXA (STICKY 100vw x 100vh) QUE REPRODUZ OS FRAMES CONFORME O SCROLL -->
+      <div class="sticky top-0 left-0 w-full h-screen overflow-hidden bg-[#050811] z-0">
+        <!-- Frame Atual do Vídeo 3D Ocupando 100% da Tela -->
+        <img 
+          id="fullScreenFrameImg" 
+          src="frames/frame_008.jpg" 
+          alt="ALRIS 3D Scroll Animation" 
+          class="w-full h-full object-cover object-center select-none pointer-events-none transition-opacity duration-75"
+        >
+        <!-- Vinheta Cinematográfica Suave para Leitura Perfeita dos Textos -->
+        <div class="absolute inset-0 bg-gradient-to-b from-[#060a12]/70 via-[#060a12]/30 to-[#060a12]/85 pointer-events-none"></div>
 
-        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.1] text-slate-950 max-w-4xl mx-auto">
-          Seu Canal de Atendimento Inteligente para <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600">Gerenciar Equipes e Converter Vendas com IA</span>
-        </h1>
-
-        <p class="mt-5 text-sm sm:text-base text-slate-600 leading-relaxed font-normal max-w-2xl mx-auto">
-          Centralize sua operação na <strong>ALRIS</strong> com login isolado para <strong>Administrador</strong> e acesso rápido por <strong>Código de Convite para a Equipe</strong>. Organize clientes em colunas Kanban e atenda com nosso Copiloto de IA que escuta a chamada e monitora o sentimento ao vivo.
-        </p>
-
-        <!-- CTAs Principais Sóbrios e Elegantes -->
-        <div class="mt-8 flex flex-wrap items-center justify-center gap-3.5">
-          <button onclick="goToView('login'); switchLoginMode('admin');" class="px-7 py-4 rounded-2xl bg-[#0c1322] hover:bg-slate-800 text-white font-extrabold text-sm shadow-lg shadow-slate-900/15 transition flex items-center gap-2.5">
-            <i class="fa-solid fa-building-user text-cyan-400"></i> Acessar Painel (Sou Administrador)
-          </button>
-
-          <button onclick="goToView('login'); switchLoginMode('team');" class="px-6 py-4 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-sm shadow-md shadow-blue-600/20 transition flex items-center gap-2">
-            <i class="fa-solid fa-ticket"></i> Entrar com Código de Equipe
-          </button>
-
-          <a href="#planos" class="px-6 py-4 rounded-2xl bg-white hover:bg-slate-50 border border-slate-300 text-slate-800 font-bold text-sm transition flex items-center gap-2 shadow-sm">
-            <i class="fa-solid fa-credit-card text-blue-600"></i> Ver Planos & Preços
-          </a>
-        </div>
-
-        <!-- Badges de Confiança -->
-        <div class="mt-7 flex flex-wrap items-center justify-center gap-6 text-xs text-slate-500 font-semibold">
-          <span class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-blue-600"></i> Login Admin & Código de Equipe</span>
-          <span class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-blue-600"></i> Ligação Normal no PC + WhatsApp</span>
-          <span class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-blue-600"></i> Telemetria & Sentimento ao Vivo</span>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- 1.2 SEÇÃO ESTILO PERISKOPE: VITRINE COM OS PRINTS REAIS DAS PÁGINAS QUE CRIAMOS AQUI -->
-    <section id="prints-reais" class="py-20 px-6 max-w-6xl mx-auto space-y-20">
-      <div class="text-center max-w-3xl mx-auto">
-        <span class="text-xs font-extrabold text-indigo-700 uppercase tracking-widest bg-indigo-50 px-3.5 py-1.5 rounded-full border border-indigo-200">
-          Interfaces Reais da Plataforma ALRIS
-        </span>
-        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mt-3">
-          Veja por Dentro as Telas do Sistema que Você Vai Usar
-        </h2>
-        <p class="text-sm text-slate-600 mt-2">
-          Confira abaixo os prints reais das páginas da <strong>ALRIS — Canal de Atendimento</strong> criadas para o seu administrador e sua equipe.
-        </p>
-      </div>
-
-      <!-- Bloco Visual 1: Console de Atendimento ao Vivo + Telemetria & Sentimento -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-        <div class="lg:col-span-5 space-y-4">
-          <span class="px-3 py-1 rounded-full bg-cyan-50 text-cyan-800 border border-cyan-200 font-extrabold text-[11px] uppercase">
-            1. Console de Atendimento & Copiloto IA
-          </span>
-          <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-tight">
-            Atendimento ao Vivo por Voz e WhatsApp com Telemetria de Conversão
-          </h3>
-          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            Ao abrir o atendimento de um cliente, sua equipe conta com o perfil completo do lead, controle de chamada no topo, transcrição em tempo real, sugestões instantâneas do Copiloto IA e o gráfico de sentimento da conversa ao vivo.
-          </p>
-          <ul class="space-y-2 text-xs text-slate-700 font-semibold pt-1">
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check-circle text-blue-600"></i> Principal Dor do cliente extraída automaticamente pela IA</li>
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check-circle text-indigo-600"></i> 3 abordagens prontas para contornar objeções na hora</li>
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check-circle text-purple-600"></i> Anel de probabilidade de conversão e envio de contrato no WhatsApp</li>
-          </ul>
-          <div class="pt-2">
-            <button onclick="goToView('login')" class="px-5 py-3 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white font-extrabold text-xs shadow-md transition">
-              Testar Console Ao Vivo Agora &rarr;
-            </button>
-          </div>
-        </div>
-
-        <div class="lg:col-span-7">
-          <div class="rounded-2xl bg-[#0c1322] p-2.5 shadow-2xl border border-indigo-200">
-            <img src="prints/print-callcenter-3d.png" alt="Print Real Console de Atendimento ALRIS" class="w-full h-auto rounded-xl">
-          </div>
+        <!-- Barra Discreta de Progresso dos 200 Frames no Canto Inferior -->
+        <div class="absolute bottom-6 right-6 z-20 hidden sm:flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-slate-950/75 border border-cyan-400/30 backdrop-blur-md text-[10px] font-mono text-cyan-300">
+          <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+          <span id="frameCounterBadge">FRAME 008 / 199 • ROLE O SCROLL</span>
         </div>
       </div>
 
-      <!-- Bloco Visual 2: Quadro Kanban de Processos com os Clientes -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-        <div class="lg:col-span-7 order-2 lg:order-1">
-          <div class="rounded-2xl bg-[#0c1322] p-2.5 shadow-2xl border border-indigo-200">
-            <img src="prints/print-kanban-alris.png" alt="Print Real Quadro Kanban de Processos com Clientes ALRIS" class="w-full h-auto rounded-xl">
-          </div>
-        </div>
+      <!-- CAMADA DE CONTEÚDO QUE DESLIZA SOBRE O VÍDEO 3D EM TELA CHEIA -->
+      <div class="relative z-10 -mt-[100vh]">
 
-        <div class="lg:col-span-5 space-y-4 order-1 lg:order-2">
-          <span class="px-3 py-1 rounded-full bg-purple-100 text-purple-800 border border-purple-200 font-extrabold text-[11px] uppercase">
-            2. Gestão de Processos & Pipeline de Clientes
-          </span>
-          <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-tight">
-            Acompanhe Cada Cliente em Todas as Etapas do Processo no Kanban
-          </h3>
-          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            Visualize e organize todos os seus clientes em 4 etapas claras: <strong>1. Entrada & Triagem</strong>, <strong>2. Proposta & Negociação</strong>, <strong>3. Desenvolvimento</strong> e <strong>4. Entregue (Go-Live)</strong>. Basta clicar em qualquer card para abrir a conversa e o histórico daquele cliente.
-          </p>
-          <ul class="space-y-2 text-xs text-slate-700 font-semibold pt-1">
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check-circle text-blue-600"></i> Cards 100% clicáveis da triagem até a entrega final e pós-venda</li>
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check-circle text-indigo-600"></i> Controle de responsável, SLA de atendimento e progresso do projeto</li>
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check-circle text-purple-600"></i> Equipe sincronizada por código de convite (<code class="bg-slate-100 px-1.5 py-0.5 rounded font-mono font-bold text-indigo-700">ALRIS-8842-TEAM</code>)</li>
-          </ul>
-          <div class="pt-2 flex flex-wrap gap-2">
-            <button onclick="goToView('login'); switchLoginMode('admin');" class="px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs shadow-md transition">
-              Acessar Quadro de Processos
-            </button>
-            <button onclick="goToView('login'); switchLoginMode('team');" class="px-4 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-extrabold text-xs border border-slate-300 transition">
-              Entrar como Equipe
-            </button>
+        <!-- CENA 1 (Topo / Hero Limpo e Direto): Título Enxuto + Acesso Rápido -->
+        <section class="min-h-screen flex flex-col items-center justify-center px-6 text-center">
+          <div class="max-w-3xl mx-auto">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/10 border border-cyan-400/30 text-[11px] font-bold text-cyan-300 mb-5 backdrop-blur-md">
+              <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+              <span>ALRIS • CANAL DE ATENDIMENTO & COPILOTO IA</span>
+            </div>
+
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.08] text-white drop-shadow-lg">
+              Atendimento Inteligente que <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-400 to-purple-400">Converte Vendas em Tempo Real</span>
+            </h1>
+
+            <p class="mt-4 text-sm sm:text-base text-slate-200/90 max-w-xl mx-auto leading-relaxed drop-shadow">
+              Role a página para navegar pela central neural 3D da <strong>ALRIS</strong> ou acesse diretamente o painel da sua empresa.
+            </p>
+
+            <!-- Apenas 2 Botões Diretos e Limpos -->
+            <div class="mt-8 flex flex-wrap items-center justify-center gap-3.5">
+              <button onclick="goToView('login'); switchLoginMode('admin');" class="px-7 py-3.5 rounded-2xl bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white font-extrabold text-sm shadow-xl shadow-cyan-500/25 transition flex items-center gap-2">
+                <i class="fa-solid fa-lock-open"></i> Acessar Plataforma
+              </button>
+
+              <button onclick="goToView('login'); switchLoginMode('team');" class="px-6 py-3.5 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/25 text-white font-bold text-sm backdrop-blur-md transition flex items-center gap-2">
+                <i class="fa-solid fa-ticket text-cyan-300"></i> Entrar com Código de Equipe
+              </button>
+            </div>
+
+            <div class="mt-12 text-cyan-300/80 text-xs font-semibold flex flex-col items-center gap-1 animate-bounce">
+              <span>Role o scroll para ver o vídeo 3D em movimento</span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </div>
           </div>
-        </div>
+        </section>
+
+        <!-- CENA 2 (Meio do Scroll - Arena 3D de Operadores): Central de Atendimento & Equipe -->
+        <section class="min-h-[85vh] flex items-center px-6 lg:px-16">
+          <div class="max-w-lg bg-slate-950/70 backdrop-blur-xl border border-cyan-400/30 rounded-3xl p-7 text-white shadow-2xl">
+            <span class="px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 font-extrabold text-[10px] uppercase tracking-wider">
+              1. Operação Conectada em Tempo Real
+            </span>
+            <h2 class="text-2xl sm:text-3xl font-black text-white mt-3 leading-tight">
+              Toda a Sua Equipe Sincronizada em um Único Canal
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-300 mt-3 leading-relaxed">
+              O administrador gerencia o plano e libera o código exclusivo da empresa (<code class="text-cyan-300 font-mono font-bold">ALRIS-8842-TEAM</code>). Cada operador acompanha os clientes do Kanban da triagem até a entrega final.
+            </p>
+            <div class="mt-5 flex items-center gap-3">
+              <button onclick="goToView('login')" class="px-5 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-extrabold text-xs transition">
+                Abrir Quadro Kanban &rarr;
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- CENA 3 (Final do Scroll do Vídeo - Gráfico Holográfico de Análise de Sentimento 74% Positivo) -->
+        <section class="min-h-[90vh] flex items-center justify-end px-6 lg:px-16 pb-16">
+          <div class="max-w-lg bg-slate-950/75 backdrop-blur-xl border border-purple-400/40 rounded-3xl p-7 text-white shadow-2xl">
+            <span class="px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 border border-purple-400/30 font-extrabold text-[10px] uppercase tracking-wider">
+              2. Análise de Sentimento Ao Vivo
+            </span>
+            <h2 class="text-2xl sm:text-3xl font-black text-white mt-3 leading-tight">
+              Telemetria de Voz e Sugestões Instantâneas na Chamada
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-300 mt-3 leading-relaxed">
+              Enquanto sua equipe fala no telefone ou WhatsApp, a IA mede o sentimento positivo, neutro ou negativo da conversa em tempo real e entrega na tela o argumento exato para fechar o contrato.
+            </p>
+            <div class="mt-5 flex items-center gap-3">
+              <button onclick="goToView('login')" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white font-extrabold text-xs transition shadow-lg">
+                Testar Copiloto de Voz IA &rarr;
+              </button>
+            </div>
+          </div>
+        </section>
+
       </div>
-    </section>
+    </div>
 
     <!-- 1.3 COMO FUNCIONA O APLICATIVO (PASSO A PASSO SEQUENCIAL) -->
     <section id="como-funciona" class="py-16 px-6 max-w-6xl mx-auto border-t border-slate-200">
@@ -1781,45 +1757,42 @@
       }, 2000);
     }
 
-    function handleLandingScroll3D(container) {
-      const companion = document.getElementById('scroll3DCompanion');
-      const cube = document.getElementById('scroll3DCoreCube');
-      const label = document.getElementById('scroll3DStageLabel');
-      const planosSection = document.getElementById('planos');
-      if (!companion || !container || !planosSection) return;
+    const TOTAL_3D_FRAMES = 200;
+    const preloaded3DFrames = [];
 
-      const scrollTop = container.scrollTop;
-      const planosTop = planosSection.offsetTop - 420;
-
-      // Desce acompanhando o scroll e desaparece suavemente ao chegar na seção de Planos
-      if (scrollTop >= planosTop) {
-        companion.style.opacity = '0';
-        companion.style.transform = `translateY(${Math.min(scrollTop * 0.18, 220)}px) scale(0.75)`;
-        return;
-      }
-
-      companion.style.opacity = '1';
-      const translateY = Math.min(scrollTop * 0.22, 260);
-      const rotY = (scrollTop * 0.35) % 360;
-      const rotX = Math.sin(scrollTop * 0.01) * 18;
-
-      companion.style.transform = `translateY(${translateY}px)`;
-      if (cube) {
-        cube.style.transform = `rotateY(${rotY}deg) rotateX(${rotX}deg)`;
-      }
-
-      if (label) {
-        if (scrollTop < 250) {
-          label.innerText = "ALRIS 3D • Início";
-        } else if (scrollTop < 900) {
-          label.innerText = "ALRIS 3D • Tour Visual";
-        } else if (scrollTop < 1450) {
-          label.innerText = "ALRIS 3D • Fluxo Kanban";
-        } else {
-          label.innerText = "ALRIS 3D • Recursos IA";
-        }
+    function preloadAll3DFrames() {
+      for (let i = 0; i < TOTAL_3D_FRAMES; i++) {
+        const img = new Image();
+        const num = String(i).padStart(3, '0');
+        img.src = `frames/frame_${num}.jpg`;
+        preloaded3DFrames.push(img);
       }
     }
+
+    function handleFullScreenFrameScroll(container) {
+      const frameImg = document.getElementById('fullScreenFrameImg');
+      const badge = document.getElementById('frameCounterBadge');
+      const stage = document.getElementById('experiencia-3d');
+      if (!frameImg || !container || !stage) return;
+
+      const scrollTop = container.scrollTop;
+      const maxScroll = Math.max(1, stage.offsetHeight - window.innerHeight * 0.85);
+      const progress = Math.max(0, Math.min(1, scrollTop / maxScroll));
+
+      // Mapeia o progresso do scroll entre o frame 008 e o frame 199
+      const minFrame = 8;
+      const maxFrame = TOTAL_3D_FRAMES - 1;
+      const frameIndex = Math.min(maxFrame, Math.max(minFrame, Math.round(minFrame + progress * (maxFrame - minFrame))));
+      const numStr = String(frameIndex).padStart(3, '0');
+
+      frameImg.src = `frames/frame_${numStr}.jpg`;
+      if (badge) {
+        badge.innerText = `FRAME ${numStr} / 199 • ${Math.round(progress * 100)}%`;
+      }
+    }
+
+    // Inicia o pré-carregamento dos 200 frames imediatamente
+    setTimeout(preloadAll3DFrames, 100);
 
     function filterKanbanCards(query) {
       const q = (query || '').toLowerCase().trim();
