@@ -69,19 +69,19 @@
   <!-- ====================================================================== -->
   <!-- ETAPA 1: PÁGINA INICIAL PÚBLICA (VÍDEO 3D EM TELA CHEIA NO SCROLL)     -->
   <!-- ====================================================================== -->
-  <div id="view-landing" onscroll="handleFullScreenFrameScroll(this)" class="flex-1 overflow-y-auto bg-[#060a12] relative">
+  <div id="view-landing" onscroll="handleFullScreenFrameScroll(this)" class="flex-1 overflow-y-auto bg-[#120d08] relative">
     
-    <!-- Navbar Oficial ALRIS com Efeito Translúcido sobre o Vídeo 3D -->
-    <header class="h-18 py-3 bg-[#060a12]/80 backdrop-blur-xl text-white px-6 lg:px-12 flex items-center justify-between border-b border-white/10 sticky top-0 z-50 shrink-0">
+    <!-- Navbar Oficial ALRIS com Paleta Arquitetônica Amadeirada & Âmbar Dourado -->
+    <header class="h-18 py-3 bg-[#140e09]/85 backdrop-blur-xl text-[#faf4eb] px-6 lg:px-12 flex items-center justify-between border-b border-amber-400/20 sticky top-0 z-50 shrink-0">
       <div class="flex items-center gap-3.5 cursor-pointer group" onclick="goToView('landing')">
         <div class="flex items-center gap-3">
-          <div class="w-11 h-11 rounded-2xl bg-[#111b30] border border-cyan-400/30 shadow-md shadow-indigo-500/20 flex items-center justify-center p-1.5">
+          <div class="w-11 h-11 rounded-2xl bg-[#1f160e] border border-amber-400/35 shadow-md shadow-amber-500/15 flex items-center justify-center p-1.5">
             <svg viewBox="0 0 64 64" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <linearGradient id="alrisGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#22d3ee" />
-                  <stop offset="55%" stop-color="#3b82f6" />
-                  <stop offset="100%" stop-color="#8b5cf6" />
+                  <stop offset="0%" stop-color="#fde68a" />
+                  <stop offset="50%" stop-color="#f59e0b" />
+                  <stop offset="100%" stop-color="#b45309" />
                 </linearGradient>
               </defs>
               <path d="M12 48 L26 15 C28.5 9.5 34.5 9.5 37 15 L44 31" stroke="url(#alrisGrad1)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -90,223 +90,323 @@
           </div>
           <div>
             <div class="flex items-center gap-2">
-              <span class="text-xl font-black tracking-widest text-white leading-none">ALR<span class="text-cyan-400">I</span>S</span>
-              <span class="text-[9px] bg-gradient-to-r from-cyan-500/20 to-purple-500/20 text-cyan-300 font-extrabold px-2 py-0.5 rounded-full border border-cyan-400/30">IA</span>
+              <span class="text-xl font-black tracking-widest text-[#faf4eb] leading-none">ALR<span class="text-amber-400">I</span>S</span>
+              <span class="text-[9px] bg-gradient-to-r from-amber-500/25 to-yellow-600/20 text-amber-200 font-extrabold px-2 py-0.5 rounded-full border border-amber-400/35">IA</span>
             </div>
-            <p class="text-[10px] text-blue-300/80 font-bold tracking-[0.16em] uppercase mt-0.5">CANAL DE ATENDIMENTO</p>
+            <p class="text-[10px] text-amber-300/80 font-bold tracking-[0.16em] uppercase mt-0.5">CANAL DE ATENDIMENTO</p>
           </div>
         </div>
       </div>
 
       <!-- Links de Âncora da Própria Página Inicial -->
-      <nav class="hidden md:flex items-center gap-8 text-xs font-bold text-slate-300">
-        <a href="#experiencia-3d" class="hover:text-cyan-400 transition">Experiência 3D</a>
-        <a href="#como-funciona" class="hover:text-cyan-400 transition">Como Funciona</a>
-        <a href="#recursos" class="hover:text-cyan-400 transition">Recursos</a>
-        <a href="#planos" class="hover:text-cyan-400 transition">Planos Mensais</a>
+      <nav class="hidden md:flex items-center gap-8 text-xs font-bold text-[#e7dac7]">
+        <a href="#experiencia-3d" class="hover:text-amber-300 transition">Experiência 3D</a>
+        <a href="#como-funciona" class="hover:text-amber-300 transition">Como Funciona</a>
+        <a href="#recursos" class="hover:text-amber-300 transition">Recursos</a>
+        <a href="#planos" class="hover:text-amber-300 transition">Planos Mensais</a>
       </nav>
 
       <!-- Botões de Login (Sou Admin / Sou Equipe c/ Código) e Teste -->
       <div class="flex items-center gap-3">
-        <button onclick="goToView('login')" class="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white border border-white/15 font-extrabold text-xs transition flex items-center gap-2">
-          <i class="fa-solid fa-arrow-right-to-bracket text-cyan-400"></i> Entrar (Admin / Equipe)
+        <button onclick="goToView('login')" class="px-4 py-2.5 rounded-xl bg-[#241a10]/80 hover:bg-[#2f2215] text-[#faf4eb] border border-amber-400/25 font-extrabold text-xs transition flex items-center gap-2">
+          <i class="fa-solid fa-arrow-right-to-bracket text-amber-400"></i> Entrar (Admin / Equipe)
         </button>
-        <a href="#planos" class="hidden sm:flex px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white font-extrabold text-xs shadow-lg shadow-indigo-500/30 transition items-center gap-1.5">
+        <a href="#planos" class="hidden sm:flex px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-600 hover:from-amber-300 hover:to-amber-500 text-[#1a120b] font-black text-xs shadow-lg shadow-amber-500/25 transition items-center gap-1.5">
           Começar Agora &rarr;
         </a>
       </div>
     </header>
 
     <!-- ==================================================================== -->
-    <!-- PALCO 3D EM TELA CHEIA (480 FRAMES REAIS ATÉ ANTES DOS PLANOS!)      -->
+    <!-- PALCO 3D EM TELA CHEIA (ILUMINAÇÃO ARQUITETÔNICA ATÉ OS PLANOS!)     -->
     <!-- ==================================================================== -->
     <div id="experiencia-3d" class="relative w-full">
 
-      <!-- TELA CHEIA FIXA (STICKY 100vw x 100vh) QUE REPRODUZ OS 480 FRAMES ATÉ CHEGAR NOS PLANOS -->
-      <div class="sticky top-0 left-0 w-full h-screen overflow-hidden bg-[#050811] z-0">
+      <!-- TELA CHEIA FIXA (STICKY 100vw x 100vh) QUE REPRODUZ OS FRAMES ATÉ CHEGAR NOS PLANOS -->
+      <div class="sticky top-0 left-0 w-full h-screen overflow-hidden bg-[#120d08] z-0">
         <!-- Frame Atual do Vídeo 3D Ocupando 100% da Tela -->
         <img 
           id="fullScreenFrameImg" 
-          src="frames/frame_018.jpg?v=capa2" 
+          src="frames/frame_024.jpg?v=capa4" 
           alt="ALRIS 3D Scroll Animation" 
           class="w-full h-full object-cover object-center select-none pointer-events-none"
         >
-        <!-- Vinheta Cinematográfica Suave para Leitura Perfeita dos Textos e Destaque da Iluminação -->
-        <div class="absolute inset-0 bg-gradient-to-b from-[#060a12]/60 via-[#060a12]/20 to-[#060a12]/75 pointer-events-none"></div>
+        <!-- Vinheta Quente Amadeirada Suave para Harmonizar com o Piso e Iluminação Dourada -->
+        <div class="absolute inset-0 bg-gradient-to-b from-[#120d08]/60 via-[#1a130c]/15 to-[#16100a]/75 pointer-events-none"></div>
 
         <!-- Barra Discreta de Progresso dos Frames no Canto Inferior -->
-        <div class="absolute bottom-6 right-6 z-20 hidden sm:flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-slate-950/75 border border-cyan-400/30 backdrop-blur-md text-[10px] font-mono text-cyan-300">
-          <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
-          <span id="frameCounterBadge">FRAME 018 / 143 • ROLE O SCROLL</span>
+        <div class="absolute bottom-6 right-6 z-20 hidden sm:flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-[#1a120b]/85 border border-amber-400/35 backdrop-blur-md text-[10px] font-mono text-amber-200">
+          <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+          <span id="frameCounterBadge">FRAME 024 / 143 • ROLE O SCROLL</span>
         </div>
       </div>
 
-      <!-- CAMADA DE CONTEÚDO QUE DESLIZA SOBRE O VÍDEO 3D EM TELA CHEIA ATÉ ANTES DOS PLANOS -->
+      <!-- CAMADA DE CONTEÚDO QUE DESLIZA SOBRE O VÍDEO 3D EM TELA CHEIA -->
       <div class="relative z-10 -mt-[100vh]">
 
-        <!-- CENA 1 (Topo / Hero Limpo com Mais Frames de Abertura do Teclado): Título Enxuto + Acesso Rápido -->
+        <!-- CENA 1 (Topo / Hero Harmônico com o Piso Amadeirado e Luzes Douradas) -->
         <section class="min-h-[115vh] flex flex-col items-center justify-center px-6 text-center">
           <div class="max-w-3xl mx-auto">
-            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/10 border border-cyan-400/30 text-[11px] font-bold text-cyan-300 mb-5 backdrop-blur-md">
-              <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#1f160e]/80 border border-amber-400/35 text-[11px] font-bold text-amber-200 mb-5 backdrop-blur-md shadow">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
               <span>ALRIS • CANAL DE ATENDIMENTO & COPILOTO IA</span>
             </div>
 
-            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.08] text-white drop-shadow-lg">
-              Atendimento Inteligente que <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-400 to-purple-400">Converte Vendas em Tempo Real</span>
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.08] text-[#faf4eb] drop-shadow-[0_4px_24px_rgba(0,0,0,0.75)]">
+              Atendimento Inteligente que <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#fde68a] via-[#f59e0b] to-[#d97706]">Converte Vendas em Tempo Real</span>
             </h1>
 
-            <p class="mt-4 text-sm sm:text-base text-slate-200/90 max-w-xl mx-auto leading-relaxed drop-shadow">
-              Role a página para navegar pela central neural 3D da <strong>ALRIS</strong> ou acesse diretamente o painel da sua empresa.
+            <p class="mt-4 text-sm sm:text-base text-[#efe4d4] max-w-xl mx-auto leading-relaxed drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
+              Role a página para acender a central de atendimento <strong>ALRIS</strong> ou acesse diretamente o painel da sua empresa.
             </p>
 
-            <!-- Apenas 2 Botões Diretos e Limpos -->
+            <!-- Apenas 2 Botões Diretos na Paleta Âmbar / Bronze do Piso -->
             <div class="mt-8 flex flex-wrap items-center justify-center gap-3.5">
-              <button onclick="goToView('login'); switchLoginMode('admin');" class="px-7 py-3.5 rounded-2xl bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white font-extrabold text-sm shadow-xl shadow-cyan-500/25 transition flex items-center gap-2">
+              <button onclick="goToView('login'); switchLoginMode('admin');" class="px-7 py-3.5 rounded-2xl bg-gradient-to-r from-amber-300 via-amber-500 to-yellow-600 hover:from-amber-200 hover:to-amber-400 text-[#181109] font-black text-sm shadow-xl shadow-amber-500/30 transition flex items-center gap-2">
                 <i class="fa-solid fa-lock-open"></i> Acessar Plataforma
               </button>
 
-              <button onclick="goToView('login'); switchLoginMode('team');" class="px-6 py-3.5 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/25 text-white font-bold text-sm backdrop-blur-md transition flex items-center gap-2">
-                <i class="fa-solid fa-ticket text-cyan-300"></i> Entrar com Código de Equipe
+              <button onclick="goToView('login'); switchLoginMode('team');" class="px-6 py-3.5 rounded-2xl bg-[#1f160e]/80 hover:bg-[#2c2015]/90 border border-amber-300/35 text-[#faf4eb] font-bold text-sm backdrop-blur-md transition flex items-center gap-2 shadow-lg">
+                <i class="fa-solid fa-ticket text-amber-300"></i> Entrar com Código de Equipe
               </button>
             </div>
 
-            <div class="mt-12 text-cyan-300/80 text-xs font-semibold flex flex-col items-center gap-1 animate-bounce">
-              <span>Role o scroll para ver o vídeo 3D em movimento</span>
-              <i class="fa-solid fa-chevron-down"></i>
+            <div class="mt-12 text-amber-200/90 text-xs font-semibold flex flex-col items-center gap-1 animate-bounce drop-shadow">
+              <span>Role o scroll para acender a central em movimento</span>
+              <i class="fa-solid fa-chevron-down text-amber-400"></i>
             </div>
           </div>
         </section>
 
-        <!-- CENA 2 (Surgimento do Robô e Mente Neural): Equipe Sincronizada -->
+        <!-- CENA 2 (Equipe Sincronizada — Card Glass Espresso/Madeira & Dourado) -->
         <section class="min-h-[85vh] flex items-center px-6 lg:px-16">
-          <div class="max-w-lg bg-slate-950/75 backdrop-blur-xl border border-cyan-400/30 rounded-3xl p-7 text-white shadow-2xl">
-            <span class="px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 font-extrabold text-[10px] uppercase tracking-wider">
+          <div class="max-w-lg bg-[#1a130c]/85 backdrop-blur-xl border border-amber-400/35 rounded-3xl p-7 text-[#faf4eb] shadow-[0_20px_50px_rgba(0,0,0,0.65)]">
+            <span class="px-3 py-1 rounded-full bg-amber-500/20 text-amber-200 border border-amber-400/35 font-extrabold text-[10px] uppercase tracking-wider">
               1. Operação Conectada em Tempo Real
             </span>
-            <h2 class="text-2xl sm:text-3xl font-black text-white mt-3 leading-tight">
+            <h2 class="text-2xl sm:text-3xl font-black text-[#faf4eb] mt-3 leading-tight">
               Toda a Sua Equipe Sincronizada em um Único Canal
             </h2>
-            <p class="text-xs sm:text-sm text-slate-300 mt-3 leading-relaxed">
-              O administrador gerencia o plano e libera o código exclusivo da empresa (<code class="text-cyan-300 font-mono font-bold">ALRIS-8842-TEAM</code>). Cada operador acompanha os clientes do Kanban da triagem até a entrega final.
+            <p class="text-xs sm:text-sm text-[#e2d3be] mt-3 leading-relaxed">
+              O administrador gerencia o plano e libera o código exclusivo da empresa (<code class="text-amber-300 font-mono font-bold">ALRIS-8842-TEAM</code>). Cada operador acompanha os clientes do Kanban da triagem até a entrega final.
             </p>
             <div class="mt-5 flex items-center gap-3">
-              <button onclick="goToView('login')" class="px-5 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-extrabold text-xs transition">
+              <button onclick="goToView('login')" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-[#181109] font-black text-xs transition shadow-md">
                 Abrir Quadro Kanban &rarr;
               </button>
             </div>
           </div>
         </section>
 
-        <!-- CENA 2.5 (Transição Direta da Mente do Robô para o Gráfico Holográfico 3D): Card do Gráfico de Análise de Sentimento Restaurado! -->
+        <!-- CENA 2.5 (Card do Gráfico de Análise de Sentimento na Paleta Bronze/Dourado) -->
         <section class="min-h-[85vh] flex items-center justify-end px-6 lg:px-16">
-          <div class="max-w-lg bg-slate-950/75 backdrop-blur-xl border border-purple-400/40 rounded-3xl p-7 text-white shadow-2xl">
-            <span class="px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 border border-purple-400/30 font-extrabold text-[10px] uppercase tracking-wider">
+          <div class="max-w-lg bg-[#1a130c]/85 backdrop-blur-xl border border-amber-300/40 rounded-3xl p-7 text-[#faf4eb] shadow-[0_20px_50px_rgba(0,0,0,0.65)]">
+            <span class="px-3 py-1 rounded-full bg-yellow-500/20 text-amber-200 border border-amber-300/35 font-extrabold text-[10px] uppercase tracking-wider">
               2. Análise de Sentimento Ao Vivo
             </span>
-            <h2 class="text-2xl sm:text-3xl font-black text-white mt-3 leading-tight">
+            <h2 class="text-2xl sm:text-3xl font-black text-[#faf4eb] mt-3 leading-tight">
               Gráfico 3D de Sentimento e Telemetria de Voz na Chamada
             </h2>
-            <p class="text-xs sm:text-sm text-slate-300 mt-3 leading-relaxed">
-              Assim que a IA processa a voz do cliente, o gráfico holográfico projeta o sentimento positivo, neutro ou negativo da conversa em tempo real e entrega na tela o argumento exato para fechar o contrato.
+            <p class="text-xs sm:text-sm text-[#e2d3be] mt-3 leading-relaxed">
+              Assim que a IA processa a voz do cliente, o painel projeta o sentimento positivo, neutro ou negativo da conversa em tempo real e entrega na tela o argumento exato para fechar o contrato.
             </p>
             <div class="mt-5 flex items-center gap-3">
-              <button onclick="goToView('login')" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white font-extrabold text-xs transition shadow-lg">
+              <button onclick="goToView('login')" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-600 hover:from-amber-300 hover:to-amber-500 text-[#181109] font-black text-xs transition shadow-lg">
                 Testar Copiloto de Voz IA &rarr;
               </button>
             </div>
           </div>
         </section>
 
-        <!-- CENA 3 (COMO FUNCIONA O FLUXO DE TRABALHO — SOBRE O VÍDEO 3D EM TELA CHEIA!) -->
+        <!-- CENA 3 (COMO FUNCIONA O FLUXO DE TRABALHO — PALETA AMADEIRADA & DOURADA) -->
         <section id="como-funciona" class="min-h-[90vh] flex flex-col justify-center py-16 px-6 max-w-6xl mx-auto">
           <div class="text-center max-w-3xl mx-auto mb-10">
-            <span class="text-xs font-extrabold text-cyan-300 uppercase tracking-widest bg-cyan-500/15 px-3.5 py-1 rounded-full border border-cyan-400/30 backdrop-blur-md">
+            <span class="text-xs font-extrabold text-amber-200 uppercase tracking-widest bg-[#1f160e]/85 px-3.5 py-1 rounded-full border border-amber-400/35 backdrop-blur-md">
               Jornada Dentro da ALRIS
             </span>
-            <h2 class="text-3xl sm:text-4xl font-black text-white mt-3 drop-shadow">
+            <h2 class="text-3xl sm:text-4xl font-black text-[#faf4eb] mt-3 drop-shadow-[0_4px_18px_rgba(0,0,0,0.75)]">
               Como Funciona o Fluxo de Trabalho?
             </h2>
-            <p class="text-sm text-slate-200 mt-2 drop-shadow">
+            <p class="text-sm text-[#efe4d4] mt-2 drop-shadow">
               Uma experiência limpa e sequencial: você faz login, visualiza seus processos no Kanban e abre o atendimento inteligente de qualquer etapa com um clique.
             </p>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
-            <div class="bg-slate-950/75 backdrop-blur-xl p-6 rounded-2xl border border-white/15 text-white shadow-xl">
-              <div class="w-10 h-10 rounded-xl bg-cyan-500 text-slate-950 font-black text-sm flex items-center justify-center mb-4 shadow">1</div>
-              <h3 class="text-base font-bold text-white mb-2">Login Admin ou Código</h3>
-              <p class="text-xs text-slate-300 leading-relaxed">
+            <div class="bg-[#1a130c]/85 backdrop-blur-xl p-6 rounded-2xl border border-amber-400/25 text-[#faf4eb] shadow-xl">
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-300 to-amber-500 text-[#181109] font-black text-sm flex items-center justify-center mb-4 shadow">1</div>
+              <h3 class="text-base font-bold text-[#faf4eb] mb-2">Login Admin ou Código</h3>
+              <p class="text-xs text-[#dfd0ba] leading-relaxed">
                 O administrador entra com seu e-mail corporativo e libera o código da empresa para a equipe entrar rapidamente sem burocracia.
               </p>
             </div>
 
-            <div class="bg-slate-950/75 backdrop-blur-xl p-6 rounded-2xl border border-white/15 text-white shadow-xl">
-              <div class="w-10 h-10 rounded-xl bg-blue-500 text-white font-black text-sm flex items-center justify-center mb-4 shadow">2</div>
-              <h3 class="text-base font-bold text-white mb-2">Kanban 100% Clicável</h3>
-              <p class="text-xs text-slate-300 leading-relaxed">
+            <div class="bg-[#1a130c]/85 backdrop-blur-xl p-6 rounded-2xl border border-amber-400/25 text-[#faf4eb] shadow-xl">
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-yellow-600 text-[#181109] font-black text-sm flex items-center justify-center mb-4 shadow">2</div>
+              <h3 class="text-base font-bold text-[#faf4eb] mb-2">Kanban 100% Clicável</h3>
+              <p class="text-xs text-[#dfd0ba] leading-relaxed">
                 Crie chamados com Raio-X por link ou clique em qualquer card (inclusive em <strong>Desenvolvimento</strong> e <strong>Entregue</strong>) para abrir a conversa do cliente.
               </p>
             </div>
 
-            <div class="bg-slate-950/75 backdrop-blur-xl p-6 rounded-2xl border border-white/15 text-white shadow-xl">
-              <div class="w-10 h-10 rounded-xl bg-indigo-500 text-white font-black text-sm flex items-center justify-center mb-4 shadow">3</div>
-              <h3 class="text-base font-bold text-white mb-2">Ligue & Monitore em 3D</h3>
-              <p class="text-xs text-slate-300 leading-relaxed">
+            <div class="bg-[#1a130c]/85 backdrop-blur-xl p-6 rounded-2xl border border-amber-400/25 text-[#faf4eb] shadow-xl">
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-yellow-500 to-amber-600 text-[#181109] font-black text-sm flex items-center justify-center mb-4 shadow">3</div>
+              <h3 class="text-base font-bold text-[#faf4eb] mb-2">Ligue & Monitore em 3D</h3>
+              <p class="text-xs text-[#dfd0ba] leading-relaxed">
                 Inicie uma <strong>Ligação Normal</strong> no computador ou pelo <strong>WhatsApp Web</strong> com telemetria de sentimento ao vivo e 3 sugestões do que falar.
               </p>
             </div>
 
-            <div class="bg-slate-950/75 backdrop-blur-xl p-6 rounded-2xl border border-white/15 text-white shadow-xl">
-              <div class="w-10 h-10 rounded-xl bg-purple-500 text-white font-black text-sm flex items-center justify-center mb-4 shadow">4</div>
-              <h3 class="text-base font-bold text-white mb-2">Envio de Contrato no Whats</h3>
-              <p class="text-xs text-slate-300 leading-relaxed">
+            <div class="bg-[#1a130c]/85 backdrop-blur-xl p-6 rounded-2xl border border-amber-400/25 text-[#faf4eb] shadow-xl">
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 text-[#181109] font-black text-sm flex items-center justify-center mb-4 shadow">4</div>
+              <h3 class="text-base font-bold text-[#faf4eb] mb-2">Envio de Contrato no Whats</h3>
+              <p class="text-xs text-[#dfd0ba] leading-relaxed">
                 Quando o cliente aceita a proposta, basta clicar no botão de fechamento para disparar o contrato pronto no WhatsApp dele e avançar o projeto.
               </p>
             </div>
           </div>
         </section>
 
-        <!-- CENA 4 (RECURSOS & ANÁLISE DE SENTIMENTO 74% — ENCERRANDO EXATAMENTE ANTES DOS PLANOS!) -->
-        <section id="recursos" class="min-h-[95vh] flex flex-col justify-center py-16 px-6 max-w-6xl mx-auto pb-24">
+        <!-- CENA 4 (RECURSOS & DIFERENCIAIS NA PALETA DO PISO E MADEIRA ILUMINADA) -->
+        <section id="recursos" class="min-h-[95vh] flex flex-col justify-center py-16 px-6 max-w-6xl mx-auto pb-20">
           <div class="text-center max-w-3xl mx-auto mb-10">
-            <span class="text-xs font-extrabold text-purple-300 uppercase tracking-widest bg-purple-500/20 px-3.5 py-1 rounded-full border border-purple-400/30 backdrop-blur-md">
+            <span class="text-xs font-extrabold text-amber-200 uppercase tracking-widest bg-[#1f160e]/85 px-3.5 py-1 rounded-full border border-amber-400/35 backdrop-blur-md">
               Diferenciais Tecnológicos ALRIS
             </span>
-            <h2 class="text-3xl sm:text-4xl font-black text-white mt-3 drop-shadow">
+            <h2 class="text-3xl sm:text-4xl font-black text-[#faf4eb] mt-3 drop-shadow-[0_4px_18px_rgba(0,0,0,0.75)]">
               Ferramentas Criadas para Multiplicar seus Fechamentos
             </h2>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="p-6 rounded-2xl bg-slate-950/75 backdrop-blur-xl border border-cyan-400/30 text-white shadow-xl">
-              <div class="w-12 h-12 rounded-xl bg-cyan-500/20 text-cyan-300 flex items-center justify-center text-xl mb-4 border border-cyan-400/30">
+            <div class="p-6 rounded-2xl bg-[#1a130c]/85 backdrop-blur-xl border border-amber-400/30 text-[#faf4eb] shadow-xl">
+              <div class="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-300 flex items-center justify-center text-xl mb-4 border border-amber-400/35">
                 <i class="fa-solid fa-ear-listen"></i>
               </div>
-              <h3 class="text-base font-bold text-white mb-2">Escuta Ativa com Google Gemini</h3>
-              <p class="text-xs text-slate-300 leading-relaxed">
+              <h3 class="text-base font-bold text-[#faf4eb] mb-2">Escuta Ativa com Google Gemini</h3>
+              <p class="text-xs text-[#dfd0ba] leading-relaxed">
                 Transcreve a fala do cliente ao vivo e detecta pausas, hesitações e objeções de preço ou prazo no exato segundo em que acontecem.
               </p>
             </div>
 
-            <div class="p-6 rounded-2xl bg-slate-950/75 backdrop-blur-xl border border-blue-400/30 text-white shadow-xl">
-              <div class="w-12 h-12 rounded-xl bg-blue-500/20 text-blue-300 flex items-center justify-center text-xl mb-4 border border-blue-400/30">
+            <div class="p-6 rounded-2xl bg-[#1a130c]/85 backdrop-blur-xl border border-amber-400/30 text-[#faf4eb] shadow-xl">
+              <div class="w-12 h-12 rounded-xl bg-yellow-500/20 text-amber-200 flex items-center justify-center text-xl mb-4 border border-amber-300/35">
                 <i class="fa-solid fa-chart-column"></i>
               </div>
-              <h3 class="text-base font-bold text-white mb-2">Análise de Sentimento Ao Vivo</h3>
-              <p class="text-xs text-slate-300 leading-relaxed">
+              <h3 class="text-base font-bold text-[#faf4eb] mb-2">Análise de Sentimento Ao Vivo</h3>
+              <p class="text-xs text-[#dfd0ba] leading-relaxed">
                 Acompanhe a probabilidade de fechamento subindo de 0% a 100% em tempo real com alerta visual imediato quando a venda entra em risco.
               </p>
             </div>
 
-            <div class="p-6 rounded-2xl bg-slate-950/75 backdrop-blur-xl border border-purple-400/30 text-white shadow-xl">
-              <div class="w-12 h-12 rounded-xl bg-purple-500/20 text-purple-300 flex items-center justify-center text-xl mb-4 border border-purple-400/30">
+            <div class="p-6 rounded-2xl bg-[#1a130c]/85 backdrop-blur-xl border border-amber-400/30 text-[#faf4eb] shadow-xl">
+              <div class="w-12 h-12 rounded-xl bg-orange-500/20 text-amber-300 flex items-center justify-center text-xl mb-4 border border-amber-400/35">
                 <i class="fa-solid fa-sliders"></i>
               </div>
-              <h3 class="text-base font-bold text-white mb-2">Playbooks & Argumentos Dinâmicos</h3>
-              <p class="text-xs text-slate-300 leading-relaxed">
+              <h3 class="text-base font-bold text-[#faf4eb] mb-2">Playbooks & Argumentos Dinâmicos</h3>
+              <p class="text-xs text-[#dfd0ba] leading-relaxed">
                 Alterne com 1 clique entre argumentos de parcelamento em 3x sem juros, garantia de alta velocidade ou escopo enxuto para converter na hora.
               </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- 1.5 PLANOS DE ASSINATURA MENSAL COM TRANSIÇÃO CONTÍNUA NO TOM DO PISO AMADEIRADO & OURO -->
+        <section id="planos" class="pt-12 pb-24 px-6 bg-gradient-to-b from-transparent via-[#1c140d]/85 to-[#120d08] relative z-20 text-[#faf4eb]">
+          <!-- Luzes âmbar suaves integradas ao brilho dourado do piso do vídeo -->
+          <div class="absolute top-0 left-1/4 w-96 h-64 bg-amber-500/15 rounded-full blur-[120px] pointer-events-none"></div>
+          <div class="absolute bottom-0 right-1/4 w-96 h-64 bg-yellow-600/15 rounded-full blur-[120px] pointer-events-none"></div>
+
+          <div class="max-w-6xl mx-auto relative z-10">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+              <span class="text-xs font-extrabold text-amber-200 uppercase tracking-widest bg-[#1f160e]/85 px-3.5 py-1 rounded-full border border-amber-400/35 backdrop-blur-md">
+                Planos & Checkout Transparente ALRIS
+              </span>
+              <h2 class="text-3xl sm:text-4xl font-black text-[#faf4eb] mt-3 drop-shadow-lg">
+                Escolha o Plano Ideal para o Tamanho da Sua Equipe
+              </h2>
+              <p class="text-sm text-[#efe4d4] mt-2 drop-shadow">
+                Ao selecionar qualquer plano abaixo, você abre nossa <strong>Página de Pagamento Segura (Pix QR Code ou Cartão)</strong> com liberação automática das vagas da equipe.
+              </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+              
+              <!-- Plano 1: Starter (Glass Espresso/Bronze Harmônico com o Piso do Vídeo) -->
+              <div class="bg-[#1b140d]/88 backdrop-blur-2xl rounded-3xl p-7 border border-amber-400/25 hover:border-amber-400/55 shadow-2xl flex flex-col justify-between transition">
+                <div>
+                  <span class="text-xs font-extrabold text-amber-300 uppercase tracking-wider">Plano Starter</span>
+                  <h3 class="text-xl font-extrabold text-[#faf4eb] mt-1">Individual & Autônomo</h3>
+                  <p class="text-xs text-[#d6c5ad] mt-1">Ideal para começar com 1 canal de atendimento e Kanban completo.</p>
+                  <div class="my-6 flex items-baseline gap-1">
+                    <span class="text-sm font-bold text-amber-300/80">R$</span>
+                    <span class="text-4xl font-black text-[#faf4eb] mono">149</span>
+                    <span class="text-xs text-[#d6c5ad] font-semibold">/mês</span>
+                  </div>
+                  <ul class="space-y-3 text-xs text-[#ede0ce] border-t border-amber-400/15 pt-5">
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> <strong>1 Usuário (Admin)</strong> ativo</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> 1 Canal WhatsApp conectado</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> Quadro Kanban de Processos ilimitado</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> Raio-X de Clientes por Link Social</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> Envio de Contrato rápido no WhatsApp</li>
+                  </ul>
+                </div>
+                <button onclick="openPaymentCheckout('Plano Starter', '149,00', 1)" class="mt-8 w-full py-3.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-[#faf4eb] border border-amber-400/35 font-extrabold text-xs transition shadow-sm flex items-center justify-center gap-2">
+                  <i class="fa-solid fa-lock text-amber-300"></i> Selecionar Starter & Ir p/ Pagamento
+                </button>
+              </div>
+
+              <!-- Plano 2: Growth / Pro Team (Destaque Central Ouro & Nogueira) -->
+              <div class="bg-gradient-to-b from-[#2a1e13]/92 to-[#17100a]/95 backdrop-blur-2xl text-[#faf4eb] rounded-3xl p-7 border-2 border-amber-400 shadow-[0_0_50px_-10px_rgba(245,158,11,0.4)] flex flex-col justify-between relative transform md:-translate-y-2">
+                <span class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-300 via-amber-500 to-yellow-600 text-[#181109] font-black text-[10px] uppercase tracking-wider px-4 py-1 rounded-full shadow">
+                  Mais Popular • Equipe & IA
+                </span>
+                <div>
+                  <span class="text-xs font-bold text-amber-300 uppercase tracking-wider">Plano Pro Growth</span>
+                  <h3 class="text-xl font-extrabold text-[#faf4eb] mt-1">Equipes & Copiloto Ao Vivo</h3>
+                  <p class="text-xs text-[#e5d5be] mt-1">Acesso por código para a equipe e IA escutando chamadas em tempo real.</p>
+                  <div class="my-6 flex items-baseline gap-1">
+                    <span class="text-sm font-bold text-amber-300">R$</span>
+                    <span class="text-4xl font-black text-[#fde68a] mono">299</span>
+                    <span class="text-xs text-[#e5d5be] font-semibold">/mês</span>
+                  </div>
+                  <ul class="space-y-3 text-xs text-[#faf4eb] border-t border-amber-400/20 pt-5">
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> <strong>Até 5 Membros na Equipe</strong> via Código</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> <strong>Copiloto Gemini ao Vivo</strong> nas chamadas</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> <strong>Gráfico 3D de Sentimento</strong> e Alerta de Risco</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> Sugestões automáticas de quebra de objeção</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> Ligação Normal no PC + WhatsApp Integrado</li>
+                  </ul>
+                </div>
+                <button onclick="openPaymentCheckout('Plano Pro Growth', '299,00', 5)" class="mt-8 w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-300 via-amber-500 to-yellow-600 hover:from-amber-200 hover:to-amber-400 text-[#181109] font-black text-xs shadow-lg shadow-amber-500/25 transition flex items-center justify-center gap-2">
+                  <i class="fa-solid fa-credit-card"></i> Fazer Upgrade p/ Pro (Página de Pagamento)
+                </button>
+              </div>
+
+              <!-- Plano 3: Scale / Enterprise (Glass Nogueira & Bronze) -->
+              <div class="bg-[#1b140d]/88 backdrop-blur-2xl rounded-3xl p-7 border border-amber-400/25 hover:border-amber-300/60 shadow-2xl flex flex-col justify-between transition">
+                <div>
+                  <span class="text-xs font-extrabold text-amber-200 uppercase tracking-wider">Plano Enterprise Scale</span>
+                  <h3 class="text-xl font-extrabold text-[#faf4eb] mt-1">Operação Ilimitada</h3>
+                  <p class="text-xs text-[#d6c5ad] mt-1">Para agências e centrais com múltiplos operadores e canais.</p>
+                  <div class="my-6 flex items-baseline gap-1">
+                    <span class="text-sm font-bold text-amber-300/80">R$</span>
+                    <span class="text-4xl font-black text-[#faf4eb] mono">699</span>
+                    <span class="text-xs text-[#d6c5ad] font-semibold">/mês</span>
+                  </div>
+                  <ul class="space-y-3 text-xs text-[#ede0ce] border-t border-amber-400/15 pt-5">
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-300"></i> <strong>Membros Ilimitados</strong> com Código de Equipe</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-300"></i> Múltiplos WhatsApps & Ramais VoIP</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-300"></i> Motor <strong>Gemini 4 Argon</strong> Dedicado</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-300"></i> Playbooks customizados & API Aberta</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-300"></i> Gerente de Conta & SLA VIP</li>
+                  </ul>
+                </div>
+                <button onclick="openPaymentCheckout('Plano Enterprise Scale', '699,00', 99)" class="mt-8 w-full py-3.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-[#faf4eb] border border-amber-300/40 font-extrabold text-xs transition shadow-sm flex items-center justify-center gap-2">
+                  <i class="fa-solid fa-crown text-amber-300"></i> Selecionar Enterprise & Ir p/ Pagamento
+                </button>
+              </div>
+
             </div>
           </div>
         </section>
@@ -314,115 +414,15 @@
       </div>
     </div>
 
-    <!-- 1.5 PLANOS DE ASSINATURA MENSAL COM TRANSIÇÃO CONTÍNUA DO FINAL DO VÍDEO 3D -->
-    <section id="planos" class="py-20 px-6 bg-gradient-to-b from-[#060a12] via-[#091122] to-[#0c1322] border-t border-cyan-500/20 border-b border-slate-800/80 relative z-20 text-white">
-      <!-- Luzes sutis que dão continuidade às linhas neon do gráfico 3D final -->
-      <div class="absolute top-0 left-1/4 w-96 h-64 bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none"></div>
-      <div class="absolute bottom-0 right-1/4 w-96 h-64 bg-purple-600/10 rounded-full blur-[120px] pointer-events-none"></div>
-
-      <div class="max-w-6xl mx-auto relative z-10">
-        <div class="text-center max-w-3xl mx-auto mb-12">
-          <span class="text-xs font-extrabold text-cyan-300 uppercase tracking-widest bg-cyan-500/15 px-3.5 py-1 rounded-full border border-cyan-400/30">
-            Planos & Checkout Transparente ALRIS
-          </span>
-          <h2 class="text-3xl sm:text-4xl font-black text-white mt-3">
-            Escolha o Plano Ideal para o Tamanho da Sua Equipe
-          </h2>
-          <p class="text-sm text-slate-300 mt-2">
-            Ao selecionar qualquer plano abaixo, você abre nossa <strong>Página de Pagamento Segura (Pix QR Code ou Cartão)</strong> com liberação automática das vagas da equipe.
-          </p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
-          
-          <!-- Plano 1: Starter (Dark Glass Harmônico com o Final do Vídeo 3D) -->
-          <div class="bg-[#0f172a]/85 backdrop-blur-xl rounded-3xl p-7 border border-cyan-500/25 shadow-xl flex flex-col justify-between hover:border-cyan-400/50 transition">
-            <div>
-              <span class="text-xs font-extrabold text-cyan-400 uppercase tracking-wider">Plano Starter</span>
-              <h3 class="text-xl font-extrabold text-white mt-1">Individual & Autônomo</h3>
-              <p class="text-xs text-slate-400 mt-1">Ideal para começar com 1 canal de atendimento e Kanban completo.</p>
-              <div class="my-6 flex items-baseline gap-1">
-                <span class="text-sm font-bold text-slate-400">R$</span>
-                <span class="text-4xl font-black text-white mono">149</span>
-                <span class="text-xs text-slate-400 font-semibold">/mês</span>
-              </div>
-              <ul class="space-y-3 text-xs text-slate-300 border-t border-slate-800 pt-5">
-                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-cyan-400"></i> <strong>1 Usuário (Admin)</strong> ativo</li>
-                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-cyan-400"></i> 1 Canal WhatsApp conectado</li>
-                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-cyan-400"></i> Quadro Kanban de Processos ilimitado</li>
-                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-cyan-400"></i> Raio-X de Clientes por Link Social</li>
-                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-cyan-400"></i> Envio de Contrato rápido no WhatsApp</li>
-              </ul>
-            </div>
-            <button onclick="openPaymentCheckout('Plano Starter', '149,00', 1)" class="mt-8 w-full py-3.5 rounded-xl bg-white/10 hover:bg-white/15 text-white border border-cyan-400/30 font-extrabold text-xs transition shadow-sm flex items-center justify-center gap-2">
-              <i class="fa-solid fa-lock text-cyan-400"></i> Selecionar Starter & Ir p/ Pagamento
-            </button>
-          </div>
-
-          <!-- Plano 2: Growth / Pro Team (Destaque Central Neon Ciano/Violeta) -->
-          <div class="bg-gradient-to-b from-[#131f3a] to-[#0b1326] text-white rounded-3xl p-7 border-2 border-cyan-400 shadow-[0_0_45px_-10px_rgba(34,211,238,0.35)] flex flex-col justify-between relative transform md:-translate-y-2">
-            <span class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 text-white font-black text-[10px] uppercase tracking-wider px-4 py-1 rounded-full shadow">
-              Mais Popular • Equipe & IA
-            </span>
-            <div>
-              <span class="text-xs font-bold text-cyan-300 uppercase tracking-wider">Plano Pro Growth</span>
-              <h3 class="text-xl font-extrabold text-white mt-1">Equipes & Copiloto Ao Vivo</h3>
-              <p class="text-xs text-slate-300 mt-1">Acesso por código para a equipe e IA escutando chamadas em tempo real.</p>
-              <div class="my-6 flex items-baseline gap-1">
-                <span class="text-sm font-bold text-slate-300">R$</span>
-                <span class="text-4xl font-black text-white mono">299</span>
-                <span class="text-xs text-slate-300 font-semibold">/mês</span>
-              </div>
-              <ul class="space-y-3 text-xs text-slate-200 border-t border-slate-800 pt-5">
-                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-cyan-400"></i> <strong>Até 5 Membros na Equipe</strong> via Código</li>
-                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-cyan-400"></i> <strong>Copiloto Gemini ao Vivo</strong> nas chamadas</li>
-                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-cyan-400"></i> <strong>Gráfico 3D de Sentimento</strong> e Alerta de Risco</li>
-                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-cyan-400"></i> Sugestões automáticas de quebra de objeção</li>
-                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-cyan-400"></i> Ligação Normal no PC + WhatsApp Integrado</li>
-              </ul>
-            </div>
-            <button onclick="openPaymentCheckout('Plano Pro Growth', '299,00', 5)" class="mt-8 w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white font-extrabold text-xs shadow-lg shadow-indigo-500/30 transition flex items-center justify-center gap-2">
-              <i class="fa-solid fa-credit-card"></i> Fazer Upgrade p/ Pro (Página de Pagamento)
-            </button>
-          </div>
-
-          <!-- Plano 3: Scale / Enterprise (Dark Glass Violeta/Azul Harmônico com o Vídeo 3D) -->
-          <div class="bg-[#0f172a]/85 backdrop-blur-xl rounded-3xl p-7 border border-purple-500/30 shadow-xl flex flex-col justify-between hover:border-purple-400/60 transition">
-            <div>
-              <span class="text-xs font-extrabold text-purple-400 uppercase tracking-wider">Plano Enterprise Scale</span>
-              <h3 class="text-xl font-extrabold text-white mt-1">Operação Ilimitada</h3>
-              <p class="text-xs text-slate-400 mt-1">Para agências e centrais com múltiplos operadores e canais.</p>
-              <div class="my-6 flex items-baseline gap-1">
-                <span class="text-sm font-bold text-slate-400">R$</span>
-                <span class="text-4xl font-black text-white mono">699</span>
-                <span class="text-xs text-slate-400 font-semibold">/mês</span>
-              </div>
-              <ul class="space-y-3 text-xs text-slate-300 border-t border-slate-800 pt-5">
-                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-purple-400"></i> <strong>Membros Ilimitados</strong> com Código de Equipe</li>
-                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-purple-400"></i> Múltiplos WhatsApps & Ramais VoIP</li>
-                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-purple-400"></i> Motor <strong>Gemini 4 Argon</strong> Dedicado</li>
-                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-purple-400"></i> Playbooks customizados & API Aberta</li>
-                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-purple-400"></i> Gerente de Conta & SLA VIP</li>
-              </ul>
-            </div>
-            <button onclick="openPaymentCheckout('Plano Enterprise Scale', '699,00', 99)" class="mt-8 w-full py-3.5 rounded-xl bg-purple-600/25 hover:bg-purple-600/40 text-white border border-purple-400/40 font-extrabold text-xs transition shadow-sm flex items-center justify-center gap-2">
-              <i class="fa-solid fa-crown text-purple-300"></i> Selecionar Enterprise & Ir p/ Pagamento
-            </button>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- Rodapé Público ALRIS -->
-    <footer class="bg-[#0c1322] text-slate-400 py-8 px-6 text-xs mt-auto border-t border-slate-800">
+    <!-- Rodapé Público ALRIS no Tom Espresso Amadeirado -->
+    <footer class="bg-[#120d08] text-[#cbb89d] py-8 px-6 text-xs mt-auto border-t border-amber-400/15">
       <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-4">
         <div class="flex items-center gap-3">
-          <img src="prints/logo-alris.jpg" alt="ALRIS Logo" class="h-8 w-auto rounded-md border border-cyan-500/30">
-          <span class="font-black text-white tracking-wider">ALRIS • CANAL DE ATENDIMENTO</span>
+          <img src="prints/logo-alris.jpg" alt="ALRIS Logo" class="h-8 w-auto rounded-md border border-amber-400/35">
+          <span class="font-black text-[#faf4eb] tracking-wider">ALRIS • CANAL DE ATENDIMENTO</span>
           <span>• © 2026 Todos os direitos reservados.</span>
         </div>
-        <button onclick="goToView('login')" class="text-cyan-400 hover:underline font-bold">
+        <button onclick="goToView('login')" class="text-amber-300 hover:underline font-bold">
           Acessar Portal (Sou Administrador / Sou Equipe com Código) &rarr;
         </button>
       </div>
@@ -1758,11 +1758,11 @@
     }
 
     const TOTAL_3D_FRAMES = 144;
-    const FRAME_CACHE_VER = 'capa2';
+    const FRAME_CACHE_VER = 'capa4';
     const preloaded3DFrames = [];
-    // Começa direto no frame 018 (último instante antes de acender) para que no primeiro toque do scroll as luzes já acendam na base da coluna!
+    // Começa no frame 024 (início da luz na base da coluna) e avança imediatamente na primeira rolagem do scroll:
     const activeFrameSequence = [];
-    for (let i = 18; i < TOTAL_3D_FRAMES; i++) activeFrameSequence.push(i);
+    for (let i = 24; i < TOTAL_3D_FRAMES; i++) activeFrameSequence.push(i);
 
     function preloadAll3DFrames() {
       activeFrameSequence.forEach(idx => {
@@ -1780,11 +1780,11 @@
       if (!frameImg || !container || !planosSection) return;
 
       const scrollTop = container.scrollTop;
-      // O vídeo termina exatamente quando o topo da seção Planos & Checkout chega na tela
-      const maxScroll = Math.max(1, planosSection.offsetTop - window.innerHeight * 0.9);
+      // O vídeo completa 100% da iluminação exatamente quando a seção Planos chega na tela
+      const maxScroll = Math.max(1, planosSection.offsetTop - window.innerHeight * 0.85);
       const rawProgress = Math.max(0, Math.min(1, scrollTop / maxScroll));
-      // Curva com resposta imediata no primeiro scroll para já acender as luzes da coluna:
-      const easedProgress = scrollTop > 2 ? Math.max(0.04, Math.pow(rawProgress, 0.78)) : 0;
+      // Resposta imediata na primeira rolagem do scroll para as luzes já subirem pela coluna central:
+      const easedProgress = scrollTop > 2 ? Math.max(0.10, Math.pow(rawProgress, 0.68)) : 0;
 
       const totalSeq = activeFrameSequence.length;
       const seqIndex = Math.max(0, Math.min(totalSeq - 1, Math.round(easedProgress * (totalSeq - 1))));
