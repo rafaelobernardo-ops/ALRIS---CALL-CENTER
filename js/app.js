@@ -300,6 +300,7 @@ let sentimentChart = null;
     function sendConfirmationEmailDemo() {
       const email = document.getElementById('loginEmail') ? document.getElementById('loginEmail').value : "rafael@alris.com.br";
       const btn = document.getElementById('btnEmailConfirm');
+      if (!btn) { alert(`Link de redefinição enviado para ${email}`); return; }
       btn.className = "w-full py-2 px-3 rounded-lg bg-cyan-100 text-cyan-900 border border-cyan-300 font-bold text-[11px] transition flex items-center justify-center gap-1.5";
       btn.innerHTML = `<i class="fa-solid fa-check-double"></i> Link de Confirmação Enviado para ${email}!`;
     }
