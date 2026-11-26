@@ -255,9 +255,45 @@ let sentimentChart = null;
       }
     }
 
+    function showAlrisToast(title, message) {
+      let toast = document.getElementById('alrisToast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'alrisToast';
+        toast.className = 'fixed top-6 left-1/2 -translate-x-1/2 z-[9999] w-[92%] max-w-md px-5 py-4 rounded-2xl bg-[#15181f]/90 backdrop-blur-xl border border-white/25 shadow-[0_20px_50px_rgba(0,0,0,0.7)] text-white flex items-start gap-3 transition-all duration-500 opacity-0 -translate-y-4';
+        document.body.appendChild(toast);
+      }
+      toast.innerHTML = `
+        <div class="w-9 h-9 shrink-0 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center">
+          <i class="fa-solid fa-envelope-circle-check text-white"></i>
+        </div>
+        <div class="text-xs leading-relaxed">
+          <strong class="block text-sm font-extrabold mb-0.5">${title}</strong>
+          <span class="text-slate-200">${message}</span>
+        </div>`;
+      requestAnimationFrame(() => {
+        toast.classList.remove('opacity-0', '-translate-y-4');
+      });
+      clearTimeout(toast._hideTimer);
+      toast._hideTimer = setTimeout(() => {
+        toast.classList.add('opacity-0', '-translate-y-4');
+      }, 4500);
+    }
+
     function handleAdminRegister(e) {
       if (e) e.preventDefault();
-      handleAdminLogin(e);
+      const email = document.getElementById('regAdminEmail')?.value.trim() || 'seu e-mail corporativo';
+      const pass = document.getElementById('regAdminPass')?.value || '';
+      const passConfirm = document.getElementById('regAdminPassConfirm')?.value || '';
+      if (pass !== passConfirm) {
+        showAlrisToast('As senhas não conferem', 'Verifique a senha e a confirmação antes de concluir o cadastro.');
+        return;
+      }
+      showAlrisToast(
+        'Cadastro realizado com sucesso!',
+        `Enviamos um link de confirmação para <strong class="text-white">${email}</strong>. Acesse sua caixa de entrada para ativar sua conta.`
+      );
+      setTimeout(() => handleAdminLogin(null), 2600);
     }
 
     function handleAdminLogin(e) {
