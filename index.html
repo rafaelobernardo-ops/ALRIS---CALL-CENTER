@@ -428,17 +428,17 @@
     </div>
 
     <div class="relative z-10 flex-1 flex items-center justify-center p-4 sm:p-6">
-      <div class="bg-[#15181f]/45 hover:bg-[#15181f]/55 backdrop-blur-xl w-full max-w-md rounded-3xl shadow-[0_28px_70px_rgba(0,0,0,0.75)] overflow-hidden border border-white/20 ring-1 ring-white/10 transition-all duration-300">
+      <div id="loginMainCard" class="bg-[#15181f]/45 hover:bg-[#15181f]/55 backdrop-blur-xl w-full max-w-md rounded-3xl shadow-[0_28px_70px_rgba(0,0,0,0.75)] overflow-hidden border border-white/20 ring-1 ring-white/10 transition-all duration-300">
         
         <!-- Card Único e Compacto: Seletor Administrador vs Equipe por Código (Vidro Translúcido) -->
-        <div class="p-6 sm:p-7 text-xs text-slate-100">
+        <div id="loginMainCardInner" class="p-6 sm:p-7 text-xs text-slate-100">
           <div id="selectedPlanBanner" class="hidden mb-4 p-3 rounded-2xl bg-white/10 border border-white/25 backdrop-blur-md text-xs text-center">
             <span class="text-[10px] font-extrabold text-slate-300 uppercase tracking-wider block">Plano Selecionado:</span>
             <strong id="selectedPlanText" class="text-white text-sm">Plano Pro Growth - R$ 299/mês</strong>
           </div>
           
           <!-- Abas de Escolha: Administrador vs Equipe (Código) -->
-          <div class="grid grid-cols-2 gap-2 p-1.5 bg-[#0e1014]/80 rounded-2xl border border-white/15 mb-6 shadow-inner">
+          <div id="loginModeTabsWrap" class="grid grid-cols-2 gap-2 p-1.5 bg-[#0e1014]/80 rounded-2xl border border-white/15 mb-6 shadow-inner transition-all duration-300">
             <button type="button" onclick="switchLoginMode('admin')" id="btnModeAdmin" class="py-2.5 px-3 rounded-xl font-extrabold text-xs bg-gradient-to-r from-white via-slate-100 to-slate-300 text-[#0e1014] shadow-md transition-all duration-300 flex items-center justify-center gap-1.5">
               <i class="fa-solid fa-building-user"></i> Sou Administrador
             </button>
@@ -462,7 +462,7 @@
                 <div>
                   <div class="flex items-center justify-between mb-1">
                     <label class="font-bold text-slate-200">Senha de Acesso *</label>
-                    <button type="button" onclick="sendConfirmationEmailDemo()" class="text-[11px] text-slate-300 hover:text-white underline">Esqueci minha senha</button>
+                    <button type="button" onclick="switchAdminAuthTab('forgot')" class="text-[11px] text-slate-300 hover:text-white underline">Esqueci minha senha</button>
                   </div>
                   <input type="password" id="loginPass" required value="12345678" placeholder="••••••••" class="w-full bg-[#0e1014]/75 backdrop-blur-sm border border-white/20 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-white focus:ring-1 focus:ring-white/30 transition">
                 </div>
@@ -476,6 +476,34 @@
                 <span class="text-slate-300 text-[11px]">Ainda não cadastrou sua empresa?</span>
                 <button type="button" onclick="switchAdminAuthTab('register')" class="ml-1 text-white font-extrabold text-[11px] underline hover:text-slate-200">
                   Criar Cadastro de Administrador &rarr;
+                </button>
+              </div>
+            </div>
+
+            <!-- ABA 1C: RECUPERAR SENHA DO ADMINISTRADOR (ENVIO DE LINK PARA O E-MAIL CADASTRADO) -->
+            <div id="adminFormForgotWrap" class="hidden">
+              <div class="flex flex-col items-center text-center mb-4">
+                <div class="w-12 h-12 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center mb-3">
+                  <i class="fa-solid fa-key text-white text-lg"></i>
+                </div>
+                <h3 class="hero-title-font text-lg font-extrabold text-white">Recuperar Senha</h3>
+                <p class="text-xs text-slate-300 mt-1 max-w-xs">Informe o e-mail corporativo cadastrado. Enviaremos um link seguro para você criar uma nova senha.</p>
+              </div>
+
+              <form onsubmit="handleForgotPassword(event)" class="space-y-3.5">
+                <div>
+                  <label class="block font-bold text-slate-200 mb-1">E-mail Corporativo Cadastrado *</label>
+                  <input type="email" id="forgotEmailInput" required placeholder="seuemail@empresa.com.br" class="w-full bg-[#0e1014]/75 backdrop-blur-sm border border-white/20 rounded-xl px-3.5 py-2.5 text-white font-semibold focus:outline-none focus:border-white focus:ring-1 focus:ring-white/30 transition">
+                </div>
+
+                <button type="submit" id="btnForgotSubmit" class="w-full bg-gradient-to-r from-white via-slate-100 to-slate-300 hover:from-white hover:to-white hover:scale-[1.015] text-[#0e1014] font-extrabold text-sm py-3.5 rounded-xl shadow-xl shadow-black/40 transition-all duration-300 flex items-center justify-center gap-2">
+                  <i class="fa-solid fa-paper-plane"></i> Enviar Link de Recuperação
+                </button>
+              </form>
+
+              <div class="mt-3 text-center">
+                <button type="button" onclick="switchAdminAuthTab('login')" class="text-white font-extrabold text-[11px] underline hover:text-slate-200">
+                  &larr; Voltar para o Login
                 </button>
               </div>
             </div>
@@ -539,43 +567,43 @@
             </div>
           </div>
 
-          <!-- MODO 2: ACESSO E CADASTRO DA EQUIPE (COM CÓDIGO DE CONVITE!) -->
-          <div id="loginBoxTeam" class="hidden">
+          <!-- MODO 2: ACESSO E CADASTRO DA EQUIPE (CORES INVERTIDAS: FUNDO CLARO / TEXTO GRAFITE ESCURO AO CONTRÁRIO DO ADM) -->
+          <div id="loginBoxTeam" class="hidden text-[#0e1014]">
             <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
               <div>
-                <span class="text-[10px] font-extrabold uppercase tracking-wider bg-white/10 text-slate-200 px-3 py-1 rounded-full border border-white/20">
+                <span class="text-[10px] font-extrabold uppercase tracking-wider bg-[#0e1014]/10 text-[#0e1014] px-3 py-1 rounded-full border border-[#0e1014]/20">
                   Acesso Rápido de Operador & Equipe
                 </span>
-                <h3 id="teamAuthTitle" class="hero-title-font text-xl font-extrabold text-white mt-2">Entrar na Equipe com Código</h3>
+                <h3 id="teamAuthTitle" class="hero-title-font text-xl font-extrabold text-[#0e1014] mt-2">Entrar na Equipe com Código</h3>
               </div>
 
               <!-- Seletor Interno da Equipe: Entrar com Código vs Primeiro Acesso (Cadastro na Equipe) -->
-              <div class="inline-flex p-1 bg-[#0e1014]/85 rounded-xl border border-white/15">
-                <button type="button" id="btnTeamSubLogin" onclick="switchTeamAuthTab('login')" class="px-3 py-1.5 rounded-lg font-extrabold text-[11px] bg-white text-[#0e1014] shadow transition-all">
+              <div class="inline-flex p-1 bg-slate-200/90 rounded-xl border border-slate-300">
+                <button type="button" id="btnTeamSubLogin" onclick="switchTeamAuthTab('login')" class="px-3 py-1.5 rounded-lg font-extrabold text-[11px] bg-[#0e1014] text-white shadow transition-all">
                   <i class="fa-solid fa-ticket mr-1"></i> Já Sou da Equipe
                 </button>
-                <button type="button" id="btnTeamSubRegister" onclick="switchTeamAuthTab('register')" class="px-3 py-1.5 rounded-lg font-bold text-[11px] text-slate-300 hover:text-white transition-all">
+                <button type="button" id="btnTeamSubRegister" onclick="switchTeamAuthTab('register')" class="px-3 py-1.5 rounded-lg font-bold text-[11px] text-slate-600 hover:text-[#0e1014] transition-all">
                   <i class="fa-solid fa-id-card mr-1"></i> Primeiro Cadastro
                 </button>
               </div>
             </div>
 
             <form onsubmit="handleTeamCodeLogin(event)" class="space-y-3.5">
-              <div class="p-3.5 rounded-2xl bg-[#0e1014]/75 border border-white/20 shadow-inner">
-                <label class="block font-extrabold text-slate-200 text-center uppercase tracking-wider text-[10px] mb-1.5">
-                  <i class="fa-solid fa-key mr-1"></i> Código Exclusivo Fornecido pelo Administrador *
+              <div class="p-3.5 rounded-2xl bg-slate-100 border border-slate-300 shadow-inner">
+                <label class="block font-extrabold text-slate-700 text-center uppercase tracking-wider text-[10px] mb-1.5">
+                  <i class="fa-solid fa-key mr-1 text-[#0e1014]"></i> Código Exclusivo Fornecido pelo Administrador *
                 </label>
-                <input type="text" id="teamCodeInput" required value="ALRIS-8842-TEAM" placeholder="Ex: ALRIS-8842-TEAM" class="w-full bg-[#15181f]/90 text-white border-2 border-white/30 rounded-xl px-4 py-2.5 font-mono text-lg font-black tracking-[0.2em] uppercase text-center focus:outline-none focus:border-white shadow-md transition">
+                <input type="text" id="teamCodeInput" required value="ALRIS-8842-TEAM" placeholder="Ex: ALRIS-8842-TEAM" class="w-full bg-white text-[#0e1014] border-2 border-[#0e1014]/30 rounded-xl px-4 py-2.5 font-mono text-lg font-black tracking-[0.2em] uppercase text-center focus:outline-none focus:border-[#0e1014] shadow-sm transition">
               </div>
 
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label class="block font-bold text-slate-200 mb-1">Seu Nome Completo *</label>
-                  <input type="text" id="memberLoginName" required value="Lucas Torres" placeholder="Ex: Lucas Torres" class="w-full bg-[#0e1014]/75 backdrop-blur-sm border border-white/20 rounded-xl px-3.5 py-2.5 text-white font-semibold focus:outline-none focus:border-white transition">
+                  <label class="block font-bold text-slate-800 mb-1">Seu Nome Completo *</label>
+                  <input type="text" id="memberLoginName" required value="Lucas Torres" placeholder="Ex: Lucas Torres" class="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-[#0e1014] font-semibold focus:outline-none focus:border-[#0e1014] transition">
                 </div>
                 <div>
-                  <label class="block font-bold text-slate-200 mb-1">Sua Função na Equipe *</label>
-                  <select id="memberLoginRole" class="w-full bg-[#0e1014]/85 backdrop-blur-sm border border-white/20 rounded-xl px-3 py-2.5 text-white font-semibold focus:outline-none focus:border-white transition">
+                  <label class="block font-bold text-slate-800 mb-1">Sua Função na Equipe *</label>
+                  <select id="memberLoginRole" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2.5 text-[#0e1014] font-semibold focus:outline-none focus:border-[#0e1014] transition">
                     <option value="Vendas & Atendimento">Vendas & Atendimento</option>
                     <option value="Design UI/UX">Design UI/UX</option>
                     <option value="Desenvolvedor">Desenvolvedor</option>
@@ -586,22 +614,22 @@
               <!-- Campos Extras exibidos quando o Operador clica em "Primeiro Cadastro" -->
               <div id="teamRegisterExtraFields" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                 <div>
-                  <label class="block font-bold text-slate-200 mb-1">Seu E-mail de Operador *</label>
-                  <input type="email" id="memberRegEmail" value="lucas@alris.com.br" placeholder="operador@empresa.com" class="w-full bg-[#0e1014]/75 backdrop-blur-sm border border-white/20 rounded-xl px-3.5 py-2 text-white focus:outline-none focus:border-white transition">
+                  <label class="block font-bold text-slate-800 mb-1">Seu E-mail de Operador *</label>
+                  <input type="email" id="memberRegEmail" value="lucas@alris.com.br" placeholder="operador@empresa.com" class="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2 text-[#0e1014] font-semibold focus:outline-none focus:border-[#0e1014] transition">
                 </div>
                 <div>
-                  <label class="block font-bold text-slate-200 mb-1">Criar PIN / Senha Pessoal *</label>
-                  <input type="password" id="memberRegPin" value="1234" placeholder="••••" class="w-full bg-[#0e1014]/75 backdrop-blur-sm border border-white/20 rounded-xl px-3.5 py-2 text-white focus:outline-none focus:border-white transition">
+                  <label class="block font-bold text-slate-800 mb-1">Criar PIN / Senha Pessoal *</label>
+                  <input type="password" id="memberRegPin" value="1234" placeholder="••••" class="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2 text-[#0e1014] font-semibold focus:outline-none focus:border-[#0e1014] transition">
                 </div>
               </div>
 
-              <button type="submit" id="btnTeamSubmitMain" class="w-full bg-gradient-to-r from-white via-slate-100 to-slate-300 hover:from-white hover:to-white hover:scale-[1.015] text-[#0e1014] font-extrabold text-sm py-3.5 rounded-xl shadow-xl shadow-black/40 transition-all duration-300 flex items-center justify-center gap-2">
+              <button type="submit" id="btnTeamSubmitMain" class="w-full bg-[#0e1014] hover:bg-slate-800 hover:scale-[1.015] text-white font-extrabold text-sm py-3.5 rounded-xl shadow-xl shadow-black/25 transition-all duration-300 flex items-center justify-center gap-2">
                 <i class="fa-solid fa-users"></i> Validar Código e Entrar na Equipe
               </button>
 
-              <div class="pt-3 border-t border-white/15 flex items-center justify-between text-[11px] text-slate-300">
-                <span><i class="fa-solid fa-circle-info mr-1 text-white"></i> Código demo pronto para teste</span>
-                <span class="font-mono font-bold text-white bg-white/10 px-2.5 py-0.5 rounded-md border border-white/15">ALRIS-8842-TEAM</span>
+              <div class="pt-3 border-t border-slate-300 flex items-center justify-between text-[11px] text-slate-700">
+                <span><i class="fa-solid fa-circle-info mr-1 text-[#0e1014]"></i> Código demo pronto para teste</span>
+                <span class="font-mono font-bold text-white bg-[#0e1014] px-2.5 py-0.5 rounded-md border border-[#0e1014]">ALRIS-8842-TEAM</span>
               </div>
             </form>
           </div>

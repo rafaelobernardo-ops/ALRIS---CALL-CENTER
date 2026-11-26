@@ -194,17 +194,38 @@ let sentimentChart = null;
       const boxTeam = document.getElementById('loginBoxTeam');
       const btnAdmin = document.getElementById('btnModeAdmin');
       const btnTeam = document.getElementById('btnModeTeam');
+      const mainCard = document.getElementById('loginMainCard');
+      const mainCardInner = document.getElementById('loginMainCardInner');
+      const tabsWrap = document.getElementById('loginModeTabsWrap');
 
       if (mode === 'admin') {
         boxAdmin.classList.remove('hidden');
         boxTeam.classList.add('hidden');
+        if (mainCard) {
+          mainCard.className = "bg-[#15181f]/45 hover:bg-[#15181f]/55 backdrop-blur-xl w-full max-w-md rounded-3xl shadow-[0_28px_70px_rgba(0,0,0,0.75)] overflow-hidden border border-white/20 ring-1 ring-white/10 transition-all duration-300";
+        }
+        if (mainCardInner) {
+          mainCardInner.className = "p-6 sm:p-7 text-xs text-slate-100";
+        }
+        if (tabsWrap) {
+          tabsWrap.className = "grid grid-cols-2 gap-2 p-1.5 bg-[#0e1014]/80 rounded-2xl border border-white/15 mb-6 shadow-inner transition-all duration-300";
+        }
         btnAdmin.className = "py-2.5 px-3 rounded-xl font-extrabold text-xs bg-gradient-to-r from-white via-slate-100 to-slate-300 text-[#0e1014] shadow-md transition-all duration-300 flex items-center justify-center gap-1.5";
         btnTeam.className = "py-2.5 px-3 rounded-xl font-bold text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all duration-300 flex items-center justify-center gap-1.5";
       } else {
         boxAdmin.classList.add('hidden');
         boxTeam.classList.remove('hidden');
-        btnTeam.className = "py-2.5 px-3 rounded-xl font-extrabold text-xs bg-gradient-to-r from-white via-slate-100 to-slate-300 text-[#0e1014] shadow-md transition-all duration-300 flex items-center justify-center gap-1.5";
-        btnAdmin.className = "py-2.5 px-3 rounded-xl font-bold text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all duration-300 flex items-center justify-center gap-1.5";
+        if (mainCard) {
+          mainCard.className = "bg-white/90 hover:bg-white/95 backdrop-blur-2xl w-full max-w-md rounded-3xl shadow-[0_28px_70px_rgba(0,0,0,0.75)] overflow-hidden border-2 border-white ring-1 ring-slate-200 transition-all duration-300";
+        }
+        if (mainCardInner) {
+          mainCardInner.className = "p-6 sm:p-7 text-xs text-[#0e1014]";
+        }
+        if (tabsWrap) {
+          tabsWrap.className = "grid grid-cols-2 gap-2 p-1.5 bg-slate-200/90 rounded-2xl border border-slate-300 mb-6 shadow-inner transition-all duration-300";
+        }
+        btnTeam.className = "py-2.5 px-3 rounded-xl font-extrabold text-xs bg-[#0e1014] text-white shadow-md transition-all duration-300 flex items-center justify-center gap-1.5";
+        btnAdmin.className = "py-2.5 px-3 rounded-xl font-bold text-xs text-slate-700 hover:text-[#0e1014] hover:bg-black/5 transition-all duration-300 flex items-center justify-center gap-1.5";
       }
       if (typeof drawLoginFrameOnCanvas === 'function' && typeof lastDrawnLoginSeqIndex !== 'undefined') {
         drawLoginFrameOnCanvas(Math.max(0, lastDrawnLoginSeqIndex));
@@ -214,9 +235,27 @@ let sentimentChart = null;
     function switchAdminAuthTab(tab) {
       const loginWrap = document.getElementById('adminFormLoginWrap');
       const regWrap = document.getElementById('adminFormRegisterWrap');
+      const forgotWrap = document.getElementById('adminFormForgotWrap');
       const btnLogin = document.getElementById('btnAdminSubLogin');
       const btnReg = document.getElementById('btnAdminSubRegister');
       const titleEl = document.getElementById('adminAuthTitle');
+
+      loginWrap?.classList.add('hidden');
+      regWrap?.classList.add('hidden');
+      forgotWrap?.classList.add('hidden');
+
+      if (tab === 'forgot') {
+        forgotWrap?.classList.remove('hidden');
+        const loginEmail = document.getElementById('loginEmail')?.value.trim();
+        const forgotInput = document.getElementById('forgotEmailInput');
+        if (forgotInput && loginEmail && !forgotInput.value) forgotInput.value = loginEmail;
+        const btnForgot = document.getElementById('btnForgotSubmit');
+        if (btnForgot) {
+          btnForgot.disabled = false;
+          btnForgot.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Enviar Link de Recuperação';
+        }
+        return;
+      }
 
       if (tab === 'register') {
         loginWrap?.classList.add('hidden');
@@ -244,14 +283,14 @@ let sentimentChart = null;
         extraFields?.classList.remove('hidden');
         if (titleEl) titleEl.innerText = 'Primeiro Cadastro na Equipe';
         if (submitBtn) submitBtn.innerHTML = '<i class="fa-solid fa-user-plus"></i> Concluir Cadastro & Entrar na Equipe';
-        if (btnReg) btnReg.className = "px-3 py-1.5 rounded-lg font-extrabold text-[11px] bg-white text-[#0e1014] shadow transition-all";
-        if (btnLogin) btnLogin.className = "px-3 py-1.5 rounded-lg font-bold text-[11px] text-slate-300 hover:text-white transition-all";
+        if (btnReg) btnReg.className = "px-3 py-1.5 rounded-lg font-extrabold text-[11px] bg-[#0e1014] text-white shadow transition-all";
+        if (btnLogin) btnLogin.className = "px-3 py-1.5 rounded-lg font-bold text-[11px] text-slate-600 hover:text-[#0e1014] transition-all";
       } else {
         extraFields?.classList.add('hidden');
         if (titleEl) titleEl.innerText = 'Entrar na Equipe com Código';
         if (submitBtn) submitBtn.innerHTML = '<i class="fa-solid fa-users"></i> Validar Código e Entrar na Equipe';
-        if (btnLogin) btnLogin.className = "px-3 py-1.5 rounded-lg font-extrabold text-[11px] bg-white text-[#0e1014] shadow transition-all";
-        if (btnReg) btnReg.className = "px-3 py-1.5 rounded-lg font-bold text-[11px] text-slate-300 hover:text-white transition-all";
+        if (btnLogin) btnLogin.className = "px-3 py-1.5 rounded-lg font-extrabold text-[11px] bg-[#0e1014] text-white shadow transition-all";
+        if (btnReg) btnReg.className = "px-3 py-1.5 rounded-lg font-bold text-[11px] text-slate-600 hover:text-[#0e1014] transition-all";
       }
     }
 
@@ -280,6 +319,22 @@ let sentimentChart = null;
       }, 4500);
     }
 
+    function handleForgotPassword(e) {
+      if (e) e.preventDefault();
+      const email = document.getElementById('forgotEmailInput')?.value.trim();
+      if (!email) return;
+      const btn = document.getElementById('btnForgotSubmit');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-circle-check"></i> Link Enviado!';
+      }
+      showAlrisToast(
+        'Link de recuperação enviado!',
+        `Se <strong class="text-white">${email}</strong> estiver cadastrado, você receberá em instantes um link para criar uma nova senha. Verifique também a caixa de spam.`
+      );
+      setTimeout(() => switchAdminAuthTab('login'), 3200);
+    }
+
     function handleAdminRegister(e) {
       if (e) e.preventDefault();
       const email = document.getElementById('regAdminEmail')?.value.trim() || 'seu e-mail corporativo';
@@ -289,11 +344,13 @@ let sentimentChart = null;
         showAlrisToast('As senhas não conferem', 'Verifique a senha e a confirmação antes de concluir o cadastro.');
         return;
       }
+      const loginEmailEl = document.getElementById('loginEmail');
+      if (loginEmailEl) loginEmailEl.value = email;
       showAlrisToast(
         'Cadastro realizado com sucesso!',
-        `Enviamos um link de confirmação para <strong class="text-white">${email}</strong>. Acesse sua caixa de entrada para ativar sua conta.`
+        `Enviamos um link de confirmação para <strong class="text-white">${email}</strong>. Confirme seu e-mail e faça login para acessar o painel.`
       );
-      setTimeout(() => handleAdminLogin(null), 2600);
+      switchAdminAuthTab('login');
     }
 
     function handleAdminLogin(e) {
