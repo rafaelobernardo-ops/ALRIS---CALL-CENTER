@@ -34,13 +34,13 @@
     }
 
     .pipefy-card {
-      background: rgba(14, 16, 20, 0.85);
+      background: rgba(20, 23, 31, 0.88) !important;
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.14) !important;
       box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.6);
       transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      color: #f1f5f9;
+      color: #f1f5f9 !important;
     }
     .pipefy-card:hover {
       border-color: rgba(255, 255, 255, 0.35);

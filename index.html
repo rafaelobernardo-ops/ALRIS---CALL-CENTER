@@ -7,9 +7,9 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/styles.css?v=20261126b">
 </head>
-<body class="h-full flex flex-col bg-[#f4f6fa] text-slate-800 antialiased selection:bg-indigo-600 selection:text-white">
+<body class="h-full flex flex-col bg-[#0e1014] text-slate-100 antialiased selection:bg-white/20 selection:text-white">
 
   <!-- ====================================================================== -->
   <!-- ETAPA 1: PÁGINA INICIAL PÚBLICA (VÍDEO 3D EM TELA CHEIA NO SCROLL)     -->
@@ -760,17 +760,12 @@
       </div>
 
     </header>
-          </div>
-        </div>
-      </div>
-
-    </header>
 
     <!-- ====================================================================== -->
     <!-- ETAPA 3: PAINEL DE PROCESSOS (KANBAN) — TELA PRINCIPAL PÓS-LOGIN       -->
     <!-- Clicando em qualquer card daqui, você abre o Atendimento ao Vivo dele! -->
     <!-- ====================================================================== -->
-    <div id="view-kanban" class="flex-1 flex flex-col overflow-hidden bg-[#0a0c10] text-white">
+    <div id="view-kanban" class="hidden flex-1 flex flex-col overflow-hidden bg-[#0a0c10] text-white">
       
       <div class="h-14 bg-[#0e1014]/90 backdrop-blur-md border-b border-white/10 px-6 flex items-center justify-between shrink-0">
         <div class="flex items-center gap-3">
@@ -802,7 +797,7 @@
           <div id="colCards-1" class="space-y-3 flex-1 overflow-y-auto custom-scroll pr-1">
             
             <!-- Card 1: AutoMotors -->
-            <div onclick="openClientAttendance('Eduardo Costa', 'AutoMotors Veículos', '5511987654321', '@automotors.veiculos', '48 Carros no Pátio', 'O site atual demora 7 segundos para carregar as fotos dos 48 carros e não tem filtro de parcelas no celular. Os 38k seguidores do Instagram chegam na página e desistem da compra.')" class="pipefy-card rounded-xl p-3.5 cursor-pointer border-l-4 border-l-white">
+            <div onclick="openClientAttendance('Eduardo Costa', 'AutoMotors Veículos', '5511987654321', '@automotors.veiculos', '48 Carros no Pátio', 'O site atual demora 7 segundos para carregar as fotos dos 48 carros e não tem filtro de parcelas no celular. Os 38k seguidores do Instagram chegam na página e desistem da compra.')" class="pipefy-card !bg-[#14171f]/90 backdrop-blur-md border border-white/15 hover:border-white/35 rounded-xl p-3.5 cursor-pointer border-l-4 border-l-white">
               <div class="flex justify-between items-start mb-2">
                 <span class="text-[10px] font-extrabold uppercase bg-white/10 text-slate-200 px-2 py-0.5 rounded border border-white/15">AutoMotors Veículos</span>
                 <span class="text-[10px] text-amber-400 font-bold"><i class="fa-solid fa-clock"></i> SLA: 1h</span>
@@ -818,7 +813,7 @@
             </div>
 
             <!-- Card 2: Imobiliária Prime -->
-            <div onclick="openClientAttendance('Roberto Almeida', 'Imobiliária Prime', '5511999887766', '@imobiliariaprime.sp', '120 Imóveis Alto Padrão', 'Lançamento de condomínio em 20 dias sem landing page dedicada. Os anúncios do Instagram estão jogando para o link geral e perdendo 60% dos leads.')" class="pipefy-card rounded-xl p-3.5 cursor-pointer border-l-4 border-l-cyan-400">
+            <div onclick="openClientAttendance('Roberto Almeida', 'Imobiliária Prime', '5511999887766', '@imobiliariaprime.sp', '120 Imóveis Alto Padrão', 'Lançamento de condomínio em 20 dias sem landing page dedicada. Os anúncios do Instagram estão jogando para o link geral e perdendo 60% dos leads.')" class="pipefy-card !bg-[#14171f]/90 backdrop-blur-md border border-white/15 hover:border-white/35 rounded-xl p-3.5 cursor-pointer border-l-4 border-l-cyan-400">
               <div class="flex justify-between items-start mb-2">
                 <span class="text-[10px] font-extrabold uppercase bg-cyan-400/15 text-cyan-300 px-2 py-0.5 rounded border border-cyan-400/30">Imobiliária Prime</span>
                 <span class="text-[10px] text-emerald-400 font-bold">Novo Lead</span>
@@ -846,7 +841,7 @@
           </div>
 
           <div class="space-y-3 flex-1 overflow-y-auto custom-scroll pr-1">
-            <div onclick="openClientAttendance('Dra. Camila Rocha', 'Clínica OdontoViva', '5511977665544', '@odontoviva.clinica', '4 Consultórios', 'Pacientes reclamam que não conseguem agendar avaliação pelo celular e o botão de WhatsApp atual está quebrado.')" class="pipefy-card rounded-xl p-3.5 cursor-pointer border-l-4 border-l-cyan-400">
+            <div onclick="openClientAttendance('Dra. Camila Rocha', 'Clínica OdontoViva', '5511977665544', '@odontoviva.clinica', '4 Consultórios', 'Pacientes reclamam que não conseguem agendar avaliação pelo celular e o botão de WhatsApp atual está quebrado.')" class="pipefy-card !bg-[#14171f]/90 backdrop-blur-md border border-white/15 hover:border-white/35 rounded-xl p-3.5 cursor-pointer border-l-4 border-l-cyan-400">
               <div class="flex justify-between items-start mb-2">
                 <span class="text-[10px] font-extrabold uppercase bg-cyan-400/15 text-cyan-300 px-2 py-0.5 rounded border border-cyan-400/30">Clínica OdontoViva</span>
                 <span class="text-[10px] text-emerald-400 font-bold font-mono">R$ 4.200</span>
@@ -873,7 +868,7 @@
           </div>
 
           <div class="space-y-3 flex-1 overflow-y-auto custom-scroll pr-1">
-            <div onclick="openClientAttendance('Dr. Henrique Martins', 'Advocacia Martins', '5511966554433', '@advocaciamartins.sp', 'Portal Jurídico Trabalhista', 'Projeto em produção (85% concluído). Cliente solicitou alinhamento na chamada sobre o botão de plantão trabalhista no WhatsApp e validação final do layout mobile.')" class="pipefy-card rounded-xl p-3.5 cursor-pointer border-l-4 border-l-purple-400">
+            <div onclick="openClientAttendance('Dr. Henrique Martins', 'Advocacia Martins', '5511966554433', '@advocaciamartins.sp', 'Portal Jurídico Trabalhista', 'Projeto em produção (85% concluído). Cliente solicitou alinhamento na chamada sobre o botão de plantão trabalhista no WhatsApp e validação final do layout mobile.')" class="pipefy-card !bg-[#14171f]/90 backdrop-blur-md border border-white/15 hover:border-white/35 rounded-xl p-3.5 cursor-pointer border-l-4 border-l-purple-400">
               <div class="flex justify-between items-start mb-2">
                 <span class="text-[10px] font-extrabold uppercase bg-purple-400/15 text-purple-300 px-2 py-0.5 rounded border border-purple-400/30">Advocacia Martins</span>
                 <span class="text-[10px] text-purple-300 font-bold">85% Pronto</span>
@@ -900,7 +895,7 @@
           </div>
 
           <div class="space-y-3 flex-1 overflow-y-auto custom-scroll pr-1">
-            <div onclick="openClientAttendance('Chef Marcos Lima', 'Restaurante Sabor', '5511955443322', '@restaurantesabor.sp', 'Cardápio Digital & Reservas', 'Site 100% entregue com domínio apontado e SSL ativo. Atendimento focado em pós-venda, acompanhamento de reservas pelo WhatsApp e renovação de manutenção mensal.')" class="pipefy-card rounded-xl p-3.5 cursor-pointer border-l-4 border-l-emerald-400">
+            <div onclick="openClientAttendance('Chef Marcos Lima', 'Restaurante Sabor', '5511955443322', '@restaurantesabor.sp', 'Cardápio Digital & Reservas', 'Site 100% entregue com domínio apontado e SSL ativo. Atendimento focado em pós-venda, acompanhamento de reservas pelo WhatsApp e renovação de manutenção mensal.')" class="pipefy-card !bg-[#14171f]/90 backdrop-blur-md border border-white/15 hover:border-white/35 rounded-xl p-3.5 cursor-pointer border-l-4 border-l-emerald-400">
               <div class="flex justify-between items-start mb-2">
                 <span class="text-[10px] font-extrabold uppercase bg-emerald-400/15 text-emerald-300 px-2 py-0.5 rounded border border-emerald-400/30">Restaurante Sabor</span>
                 <span class="text-[10px] text-emerald-400 font-bold"><i class="fa-solid fa-check"></i> No Ar (100%)</span>
@@ -916,9 +911,6 @@
             </div>
           </div>
         </div>
-
-      </div>
-    </div>
 
       </div>
     </div>
@@ -1786,7 +1778,7 @@
     </div>
   </div>
 
-  <script src="js/scroll-3d.js"></script>
-  <script src="js/app.js"></script>
+  <script src="js/scroll-3d.js?v=20261126b"></script>
+  <script src="js/app.js?v=20261126b"></script>
 </body>
 </html>
