@@ -105,6 +105,8 @@ let sentimentChart = null;
       } else if (view === 'kanban') {
         shell.classList.remove('hidden');
         kanban.classList.remove('hidden');
+        const veil = document.getElementById('workspaceBgVeil');
+        if (veil) veil.className = "absolute inset-0 bg-gradient-to-b from-[#0e1014]/50 via-[#0e1014]/20 to-[#0e1014]/55 transition-colors duration-500";
         if (typeof drawWorkspaceFrameOnCanvas === 'function') {
           drawWorkspaceFrameOnCanvas(Math.round(typeof workspaceCurrentFrameFloat !== 'undefined' ? workspaceCurrentFrameFloat : 0));
         }
@@ -112,11 +114,46 @@ let sentimentChart = null;
       } else if (view === 'callcenter') {
         shell.classList.remove('hidden');
         callcenter.classList.remove('hidden');
+        const veil = document.getElementById('workspaceBgVeil');
+        if (veil) veil.className = "absolute inset-0 bg-white/10 transition-colors duration-500";
         if (typeof drawWorkspaceFrameOnCanvas === 'function') {
           drawWorkspaceFrameOnCanvas(Math.round(typeof workspaceCurrentFrameFloat !== 'undefined' ? workspaceCurrentFrameFloat : 0));
         }
         if (breadcrumb) breadcrumb.innerText = "Etapa Atual: Atendimento ao Vivo & Copiloto IA";
         setTimeout(initSentimentChart, 50);
+      }
+    }
+
+    let isTelemetryExpanded = false;
+
+    function toggleTelemetryPanel(forceState) {
+      isTelemetryExpanded = typeof forceState === 'boolean' ? forceState : !isTelemetryExpanded;
+      const wrap = document.getElementById('telemetryColWrap');
+      const dock = document.getElementById('telemetryMinimizedDock');
+      const maxContent = document.getElementById('telemetryMaximizedContent');
+      const topBtnText = document.getElementById('topToggleTelemetryText');
+      const expandHint = document.getElementById('listeningExpandHint');
+
+      if (!wrap || !dock || !maxContent) return;
+
+      if (isTelemetryExpanded) {
+        wrap.className = "w-full lg:w-[25%] shrink-0 flex flex-col overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]";
+        dock.classList.add('hidden');
+        maxContent.classList.remove('hidden');
+        maxContent.classList.add('flex');
+        requestAnimationFrame(() => {
+          maxContent.classList.remove('opacity-0', 'scale-95');
+          maxContent.classList.add('opacity-100', 'scale-100');
+        });
+        if (topBtnText) topBtnText.innerText = "Minimizar Telemetria";
+        if (expandHint) expandHint.classList.add('hidden');
+      } else {
+        wrap.className = "w-full lg:w-[60px] shrink-0 flex flex-col overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]";
+        maxContent.classList.remove('opacity-100', 'scale-100', 'flex');
+        maxContent.classList.add('opacity-0', 'scale-95', 'hidden');
+        dock.classList.remove('hidden');
+        if (topBtnText) topBtnText.innerText = "Abrir Telemetria & Conversão";
+        if (expandHint) expandHint.classList.remove('hidden');
       }
     }
 
@@ -908,19 +945,19 @@ Responda APENAS com um objeto JSON válido:
       const b1 = document.getElementById('btnPitch1');
       const b2 = document.getElementById('btnPitch2');
       const b3 = document.getElementById('btnPitch3');
-      const activeCls = "px-2.5 py-1 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold text-[10px] shadow-sm transition";
-      const idleCls = "px-2.5 py-1 rounded-full bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 font-semibold text-[10px] transition";
+      const activeCls = "px-2.5 py-1 rounded-full bg-[#0e1014] text-white font-extrabold text-[10px] shadow-sm transition";
+      const idleCls = "px-2.5 py-1 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 font-semibold text-[10px] transition";
 
       if (b1) b1.className = mode === 'parcelado' ? activeCls : idleCls;
       if (b2) b2.className = mode === 'garantia' ? activeCls : idleCls;
       if (b3) b3.className = mode === 'mvp' ? activeCls : idleCls;
 
       if (mode === 'parcelado') {
-        pitch.innerHTML = `"Compreendo perfeitamente! A diferença é que um site barato demora 7 segundos para abrir e faz você perder clientes todo dia. Se o nosso site salvar <strong>apenas UMA venda</strong> neste mês, ele já se pagou 5 vezes. Vamos fechar em <strong>3x de R$ 1.500 sem juros</strong> para colocar no ar já na próxima semana?"`;
+        pitch.innerHTML = `"Compreendo perfeitamente! A diferença é que um site barato demora 7 segundos para abrir e faz você perder clientes todo dia. Se o nosso site salvar <strong class="text-[#0e1014]">apenas UMA venda</strong> neste mês, ele já se pagou 5 vezes. Vamos fechar em <strong class="text-[#0e1014]">3x de R$ 1.500 sem juros</strong> para colocar no ar já na próxima semana?"`;
       } else if (mode === 'garantia') {
-        pitch.innerHTML = `"Colocamos em contrato a garantia de <strong>nota acima de 95 no Google PageSpeed</strong>. Seu site vai abrir em menos de 1 segundo no 4G de qualquer cliente."`;
+        pitch.innerHTML = `"Colocamos em contrato a garantia de <strong class="text-[#0e1014]">nota acima de 95 no Google PageSpeed</strong>. Seu site vai abrir em menos de 1 segundo no 4G de qualquer cliente."`;
       } else if (mode === 'mvp') {
-        pitch.innerHTML = `"Se preferir começar mais enxuto, lançamos a <strong>Versão Essencial + Botão WhatsApp por R$ 3.200</strong> em 7 dias úteis!"`;
+        pitch.innerHTML = `"Se preferir começar mais enxuto, lançamos a <strong class="text-[#0e1014]">Versão Essencial + Botão WhatsApp por R$ 3.200</strong> em 7 dias úteis!"`;
       }
     }
 
@@ -929,15 +966,15 @@ Responda APENAS com um objeto JSON válido:
       const box = document.getElementById('transcriptBox');
       box.innerHTML += `
         <div class="flex flex-col items-end">
-          <span class="text-[10px] font-bold text-slate-600 mb-1">Operador (Sua Equipe)</span>
-          <div class="max-w-[90%] p-3.5 rounded-2xl rounded-tr-sm bg-[#eef4ff] border border-blue-100 text-slate-800 leading-relaxed">
+          <span class="text-[10px] font-bold text-slate-500 mb-1">Operador (Sua Equipe)</span>
+          <div class="max-w-[84%] px-4 py-2.5 rounded-2xl rounded-tr-sm bg-[#0e1014] text-white leading-relaxed shadow-sm">
             ${pitchText}
           </div>
-          <span class="text-[10px] text-slate-400 mt-1 font-mono">Agora</span>
+          <span class="text-[9px] text-slate-400 mt-1 font-mono">Agora</span>
         </div>
       `;
       box.scrollTop = box.scrollHeight;
-      updateTelemetry(78, 'RECUPERANDO • POSITIVO', '#2563eb', 'rgba(37, 99, 235, 0.15)', 'Sugestão IA');
+      updateTelemetry(78, 'RECUPERANDO • POSITIVO', '#0e1014', 'rgba(14, 16, 20, 0.12)', 'Sugestão IA');
     }
 
     function simulateEvent(type) {
@@ -953,6 +990,7 @@ Responda APENAS com um objeto JSON válido:
 
     function updateTelemetry(score, label, colorHex, bgRgba, chartLabel) {
       const num = document.getElementById('probNumber');
+      const miniBadge = document.getElementById('miniProbBadge');
       const status = document.getElementById('probStatus');
       const ring = document.getElementById('probRingCircle');
       const score3d = document.getElementById('live3DScoreCurrent');
@@ -963,6 +1001,7 @@ Responda APENAS com um objeto JSON válido:
       const waveArea = document.getElementById('sentimentWaveArea');
 
       if (num) num.innerText = score + '%';
+      if (miniBadge) miniBadge.innerText = score + '%';
       if (status) status.innerText = label.toUpperCase();
 
       // Atualiza o anel SVG (circunferência = 201)
@@ -984,28 +1023,28 @@ Responda APENAS com um objeto JSON válido:
       }
 
       if (score < 45) {
-        if (num) num.className = "absolute text-lg font-extrabold text-rose-600";
-        if (status) status.className = "inline-block mt-1.5 px-2.5 py-0.5 rounded-md text-[10px] font-extrabold uppercase bg-rose-100 text-rose-800 border border-rose-200";
+        if (num) num.className = "absolute text-sm font-extrabold text-rose-600";
+        if (status) status.className = "inline-block mt-1 px-2 py-0.5 rounded-md text-[9px] font-extrabold uppercase bg-rose-500/15 text-rose-800 border border-rose-500/30";
         if (score3d) score3d.innerText = `${score}% Risco`;
         if (trendBadge) {
-          trendBadge.className = "text-[10px] text-rose-700 font-bold flex items-center gap-1 bg-rose-50 px-2.5 py-0.5 rounded-full border border-rose-200";
-          trendBadge.innerHTML = `<i class="fa-solid fa-arrow-trend-down text-[9px]"></i> Em Queda`;
+          trendBadge.className = "text-[9px] text-rose-800 font-extrabold flex items-center gap-1 bg-rose-500/15 px-2 py-0.5 rounded-full border border-rose-500/30";
+          trendBadge.innerHTML = `<i class="fa-solid fa-arrow-trend-down text-[8px]"></i> Em Queda`;
         }
       } else if (score < 75) {
-        if (num) num.className = "absolute text-lg font-extrabold text-blue-600";
-        if (status) status.className = "inline-block mt-1.5 px-2.5 py-0.5 rounded-md text-[10px] font-extrabold uppercase bg-amber-100 text-amber-800 border border-amber-200";
+        if (num) num.className = "absolute text-sm font-extrabold text-[#0e1014]";
+        if (status) status.className = "inline-block mt-1 px-2 py-0.5 rounded-md text-[9px] font-extrabold uppercase bg-amber-500/15 text-amber-900 border border-amber-500/30";
         if (score3d) score3d.innerText = `${score}% Atenção`;
         if (trendBadge) {
-          trendBadge.className = "text-[10px] text-amber-700 font-bold flex items-center gap-1 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200";
-          trendBadge.innerHTML = `<i class="fa-solid fa-scale-balanced text-[9px]"></i> Negociando`;
+          trendBadge.className = "text-[9px] text-amber-900 font-extrabold flex items-center gap-1 bg-amber-500/15 px-2 py-0.5 rounded-full border border-amber-500/30";
+          trendBadge.innerHTML = `<i class="fa-solid fa-scale-balanced text-[8px]"></i> Negociando`;
         }
       } else {
-        if (num) num.className = "absolute text-lg font-extrabold text-emerald-600";
-        if (status) status.className = "inline-block mt-1.5 px-2.5 py-0.5 rounded-md text-[10px] font-extrabold uppercase bg-emerald-100 text-emerald-800 border border-emerald-200";
+        if (num) num.className = "absolute text-sm font-extrabold text-emerald-700";
+        if (status) status.className = "inline-block mt-1 px-2 py-0.5 rounded-md text-[9px] font-extrabold uppercase bg-emerald-500/15 text-emerald-800 border border-emerald-500/30";
         if (score3d) score3d.innerText = `${score}% Positivo`;
         if (trendBadge) {
-          trendBadge.className = "text-[10px] text-emerald-700 font-bold flex items-center gap-1 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200";
-          trendBadge.innerHTML = `<i class="fa-solid fa-arrow-trend-up text-[9px]"></i> Recuperando`;
+          trendBadge.className = "text-[9px] text-emerald-800 font-extrabold flex items-center gap-1 bg-emerald-500/15 px-2 py-0.5 rounded-full border border-emerald-500/30";
+          trendBadge.innerHTML = `<i class="fa-solid fa-arrow-trend-up text-[8px]"></i> Recuperando`;
         }
       }
     }
