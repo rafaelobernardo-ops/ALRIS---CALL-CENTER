@@ -105,10 +105,16 @@ let sentimentChart = null;
       } else if (view === 'kanban') {
         shell.classList.remove('hidden');
         kanban.classList.remove('hidden');
+        if (typeof drawWorkspaceFrameOnCanvas === 'function') {
+          drawWorkspaceFrameOnCanvas(Math.round(typeof workspaceCurrentFrameFloat !== 'undefined' ? workspaceCurrentFrameFloat : 0));
+        }
         if (breadcrumb) breadcrumb.innerText = "Etapa Atual: Quadro Kanban de Processos";
       } else if (view === 'callcenter') {
         shell.classList.remove('hidden');
         callcenter.classList.remove('hidden');
+        if (typeof drawWorkspaceFrameOnCanvas === 'function') {
+          drawWorkspaceFrameOnCanvas(Math.round(typeof workspaceCurrentFrameFloat !== 'undefined' ? workspaceCurrentFrameFloat : 0));
+        }
         if (breadcrumb) breadcrumb.innerText = "Etapa Atual: Atendimento ao Vivo & Copiloto IA";
         setTimeout(initSentimentChart, 50);
       }

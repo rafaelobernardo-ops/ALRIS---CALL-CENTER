@@ -14,6 +14,15 @@ const TOTAL_3D_FRAMES = 144;
     let lastDrawnLoginSeqIndex = -1;
     let isAnimatingLoginFrames = false;
 
+    // Estado dedicado para o vídeo em frames do Ambiente Logado (Kanban + Novo Chamado + Atendimento)
+    const TOTAL_WORKSPACE_FRAMES = 240;
+    const WORKSPACE_FRAME_VER = 'kanban1_v1';
+    const workspacePreloadedImages = new Map();
+    let workspaceTargetFrameFloat = 0;
+    let workspaceCurrentFrameFloat = 0;
+    let lastDrawnWorkspaceIndex = -1;
+    let isAnimatingWorkspaceFrames = false;
+
     const activeFrameSequence = [];
     for (let i = START_3D_FRAME; i < TOTAL_3D_FRAMES; i++) activeFrameSequence.push(i);
 
@@ -187,5 +196,85 @@ const TOTAL_3D_FRAMES = 144;
       }
     }
 
+    function drawWorkspaceFrameOnCanvas(frameIndex) {
+      const canvas = document.getElementById('workspaceBgFrameCanvas');
+      if (!canvas) return;
+      const clampedIdx = Math.max(0, Math.min(TOTAL_WORKSPACE_FRAMES - 1, frameIndex));
+      const img = workspacePreloadedImages.get(clampedIdx);
+      if (img && img.complete && img.naturalWidth > 0) {
+        const ctx = canvas.getContext('2d', { alpha: false });
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          lastDrawnWorkspaceIndex = clampedIdx;
+        }
+      }
+    }
+
+    function preloadWorkspaceFrames() {
+      const firstImg = new Image();
+      firstImg.onload = () => {
+        if (lastDrawnWorkspaceIndex === -1) drawWorkspaceFrameOnCanvas(0);
+      };
+      firstImg.src = `assets/kanban-frames/frame_000.jpg?v=${WORKSPACE_FRAME_VER}`;
+      workspacePreloadedImages.set(0, firstImg);
+
+      // Pré-carrega os demais 239 frames da central em lotes suaves
+      let i = 1;
+      function loadBatch() {
+        const end = Math.min(TOTAL_WORKSPACE_FRAMES, i + 24);
+        for (; i < end; i++) {
+          const img = new Image();
+          const num = String(i).padStart(3, '0');
+          img.src = `assets/kanban-frames/frame_${num}.jpg?v=${WORKSPACE_FRAME_VER}`;
+          workspacePreloadedImages.set(i, img);
+        }
+        if (i < TOTAL_WORKSPACE_FRAMES) {
+          setTimeout(loadBatch, 40);
+        }
+      }
+      setTimeout(loadBatch, 100);
+    }
+
+    function tickSmoothWorkspace3DFrames() {
+      const diff = workspaceTargetFrameFloat - workspaceCurrentFrameFloat;
+      if (Math.abs(diff) > 0.05) {
+        workspaceCurrentFrameFloat += diff * 0.12;
+      } else {
+        workspaceCurrentFrameFloat = workspaceTargetFrameFloat;
+      }
+
+      const idx = Math.max(0, Math.min(TOTAL_WORKSPACE_FRAMES - 1, Math.round(workspaceCurrentFrameFloat)));
+      if (idx !== lastDrawnWorkspaceIndex) {
+        drawWorkspaceFrameOnCanvas(idx);
+      }
+
+      if (Math.abs(workspaceTargetFrameFloat - workspaceCurrentFrameFloat) > 0.05) {
+        requestAnimationFrame(tickSmoothWorkspace3DFrames);
+      } else {
+        isAnimatingWorkspaceFrames = false;
+      }
+    }
+
+    function handleWorkspaceMouseMove3D(e) {
+      const shell = document.getElementById('workspace-shell');
+      if (!shell || shell.classList.contains('hidden')) return;
+
+      const vw = Math.max(1, window.innerWidth);
+      const vh = Math.max(1, window.innerHeight);
+      const progressX = Math.max(0, Math.min(1, e.clientX / vw));
+      const progressY = Math.max(0, Math.min(1, e.clientY / vh));
+      // Combina deslocamento horizontal e vertical do mouse para avançar/voltar suavemente pelos 240 frames
+      const combinedProgress = Math.max(0, Math.min(1, progressX * 0.72 + progressY * 0.28));
+      workspaceTargetFrameFloat = combinedProgress * (TOTAL_WORKSPACE_FRAMES - 1);
+
+      if (!isAnimatingWorkspaceFrames) {
+        isAnimatingWorkspaceFrames = true;
+        requestAnimationFrame(tickSmoothWorkspace3DFrames);
+      }
+    }
+
+    window.addEventListener('mousemove', handleWorkspaceMouseMove3D, { passive: true });
+
     // Inicia o pré-carregamento imediato
     preloadAll3DFrames();
+    preloadWorkspaceFrames();

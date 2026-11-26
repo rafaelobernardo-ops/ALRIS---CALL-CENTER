@@ -1,0 +1,19 @@
+{
+  "users": {
+    "rafaelobernardo@gmail.com": {
+      "company": "Agência Rafael Tech",
+      "name": "Rafael",
+      "email": "rafaelobernardo@gmail.com",
+      "phone": "(11) 99876-5432",
+      "verified": false,
+      "created_at": 1795698607
+    }
+  },
+  "tokens": {
+    "Jhxyi9momvvD5_vw7uvzwyz5ca2t9k0GBdsOWjsJYDk": {
+      "email": "rafaelobernardo@gmail.com",
+      "expires_at": 1795785007,
+      "created_at": 1795698607
+    }
+  }
+}

@@ -7,7 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="css/styles.css?v=20261126b">
+  <link rel="stylesheet" href="css/styles.css?v=20261126c">
 </head>
 <body class="h-full flex flex-col bg-[#0e1014] text-slate-100 antialiased selection:bg-white/20 selection:text-white">
 
@@ -643,10 +643,16 @@
   <!-- ====================================================================== -->
   <!-- AMBIENTE RESTRITO (APARECE SOMENTE APÓS O LOGIN!)                      -->
   <!-- ====================================================================== -->
-  <div id="workspace-shell" class="hidden flex-1 flex flex-col overflow-hidden">
+  <div id="workspace-shell" class="hidden flex-1 flex flex-col overflow-hidden relative bg-[#0e1014]">
+
+    <!-- Fundo Dinâmico 3D em Frames (kanban_1.mp4) Guiado pelo Movimento do Mouse em Todo o Kanban / Atendimento / Novo Chamado -->
+    <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-[#0e1014]">
+      <canvas id="workspaceBgFrameCanvas" width="1280" height="720" class="w-full h-full object-cover object-center brightness-[0.88] contrast-[1.04]"></canvas>
+      <div class="absolute inset-0 bg-gradient-to-b from-[#0e1014]/55 via-[#0e1014]/22 to-[#0e1014]/60"></div>
+    </div>
     
     <!-- Topbar Exclusiva do Ambiente Logado (ULTRA-FLUIDA, 100% VISÍVEL SEM CORTES — TITÂNIO GRAFITE & PRATA LED) -->
-    <header class="h-16 bg-[#0e1014]/95 backdrop-blur-md text-white px-4 flex items-center justify-between border-b border-white/10 shrink-0 select-none shadow-md z-40 gap-2">
+    <header class="h-16 bg-[#0e1014]/75 backdrop-blur-md text-white px-4 flex items-center justify-between border-b border-white/15 shrink-0 select-none shadow-md relative z-40 gap-2">
       
       <!-- Esquerda: Logo ALRIS Vetorial + Pílula Unificada de Equipe e Convite -->
       <div class="flex items-center gap-2.5 shrink-0">
@@ -764,9 +770,9 @@
     <!-- ETAPA 3: PAINEL DE PROCESSOS (KANBAN) — TELA PRINCIPAL PÓS-LOGIN       -->
     <!-- Clicando em qualquer card daqui, você abre o Atendimento ao Vivo dele! -->
     <!-- ====================================================================== -->
-    <div id="view-kanban" class="hidden flex-1 flex flex-col overflow-hidden bg-[#0a0c10] text-white">
+    <div id="view-kanban" class="hidden flex-1 flex flex-col overflow-hidden bg-transparent text-white relative z-10">
       
-      <div class="h-14 bg-[#0e1014]/90 backdrop-blur-md border-b border-white/10 px-6 flex items-center justify-between shrink-0">
+      <div class="h-14 bg-[#0e1014]/65 backdrop-blur-md border-b border-white/15 px-6 flex items-center justify-between shrink-0">
         <div class="flex items-center gap-3">
           <h2 class="text-sm font-extrabold text-white flex items-center gap-2">
             <i class="fa-solid fa-diagram-project text-white"></i> Quadro de Processos (Kanban)
@@ -785,7 +791,7 @@
       <div class="flex-1 p-5 overflow-x-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 custom-scroll">
 
         <!-- Coluna 1: Entrada & Triagem -->
-        <div class="flex flex-col bg-[#0e1014]/75 backdrop-blur-md rounded-2xl p-3.5 border border-white/10 min-w-0 shadow-2xl">
+        <div class="flex flex-col bg-[#0e1014]/55 backdrop-blur-md rounded-2xl p-3.5 border border-white/15 min-w-0 shadow-2xl">
           <div class="flex items-center justify-between pb-2.5 mb-3 border-b border-white/10 font-bold text-xs text-slate-200">
             <span class="flex items-center gap-2">
               <span class="w-2.5 h-2.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]"></span> 1. Entrada & Triagem
@@ -796,7 +802,7 @@
           <div id="colCards-1" class="space-y-3 flex-1 overflow-y-auto custom-scroll pr-1">
             
             <!-- Card 1: AutoMotors -->
-            <div onclick="openClientAttendance('Eduardo Costa', 'AutoMotors Veículos', '5511987654321', '@automotors.veiculos', '48 Carros no Pátio', 'O site atual demora 7 segundos para carregar as fotos dos 48 carros e não tem filtro de parcelas no celular. Os 38k seguidores do Instagram chegam na página e desistem da compra.')" class="pipefy-card !bg-[#14171f]/90 backdrop-blur-md border border-white/15 hover:border-white/35 rounded-xl p-3.5 cursor-pointer border-l-4 border-l-white">
+            <div onclick="openClientAttendance('Eduardo Costa', 'AutoMotors Veículos', '5511987654321', '@automotors.veiculos', '48 Carros no Pátio', 'O site atual demora 7 segundos para carregar as fotos dos 48 carros e não tem filtro de parcelas no celular. Os 38k seguidores do Instagram chegam na página e desistem da compra.')" class="pipefy-card !bg-[#0e1014]/72 backdrop-blur-md border border-white/18 hover:border-white/38 rounded-xl p-3.5 cursor-pointer border-l-4 border-l-white">
               <div class="flex justify-between items-start mb-2">
                 <span class="text-[10px] font-extrabold uppercase bg-white/10 text-slate-200 px-2 py-0.5 rounded border border-white/15">AutoMotors Veículos</span>
                 <span class="text-[10px] text-amber-400 font-bold"><i class="fa-solid fa-clock"></i> SLA: 1h</span>
@@ -812,7 +818,7 @@
             </div>
 
             <!-- Card 2: Imobiliária Prime -->
-            <div onclick="openClientAttendance('Roberto Almeida', 'Imobiliária Prime', '5511999887766', '@imobiliariaprime.sp', '120 Imóveis Alto Padrão', 'Lançamento de condomínio em 20 dias sem landing page dedicada. Os anúncios do Instagram estão jogando para o link geral e perdendo 60% dos leads.')" class="pipefy-card !bg-[#14171f]/90 backdrop-blur-md border border-white/15 hover:border-white/35 rounded-xl p-3.5 cursor-pointer border-l-4 border-l-cyan-400">
+            <div onclick="openClientAttendance('Roberto Almeida', 'Imobiliária Prime', '5511999887766', '@imobiliariaprime.sp', '120 Imóveis Alto Padrão', 'Lançamento de condomínio em 20 dias sem landing page dedicada. Os anúncios do Instagram estão jogando para o link geral e perdendo 60% dos leads.')" class="pipefy-card !bg-[#0e1014]/72 backdrop-blur-md border border-white/18 hover:border-white/38 rounded-xl p-3.5 cursor-pointer border-l-4 border-l-cyan-400">
               <div class="flex justify-between items-start mb-2">
                 <span class="text-[10px] font-extrabold uppercase bg-cyan-400/15 text-cyan-300 px-2 py-0.5 rounded border border-cyan-400/30">Imobiliária Prime</span>
                 <span class="text-[10px] text-emerald-400 font-bold">Novo Lead</span>
@@ -831,7 +837,7 @@
         </div>
 
         <!-- Coluna 2: Proposta & Briefing IA -->
-        <div class="flex flex-col bg-[#0e1014]/75 backdrop-blur-md rounded-2xl p-3.5 border border-white/10 min-w-0 shadow-2xl">
+        <div class="flex flex-col bg-[#0e1014]/55 backdrop-blur-md rounded-2xl p-3.5 border border-white/15 min-w-0 shadow-2xl">
           <div class="flex items-center justify-between pb-2.5 mb-3 border-b border-white/10 font-bold text-xs text-slate-200">
             <span class="flex items-center gap-2">
               <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.8)]"></span> 2. Proposta & Negociação
@@ -840,7 +846,7 @@
           </div>
 
           <div class="space-y-3 flex-1 overflow-y-auto custom-scroll pr-1">
-            <div onclick="openClientAttendance('Dra. Camila Rocha', 'Clínica OdontoViva', '5511977665544', '@odontoviva.clinica', '4 Consultórios', 'Pacientes reclamam que não conseguem agendar avaliação pelo celular e o botão de WhatsApp atual está quebrado.')" class="pipefy-card !bg-[#14171f]/90 backdrop-blur-md border border-white/15 hover:border-white/35 rounded-xl p-3.5 cursor-pointer border-l-4 border-l-cyan-400">
+            <div onclick="openClientAttendance('Dra. Camila Rocha', 'Clínica OdontoViva', '5511977665544', '@odontoviva.clinica', '4 Consultórios', 'Pacientes reclamam que não conseguem agendar avaliação pelo celular e o botão de WhatsApp atual está quebrado.')" class="pipefy-card !bg-[#0e1014]/72 backdrop-blur-md border border-white/18 hover:border-white/38 rounded-xl p-3.5 cursor-pointer border-l-4 border-l-cyan-400">
               <div class="flex justify-between items-start mb-2">
                 <span class="text-[10px] font-extrabold uppercase bg-cyan-400/15 text-cyan-300 px-2 py-0.5 rounded border border-cyan-400/30">Clínica OdontoViva</span>
                 <span class="text-[10px] text-emerald-400 font-bold font-mono">R$ 4.200</span>
@@ -858,7 +864,7 @@
         </div>
 
         <!-- Coluna 3: Em Desenvolvimento -->
-        <div class="flex flex-col bg-[#0e1014]/75 backdrop-blur-md rounded-2xl p-3.5 border border-white/10 min-w-0 shadow-2xl">
+        <div class="flex flex-col bg-[#0e1014]/55 backdrop-blur-md rounded-2xl p-3.5 border border-white/15 min-w-0 shadow-2xl">
           <div class="flex items-center justify-between pb-2.5 mb-3 border-b border-white/10 font-bold text-xs text-slate-200">
             <span class="flex items-center gap-2">
               <span class="w-2.5 h-2.5 rounded-full bg-purple-400 shadow-[0_0_8px_rgba(192,132,252,0.8)]"></span> 3. Desenvolvimento
@@ -867,7 +873,7 @@
           </div>
 
           <div class="space-y-3 flex-1 overflow-y-auto custom-scroll pr-1">
-            <div onclick="openClientAttendance('Dr. Henrique Martins', 'Advocacia Martins', '5511966554433', '@advocaciamartins.sp', 'Portal Jurídico Trabalhista', 'Projeto em produção (85% concluído). Cliente solicitou alinhamento na chamada sobre o botão de plantão trabalhista no WhatsApp e validação final do layout mobile.')" class="pipefy-card !bg-[#14171f]/90 backdrop-blur-md border border-white/15 hover:border-white/35 rounded-xl p-3.5 cursor-pointer border-l-4 border-l-purple-400">
+            <div onclick="openClientAttendance('Dr. Henrique Martins', 'Advocacia Martins', '5511966554433', '@advocaciamartins.sp', 'Portal Jurídico Trabalhista', 'Projeto em produção (85% concluído). Cliente solicitou alinhamento na chamada sobre o botão de plantão trabalhista no WhatsApp e validação final do layout mobile.')" class="pipefy-card !bg-[#0e1014]/72 backdrop-blur-md border border-white/18 hover:border-white/38 rounded-xl p-3.5 cursor-pointer border-l-4 border-l-purple-400">
               <div class="flex justify-between items-start mb-2">
                 <span class="text-[10px] font-extrabold uppercase bg-purple-400/15 text-purple-300 px-2 py-0.5 rounded border border-purple-400/30">Advocacia Martins</span>
                 <span class="text-[10px] text-purple-300 font-bold">85% Pronto</span>
@@ -885,7 +891,7 @@
         </div>
 
         <!-- Coluna 4: Homologado & Entregue -->
-        <div class="flex flex-col bg-[#0e1014]/75 backdrop-blur-md rounded-2xl p-3.5 border border-white/10 min-w-0 shadow-2xl">
+        <div class="flex flex-col bg-[#0e1014]/55 backdrop-blur-md rounded-2xl p-3.5 border border-white/15 min-w-0 shadow-2xl">
           <div class="flex items-center justify-between pb-2.5 mb-3 border-b border-white/10 font-bold text-xs text-slate-200">
             <span class="flex items-center gap-2">
               <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]"></span> 4. Entregue (Go-Live)
@@ -894,7 +900,7 @@
           </div>
 
           <div class="space-y-3 flex-1 overflow-y-auto custom-scroll pr-1">
-            <div onclick="openClientAttendance('Chef Marcos Lima', 'Restaurante Sabor', '5511955443322', '@restaurantesabor.sp', 'Cardápio Digital & Reservas', 'Site 100% entregue com domínio apontado e SSL ativo. Atendimento focado em pós-venda, acompanhamento de reservas pelo WhatsApp e renovação de manutenção mensal.')" class="pipefy-card !bg-[#14171f]/90 backdrop-blur-md border border-white/15 hover:border-white/35 rounded-xl p-3.5 cursor-pointer border-l-4 border-l-emerald-400">
+            <div onclick="openClientAttendance('Chef Marcos Lima', 'Restaurante Sabor', '5511955443322', '@restaurantesabor.sp', 'Cardápio Digital & Reservas', 'Site 100% entregue com domínio apontado e SSL ativo. Atendimento focado em pós-venda, acompanhamento de reservas pelo WhatsApp e renovação de manutenção mensal.')" class="pipefy-card !bg-[#0e1014]/72 backdrop-blur-md border border-white/18 hover:border-white/38 rounded-xl p-3.5 cursor-pointer border-l-4 border-l-emerald-400">
               <div class="flex justify-between items-start mb-2">
                 <span class="text-[10px] font-extrabold uppercase bg-emerald-400/15 text-emerald-300 px-2 py-0.5 rounded border border-emerald-400/30">Restaurante Sabor</span>
                 <span class="text-[10px] text-emerald-400 font-bold"><i class="fa-solid fa-check"></i> No Ar (100%)</span>
@@ -917,16 +923,16 @@
     <!-- ====================================================================== -->
     <!-- ETAPA 4: ATENDIMENTO AO VIVO & IA (LAYOUT EXATO DA IMAGEM ALRIS)       -->
     <!-- ====================================================================== -->
-    <div id="view-callcenter" class="hidden flex-1 flex flex-col overflow-hidden bg-[#f8fafc] text-slate-800">
+    <div id="view-callcenter" class="hidden flex-1 flex flex-col overflow-hidden bg-transparent text-slate-800 relative z-10">
       
       <!-- Sub-header Limpo: Voltar ao Kanban à esquerda | Canal de Voz Criptografado à direita -->
-      <div class="h-14 bg-white border-b border-slate-200/80 px-6 flex items-center justify-between shrink-0 text-xs">
-        <button onclick="goToView('kanban')" class="px-3.5 py-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 font-semibold text-xs transition flex items-center gap-2 border border-slate-200 shadow-sm">
-          <i class="fa-solid fa-arrow-left text-slate-500"></i> Voltar ao Kanban
+      <div class="h-14 bg-[#0e1014]/65 backdrop-blur-md border-b border-white/15 px-6 flex items-center justify-between shrink-0 text-xs">
+        <button onclick="goToView('kanban')" class="px-3.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white font-semibold text-xs transition flex items-center gap-2 border border-white/20 shadow-sm">
+          <i class="fa-solid fa-arrow-left text-slate-300"></i> Voltar ao Kanban
         </button>
 
-        <span class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 font-semibold border border-emerald-200/80 flex items-center gap-1.5 text-[11px]">
-          <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Canal de Voz Criptografado
+        <span class="px-3 py-1 rounded-full bg-emerald-400/15 text-emerald-300 font-semibold border border-emerald-400/30 flex items-center gap-1.5 text-[11px]">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]"></span> Canal de Voz Criptografado
         </span>
       </div>
 
@@ -937,9 +943,9 @@
         <!-- COLUNA ESQUERDA (3 cols): PERFIL DO LEAD & CONTEXTO                -->
         <!-- ================================================================== -->
         <div class="col-span-12 lg:col-span-3 flex flex-col overflow-hidden">
-          <h2 class="text-sm font-bold text-slate-800 mb-2.5 shrink-0">Perfil do Lead & Contexto</h2>
+          <h2 class="text-sm font-bold text-white drop-shadow mb-2.5 shrink-0">Perfil do Lead & Contexto</h2>
 
-          <div class="flex-1 bg-white rounded-2xl p-5 border border-slate-200/90 text-xs flex flex-col justify-between shadow-sm overflow-y-auto custom-scroll">
+          <div class="flex-1 bg-white/85 backdrop-blur-md rounded-2xl p-5 border border-white/60 text-xs flex flex-col justify-between shadow-xl overflow-y-auto custom-scroll">
             <div class="space-y-4">
               
               <!-- Cabeçalho do Lead: Avatar Circular + Nome + Badge Ligação Ativa + Botões Compactos Telefone e WhatsApp -->
@@ -1045,9 +1051,9 @@
         <!-- COLUNA CENTRAL (5 cols): ESCUTA ATIVA & TRANSCRIÇÃO DA CHAMADA     -->
         <!-- ================================================================== -->
         <div class="col-span-12 lg:col-span-5 flex flex-col overflow-hidden">
-          <h2 class="text-sm font-bold text-slate-800 mb-2.5 shrink-0">Escuta Ativa & Transcrição da Chamada</h2>
+          <h2 class="text-sm font-bold text-white drop-shadow mb-2.5 shrink-0">Escuta Ativa & Transcrição da Chamada</h2>
 
-          <div class="flex-1 bg-white rounded-2xl p-5 border border-slate-200/90 flex flex-col justify-between text-xs shadow-sm overflow-hidden">
+          <div class="flex-1 bg-white/85 backdrop-blur-md rounded-2xl p-5 border border-white/60 flex flex-col justify-between text-xs shadow-xl overflow-hidden">
             
             <!-- Topo Interno da Transcrição -->
             <div class="pb-3 border-b border-slate-100 flex items-center justify-between shrink-0">
@@ -1142,12 +1148,12 @@
         <!-- COLUNA DIREITA (4 cols): TELEMETRIA & CONVERSÃO                    -->
         <!-- ================================================================== -->
         <div class="col-span-12 lg:col-span-4 flex flex-col overflow-hidden">
-          <h2 class="text-sm font-bold text-slate-800 mb-2.5 shrink-0">Telemetria & Conversão</h2>
+          <h2 class="text-sm font-bold text-white drop-shadow mb-2.5 shrink-0">Telemetria & Conversão</h2>
 
           <div class="flex-1 flex flex-col justify-between gap-3.5 overflow-y-auto custom-scroll">
             
             <!-- Card 1: TELEMETRIA DE CONVERSÃO com Anel Circular 54% (Donut SVG) -->
-            <div class="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-sm">
+            <div class="bg-white/85 backdrop-blur-md rounded-2xl p-4 border border-white/60 shadow-xl">
               <span class="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider block mb-3">
                 TELEMETRIA DE CONVERSÃO
               </span>
@@ -1183,7 +1189,7 @@
             </div>
 
             <!-- Card 2: ANÁLISE DE SENTIMENTO DA CALL (Gráfico de Onda Suave c/ Ponto Brilhante "↗ 78% Positivo") -->
-            <div class="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-sm flex-1 flex flex-col justify-between">
+            <div class="bg-white/85 backdrop-blur-md rounded-2xl p-4 border border-white/60 shadow-xl flex-1 flex flex-col justify-between">
               <div>
                 <div class="flex items-center justify-between mb-3">
                   <span class="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider">
@@ -1640,55 +1646,55 @@
   <!-- ======================================================== -->
   <!-- MODAL: NOVO CHAMADO COM CAMPOS DE NOME, LINK E BIO (IA) -->
   <!-- ======================================================== -->
-  <div id="newTicketModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-white w-full max-w-lg rounded-2xl border border-slate-200 shadow-2xl p-6 relative">
+  <div id="newTicketModal" class="hidden fixed inset-0 bg-slate-950/30 backdrop-blur-[2px] z-50 flex items-center justify-center p-4">
+    <div class="bg-[#0e1014]/82 backdrop-blur-xl text-white w-full max-w-lg rounded-2xl border border-white/20 shadow-2xl p-6 relative">
       
-      <button onclick="closeNewTicketModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 text-lg">
+      <button onclick="closeNewTicketModal()" class="absolute top-5 right-5 text-slate-400 hover:text-white text-lg">
         <i class="fa-solid fa-xmark"></i>
       </button>
 
-      <div class="flex items-center gap-3 pb-3 border-b border-slate-100 mb-4">
-        <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg font-bold">
+      <div class="flex items-center gap-3 pb-3 border-b border-white/15 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-white/10 text-white border border-white/20 flex items-center justify-center text-lg font-bold">
           <i class="fa-solid fa-wand-magic-sparkles"></i>
         </div>
         <div>
-          <h3 class="text-base font-bold text-slate-900">Novo Chamado / Lead com IA</h3>
-          <p class="text-xs text-slate-500">Informe os dados ou o link para o Gemini extrair a dor do cliente</p>
+          <h3 class="text-base font-bold text-white">Novo Chamado / Lead com IA</h3>
+          <p class="text-xs text-slate-300">Informe os dados ou o link para o Gemini extrair a dor do cliente</p>
         </div>
       </div>
 
       <form id="newTicketForm" onsubmit="handleCreateTicket(event)" class="space-y-3.5 text-xs">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label class="block font-bold text-slate-700 mb-1">Nome do Cliente ou Decisor *</label>
-            <input type="text" id="ticketName" required placeholder="Ex: Roberto Silva" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-800 focus:outline-none focus:border-blue-500">
+            <label class="block font-bold text-slate-200 mb-1">Nome do Cliente ou Decisor *</label>
+            <input type="text" id="ticketName" required placeholder="Ex: Roberto Silva" class="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white placeholder-slate-400 focus:outline-none focus:border-white">
           </div>
           <div>
-            <label class="block font-bold text-slate-700 mb-1">WhatsApp do Cliente</label>
-            <input type="text" id="ticketPhone" placeholder="Ex: 5511987654321" value="5511987654321" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-800 focus:outline-none focus:border-blue-500">
+            <label class="block font-bold text-slate-200 mb-1">WhatsApp do Cliente</label>
+            <input type="text" id="ticketPhone" placeholder="Ex: 5511987654321" value="5511987654321" class="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white placeholder-slate-400 focus:outline-none focus:border-white">
           </div>
         </div>
 
         <div>
-          <label class="block font-bold text-slate-700 mb-1">Nome da Empresa & Segmento *</label>
-          <input type="text" id="ticketCompany" required placeholder="Ex: Imobiliária Prime (Imóveis)" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-800 focus:outline-none focus:border-blue-500">
+          <label class="block font-bold text-slate-200 mb-1">Nome da Empresa & Segmento *</label>
+          <input type="text" id="ticketCompany" required placeholder="Ex: Imobiliária Prime (Imóveis)" class="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white placeholder-slate-400 focus:outline-none focus:border-white">
         </div>
 
         <div>
-          <label class="block font-bold text-slate-700 mb-1">Link do Instagram, Facebook ou Site Atual</label>
-          <input type="text" id="ticketLink" placeholder="Ex: instagram.com/imobiliariaprime" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-800 focus:outline-none focus:border-blue-500">
+          <label class="block font-bold text-slate-200 mb-1">Link do Instagram, Facebook ou Site Atual</label>
+          <input type="text" id="ticketLink" placeholder="Ex: instagram.com/imobiliariaprime" class="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white placeholder-slate-400 focus:outline-none focus:border-white">
         </div>
 
         <div>
-          <label class="block font-bold text-slate-700 mb-1">Biografia do Perfil ou Informações que o Cliente Falou</label>
-          <textarea id="ticketBio" rows="3" placeholder="Cole a bio da rede social ou anotações do cliente..." class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-800 focus:outline-none focus:border-blue-500"></textarea>
+          <label class="block font-bold text-slate-200 mb-1">Biografia do Perfil ou Informações que o Cliente Falou</label>
+          <textarea id="ticketBio" rows="3" placeholder="Cole a bio da rede social ou anotações do cliente..." class="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white placeholder-slate-400 focus:outline-none focus:border-white"></textarea>
         </div>
 
-        <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
-          <button type="button" onclick="closeNewTicketModal()" class="px-4 py-2 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-semibold transition">
+        <div class="pt-3 border-t border-white/15 flex items-center justify-end gap-2">
+          <button type="button" onclick="closeNewTicketModal()" class="px-4 py-2 rounded-lg bg-white/10 text-slate-200 hover:bg-white/20 font-semibold transition border border-white/15">
             Cancelar
           </button>
-          <button type="submit" id="btnCreateTicket" class="px-5 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold transition flex items-center gap-1.5 shadow-sm">
+          <button type="submit" id="btnCreateTicket" class="px-5 py-2 rounded-lg bg-gradient-to-r from-white via-slate-100 to-slate-200 hover:from-white hover:to-white text-[#0e1014] font-extrabold transition flex items-center gap-1.5 shadow-md">
             <i class="fa-solid fa-sparkles"></i> Analisar com IA & Adicionar ao Kanban
           </button>
         </div>
@@ -1777,7 +1783,7 @@
     </div>
   </div>
 
-  <script src="js/scroll-3d.js?v=20261126b"></script>
-  <script src="js/app.js?v=20261126b"></script>
+  <script src="js/scroll-3d.js?v=20261126c"></script>
+  <script src="js/app.js?v=20261126c"></script>
 </body>
 </html>
