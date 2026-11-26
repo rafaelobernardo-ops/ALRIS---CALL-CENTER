@@ -7,7 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="css/styles.css?v=20261126d">
+  <link rel="stylesheet" href="css/styles.css?v=20261126e">
 </head>
 <body class="h-full flex flex-col bg-[#0e1014] text-slate-100 antialiased selection:bg-white/20 selection:text-white">
 
@@ -651,13 +651,13 @@
       <div id="workspaceBgVeil" class="absolute inset-0 bg-gradient-to-b from-[#0e1014]/50 via-[#0e1014]/20 to-[#0e1014]/55 transition-colors duration-500"></div>
     </div>
     
-    <!-- Topbar Exclusiva do Ambiente Logado (ULTRA-FLUIDA, 100% VISÍVEL SEM CORTES — TITÂNIO GRAFITE & PRATA LED) -->
-    <header class="h-16 bg-[#0e1014]/75 backdrop-blur-md text-white px-4 flex items-center justify-between border-b border-white/15 shrink-0 select-none shadow-md relative z-40 gap-2">
+    <!-- Cabeçalho Único, Limpo e Adaptável do Ambiente Logado (Mesma Elegância da Página Inicial, Sem Barras Duplas!) -->
+    <header id="workspaceHeader" class="h-18 py-3 bg-[#111318]/45 backdrop-blur-xl text-white px-6 lg:px-10 flex items-center justify-between border-b border-white/10 shrink-0 select-none relative z-40 transition-all duration-300 gap-4">
       
-      <!-- Esquerda: Logo ALRIS Vetorial + Pílula Unificada de Equipe e Convite -->
-      <div class="flex items-center gap-2.5 shrink-0">
-        <div class="flex items-center gap-2 cursor-pointer group" onclick="goToView('kanban')" title="Ir para o Quadro Kanban">
-          <div class="w-8 h-8 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center p-1 shadow-sm shrink-0">
+      <!-- Esquerda: Logo Oficial ALRIS + Ação Contextual (Equipe no Kanban | Voltar ao Kanban no Atendimento) -->
+      <div class="flex items-center gap-4 shrink-0">
+        <div class="flex items-center gap-3 cursor-pointer group" onclick="goToView('kanban')" title="Ir para o Quadro Kanban">
+          <div id="workspaceLogoBox" class="w-10 h-10 rounded-2xl bg-[#181b22] border border-white/20 shadow-md flex items-center justify-center p-1.5 shrink-0 transition-colors">
             <svg viewBox="0 0 64 64" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <linearGradient id="alrisGradTop" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -670,70 +670,96 @@
               <path d="M14 50 C20 50 28 38 35 31 C41 25 52 27 53 36 C54 43 49 47 46 49 L47 55 L40 51 C35 52 28 49 26 42 C25 36 29 30 33 28" stroke="url(#alrisGradTop)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </div>
-          <div class="leading-none">
-            <div class="flex items-center gap-1.5">
-              <span class="alris-logo-font text-base font-black text-white">ALR<span class="text-slate-300">I</span>S</span>
-            </div>
-            <span class="text-[7px] text-slate-400 font-semibold tracking-wider uppercase block mt-0.5">CANAL DE ATENDIMENTO</span>
+          <div>
+            <span id="workspaceLogoText" class="alris-logo-font text-xl font-black text-white leading-none block">ALR<span class="opacity-75">I</span>S</span>
+            <p id="workspaceLogoSub" class="text-[9px] text-slate-300 font-bold tracking-[0.16em] uppercase mt-0.5">CANAL DE ATENDIMENTO</p>
           </div>
         </div>
 
-        <!-- Pílula Unificada e Elegante: Equipe Ativa + Botão Convidar c/ Código -->
-        <div class="hidden md:flex items-center bg-white/5 rounded-full p-1 pl-2.5 border border-white/15 gap-1.5 whitespace-nowrap">
-          <span class="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_6px_rgba(255,255,255,0.8)]"></span>
-          <span class="text-slate-300 font-semibold text-[10px]">Equipe (<span id="teamCountLabel">1/1</span>)</span>
+        <div id="headerDividerLeft" class="hidden md:block h-6 w-px bg-white/15"></div>
+
+        <!-- Contextual Esquerda 1 (Visível no Kanban): Equipe + Código -->
+        <div id="headerKanbanTeamPill" class="hidden md:flex items-center bg-white/[0.07] rounded-xl px-3 py-1.5 border border-white/15 gap-2 whitespace-nowrap">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)]"></span>
+          <span class="text-slate-200 font-bold text-[11px]">Equipe (<span id="teamCountLabel">1/1</span>)</span>
           <div id="activeTeamAvatars" class="flex items-center -space-x-1">
-            <span class="w-5 h-5 rounded-full bg-gradient-to-tr from-white to-slate-300 text-[#0e1014] font-bold text-[9px] flex items-center justify-center ring-1 ring-black" title="Rafael (Você) - Online">RC</span>
+            <span class="w-5 h-5 rounded-full bg-white text-[#0e1014] font-extrabold text-[9px] flex items-center justify-center ring-1 ring-black" title="Rafael (Você) - Online">RC</span>
           </div>
-          <button onclick="openTeamInviteModal()" class="px-2 py-0.5 rounded-full bg-white/10 hover:bg-white/20 text-slate-200 border border-white/20 text-[10px] font-bold transition flex items-center gap-1" title="Convidar membro por código de acesso">
-            <i class="fa-solid fa-user-plus text-[8px]"></i> Código
+          <button onclick="openTeamInviteModal()" class="ml-1 px-2 py-0.5 rounded-lg bg-white/10 hover:bg-white/20 text-white border border-white/15 text-[10px] font-bold transition flex items-center gap-1" title="Convidar membro por código de acesso">
+            <i class="fa-solid fa-user-plus text-[9px]"></i> Código
           </button>
+        </div>
+
+        <!-- Contextual Esquerda 2 (Visível no Atendimento): Botão Voltar ao Kanban -->
+        <button id="headerBackKanbanBtn" onclick="goToView('kanban')" class="hidden px-3.5 py-2 rounded-xl bg-[#0e1014]/[0.06] hover:bg-[#0e1014] text-[#0e1014] hover:text-white font-extrabold text-xs transition items-center gap-2 border border-slate-300/80">
+          <i class="fa-solid fa-arrow-left text-[11px]"></i> Voltar ao Kanban
+        </button>
+      </div>
+
+      <!-- Centro Contextual: Busca (no Kanban) + Barra Retrátil de Atendimento (Minimiza / Maximiza ao Clicar!) -->
+      <div class="hidden lg:flex items-center justify-center gap-3 flex-1 max-w-2xl">
+        <!-- Barra de Busca Limpa (Visível no Kanban) -->
+        <div id="headerCenterKanban" class="flex items-center bg-white/[0.07] focus-within:bg-white/[0.12] focus-within:border-white/35 border border-white/15 rounded-xl px-3.5 py-2 text-xs text-white w-full max-w-xs transition">
+          <i class="fa-solid fa-magnifying-glass text-slate-400 mr-2 text-xs"></i>
+          <input type="text" id="kanbanSearchInput" oninput="filterKanbanCards(this.value)" placeholder="Buscar cliente no Kanban..." class="bg-transparent border-none focus:outline-none text-xs text-white placeholder-slate-400 w-full">
+        </div>
+
+        <!-- Cápsula Dinâmica de Atendimento (Minimizada por Padrão -> Clica p/ Maximizar Microfone, Gravar e Encerrar!) -->
+        <div id="callToolbarIsland" class="flex items-center rounded-full border transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] bg-white/10 border-white/20 text-white shadow-sm overflow-hidden">
+          <!-- Gatilho Compacto (Sempre Visível — Clica para Maximizar / Minimizar) -->
+          <button
+            type="button"
+            onclick="toggleCallToolbar()"
+            id="callToolbarTrigger"
+            title="Clique para abrir ou recolher os controles de Microfone, Gravar e Encerrar"
+            class="flex items-center gap-2 px-3.5 py-1.5 text-[11px] font-extrabold whitespace-nowrap hover:opacity-90 transition cursor-pointer"
+          >
+            <span class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.9)] animate-pulse"></span>
+            <span id="topCallTimerText" class="mono text-[11px]">Em Atendimento • 04:12</span>
+            <i id="callToolbarChevron" class="fa-solid fa-sliders text-[10px] opacity-75 ml-0.5 transition-transform duration-300"></i>
+          </button>
+
+          <!-- Controles Expansíveis (Ocultos quando Minimizado, Exibidos ao Clicar!) -->
+          <div id="callToolbarExpanded" class="hidden items-center gap-1.5 pr-2 pl-2 border-l border-current/15 whitespace-nowrap">
+            <button type="button" onclick="toggleRealMicrophone()" id="realMicBtn" class="px-2.5 py-1 rounded-full bg-slate-700/80 hover:bg-slate-600 text-white font-bold text-[10px] transition flex items-center gap-1.5">
+              <i class="fa-solid fa-microphone text-[9px]"></i> <span id="realMicText">Microfone</span>
+            </button>
+            <button type="button" onclick="toggleCallRecording()" id="btnRecordCall" class="px-2.5 py-1 rounded-full bg-slate-700/80 hover:bg-slate-600 text-white font-bold text-[10px] transition flex items-center gap-1.5">
+              <span id="recordDot" class="w-1.5 h-1.5 rounded-full bg-slate-300"></span> <span id="recordBtnText">Gravar</span>
+            </button>
+            <button type="button" onclick="endActiveCall()" id="btnEndCallTop" class="px-2.5 py-1 rounded-full bg-rose-600 hover:bg-rose-500 text-white font-bold text-[10px] transition flex items-center gap-1 shadow-sm">
+              <i class="fa-solid fa-phone-slash text-[9px]"></i> Encerrar
+            </button>
+            <button type="button" onclick="toggleCallToolbar(false)" title="Minimizar controles" class="w-6 h-6 rounded-full hover:bg-black/10 flex items-center justify-center text-[10px] opacity-70 hover:opacity-100 transition">
+              <i class="fa-solid fa-compress"></i>
+            </button>
+          </div>
         </div>
       </div>
 
-      <!-- Centro: Cápsula Horizontal Limpa de Atendimento Ao Vivo -->
-      <div class="hidden lg:flex items-center bg-white/5 border border-white/15 rounded-full px-2.5 py-1 gap-2 shadow-inner whitespace-nowrap">
-        <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-200 pr-2 border-r border-white/15">
-          <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span>
-          <span id="topCallTimerText" class="mono text-[10px]">Em Atendimento • 04:12</span>
-        </div>
-
-        <div class="flex items-center gap-1">
-          <button onclick="toggleRealMicrophone()" id="realMicBtn" class="px-2 py-0.5 rounded-full bg-white/10 hover:bg-white/20 text-slate-200 border border-white/15 font-semibold text-[10px] transition flex items-center gap-1">
-            <i class="fa-solid fa-microphone text-slate-200 text-[9px]"></i> <span id="realMicText">Microfone</span>
-          </button>
-          <button onclick="toggleCallRecording()" id="btnRecordCall" class="px-2 py-0.5 rounded-full bg-white/10 hover:bg-white/20 text-slate-200 border border-white/15 font-semibold text-[10px] transition flex items-center gap-1">
-            <span id="recordDot" class="w-1.5 h-1.5 rounded-full bg-slate-400"></span> <span id="recordBtnText">Gravar</span>
-          </button>
-          <button onclick="endActiveCall()" id="btnEndCallTop" class="px-2.5 py-0.5 rounded-full bg-rose-600 hover:bg-rose-500 text-white font-bold text-[10px] transition flex items-center gap-1 shadow-sm">
-            <i class="fa-solid fa-phone-slash text-[8px]"></i> Encerrar
-          </button>
-        </div>
-      </div>
-
-      <!-- Direita: Busca Funcional + "+ Novo Chamado" + Perfil Rafael (ADM) 100% Visíveis -->
-      <div class="flex items-center gap-1.5 shrink-0 relative">
-        <!-- Barra de Busca Elegante que filtra os cards do Kanban em tempo real -->
-        <div class="hidden xl:flex items-center bg-white/5 focus-within:bg-white/10 focus-within:border-white/30 border border-white/15 rounded-full px-3 py-1 text-xs text-slate-200 w-40 transition">
-          <i class="fa-solid fa-magnifying-glass text-slate-400 mr-1.5 text-[10px]"></i>
-          <input type="text" id="kanbanSearchInput" oninput="filterKanbanCards(this.value)" placeholder="Buscar chamado..." class="bg-transparent border-none focus:outline-none text-[10px] text-white placeholder-slate-400 w-full">
-        </div>
-
-        <!-- Botão "+ Novo Chamado" -->
-        <button onclick="openNewTicketModal()" class="px-3 py-1.5 rounded-full bg-gradient-to-r from-white via-slate-100 to-slate-200 hover:from-white hover:to-white text-[#0e1014] font-extrabold text-[10px] shadow-md transition flex items-center gap-1 whitespace-nowrap">
-          <i class="fa-solid fa-plus text-[9px]"></i> Novo Chamado
+      <!-- Direita: Ação Principal Contextual + Perfil Unificado -->
+      <div class="flex items-center gap-2.5 shrink-0 relative">
+        <!-- Direita 1 (Kanban): "+ Novo Chamado" -->
+        <button id="headerNewTicketBtn" onclick="openNewTicketModal()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-white via-slate-100 to-slate-200 hover:from-white hover:to-white text-[#0e1014] font-extrabold text-xs shadow-md transition flex items-center gap-1.5 whitespace-nowrap">
+          <i class="fa-solid fa-plus text-[10px]"></i> Novo Chamado
         </button>
 
-        <!-- Botão de Perfil Rafael (ADM) Unificado -->
+        <!-- Direita 2 (Atendimento): Toggle Telemetria -->
+        <button type="button" id="topToggleTelemetryBtn" onclick="toggleTelemetryPanel()" class="hidden px-3.5 py-2 rounded-xl bg-[#0e1014] hover:bg-slate-800 text-white font-extrabold transition items-center gap-2 text-xs shadow-sm whitespace-nowrap">
+          <i class="fa-solid fa-chart-line text-emerald-400 text-[11px]"></i>
+          <span id="topToggleTelemetryText">Abrir Telemetria</span>
+        </button>
+
+        <!-- Botão de Perfil Unificado -->
         <div class="relative flex items-center">
-          <button onclick="toggleProfileDropdown()" id="profileMenuBtn" class="flex items-center gap-1.5 bg-white/10 hover:bg-white/20 pl-1 pr-2.5 py-1 rounded-full border border-white/15 transition whitespace-nowrap">
-            <span id="navAvatar" class="w-6 h-6 rounded-full bg-gradient-to-tr from-white to-slate-300 text-[#0e1014] font-bold text-[9px] flex items-center justify-center shadow">RC</span>
-            <span id="navUserName" class="text-[10px] font-semibold text-slate-200">Rafael (ADM)</span>
-            <i class="fa-solid fa-chevron-down text-[8px] text-slate-400"></i>
+          <button onclick="toggleProfileDropdown()" id="profileMenuBtn" class="flex items-center gap-2 bg-white/10 hover:bg-white/15 pl-1.5 pr-3 py-1.5 rounded-xl border border-white/15 transition whitespace-nowrap">
+            <span id="navAvatar" class="w-7 h-7 rounded-lg bg-white text-[#0e1014] font-extrabold text-[10px] flex items-center justify-center shadow-sm">RC</span>
+            <span id="navUserName" class="text-xs font-bold text-white hidden sm:inline">Rafael (ADM)</span>
+            <i class="fa-solid fa-chevron-down text-[9px] opacity-60"></i>
           </button>
 
           <!-- MENU SUSPENSO DO PERFIL -->
-          <div id="profileDropdown" class="hidden absolute right-0 top-11 mt-1 w-64 bg-[#0e1014] text-white rounded-2xl shadow-2xl border border-white/20 py-2 z-50 text-xs backdrop-blur-xl">
+          <div id="profileDropdown" class="hidden absolute right-0 top-12 mt-1 w-64 bg-[#0e1014] text-white rounded-2xl shadow-2xl border border-white/20 py-2 z-50 text-xs backdrop-blur-xl">
             <div class="px-4 py-2.5 border-b border-white/10">
               <strong class="text-white block text-sm" id="dropUserName">Rafael (Administrador)</strong>
               <span class="text-[11px] text-slate-400 block" id="dropPlanInfo">Plano Atual: Starter (Limite 1 membro)</span>
@@ -768,27 +794,11 @@
 
     <!-- ====================================================================== -->
     <!-- ETAPA 3: PAINEL DE PROCESSOS (KANBAN) — TELA PRINCIPAL PÓS-LOGIN       -->
-    <!-- Clicando em qualquer card daqui, você abre o Atendimento ao Vivo dele! -->
     <!-- ====================================================================== -->
     <div id="view-kanban" class="hidden flex-1 flex flex-col overflow-hidden bg-transparent text-white relative z-10">
-      
-      <div class="h-14 bg-[#0e1014]/65 backdrop-blur-md border-b border-white/15 px-6 flex items-center justify-between shrink-0">
-        <div class="flex items-center gap-3">
-          <h2 class="text-sm font-extrabold text-white flex items-center gap-2">
-            <i class="fa-solid fa-diagram-project text-white"></i> Quadro de Processos (Kanban)
-          </h2>
-          <span class="text-xs bg-white/10 text-slate-200 border border-white/15 px-2.5 py-0.5 rounded-full font-bold">
-            Clique em um card para abrir o Atendimento ao Vivo & IA
-          </span>
-        </div>
 
-        <div class="text-xs text-slate-400 hidden md:block">
-          <i class="fa-solid fa-circle-info text-white mr-1"></i> Todos os chamados criados aparecem automaticamente na Coluna 1
-        </div>
-      </div>
-
-      <!-- Colunas do Kanban (4 Colunas Responsivas Sem Corte — Padrão Dark Titânio & Prata LED) -->
-      <div class="flex-1 p-5 overflow-x-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 custom-scroll">
+      <!-- Colunas do Kanban (Direto abaixo do Cabeçalho Único, Sem Sub-barra Pesada!) -->
+      <div class="flex-1 px-6 lg:px-10 py-5 overflow-x-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 custom-scroll">
 
         <!-- Coluna 1: Entrada & Triagem -->
         <div class="flex flex-col bg-[#0e1014]/55 backdrop-blur-md rounded-2xl p-3.5 border border-white/15 min-w-0 shadow-2xl">
@@ -924,27 +934,9 @@
     <!-- ETAPA 4: ATENDIMENTO AO VIVO & IA (LAYOUT EXATO DA IMAGEM ALRIS)       -->
     <!-- ====================================================================== -->
     <div id="view-callcenter" class="hidden flex-1 flex flex-col overflow-hidden bg-transparent text-[#0e1014] relative z-10">
-      
-      <!-- Sub-header Executivo em Vidro Branco Translúcido -->
-      <div class="h-14 bg-white/85 backdrop-blur-2xl border-b border-white/90 px-6 flex items-center justify-between shrink-0 text-xs shadow-[0_4px_20px_rgba(15,23,42,0.06)]">
-        <button onclick="goToView('kanban')" class="px-3.5 py-1.5 rounded-xl bg-white hover:bg-slate-100 text-[#0e1014] font-bold text-xs transition flex items-center gap-2 border border-slate-200/90 shadow-sm">
-          <i class="fa-solid fa-arrow-left text-slate-600"></i> Voltar ao Kanban
-        </button>
 
-        <div class="flex items-center gap-2.5">
-          <button type="button" id="topToggleTelemetryBtn" onclick="toggleTelemetryPanel()" class="px-3.5 py-1.5 rounded-xl bg-[#0e1014] hover:bg-slate-800 text-white font-extrabold transition flex items-center gap-2 text-[11px] shadow-sm">
-            <i class="fa-solid fa-chart-line text-emerald-400 text-[10px]"></i>
-            <span id="topToggleTelemetryText">Abrir Telemetria & Conversão</span>
-          </button>
-
-          <span class="hidden sm:flex px-3 py-1 rounded-full bg-emerald-500/12 text-emerald-800 font-bold border border-emerald-500/25 items-center gap-1.5 text-[11px]">
-            <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Canal de Voz Criptografado
-          </span>
-        </div>
-      </div>
-
-      <!-- Layout Flexível Animado: Perfil (24%) + Escuta Ativa (Expande p/ Direita) + Telemetria (Menu Compacto <-> Painel Compacto 25%) -->
-      <div class="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden px-6 py-4 gap-4">
+      <!-- Layout Flexível Animado (Direto abaixo do Cabeçalho Único, Sem Barra Dupla!): Perfil (24%) + Escuta Ativa (Expande p/ Direita) + Telemetria (Menu Compacto <-> Painel Compacto 25%) -->
+      <div class="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden px-6 lg:px-10 py-5 gap-4">
         
         <!-- ================================================================== -->
         <!-- COLUNA ESQUERDA: PERFIL DO LEAD & CONTEXTO (VIDRO BRANCO PÉROLA)   -->
@@ -1073,28 +1065,28 @@
                 <span id="listeningExpandHint" class="hidden xl:inline-block text-[10px] font-bold text-slate-600 bg-slate-100 border border-slate-200 px-2.5 py-0.5 rounded-full">
                   Modo Ampliado
                 </span>
-                <span id="listeningBadge" class="px-3 py-1 rounded-full bg-[#0e1014] text-white font-bold text-[10px] flex items-center gap-1.5 shadow-sm">
-                  <i class="fa-solid fa-sparkles text-emerald-400"></i> Copiloto IA Ativo
+                <span id="listeningBadge" class="px-3 py-1 rounded-full bg-sky-500/12 text-sky-800 border border-sky-500/25 font-extrabold text-[10px] flex items-center gap-1.5 shadow-sm">
+                  <i class="fa-solid fa-sparkles text-sky-600"></i> Copiloto IA Ativo
                 </span>
               </div>
             </div>
 
-            <!-- Palco de Conversa Estruturado e Limpo -->
-            <div id="transcriptBox" class="flex-1 overflow-y-auto my-2.5 p-3.5 rounded-2xl bg-slate-50/75 border border-slate-200/75 space-y-3 custom-scroll min-h-[165px]">
+            <!-- Palco de Conversa em Azul-Gelo Suave (Zero Preto Puro!) -->
+            <div id="transcriptBox" class="flex-1 overflow-y-auto my-2.5 p-3.5 rounded-2xl bg-gradient-to-b from-sky-50/60 via-white/70 to-slate-100/65 border border-sky-200/60 space-y-3 custom-scroll min-h-[165px]">
               
-              <!-- Mensagem do Operador (Alinhada à Direita) -->
+              <!-- Mensagem do Operador (Alinhada à Direita — Azul Gelo Suave & Elegante, Sem Preto!) -->
               <div class="flex flex-col items-end">
                 <span class="text-[10px] font-bold text-slate-500 mb-1">Operador (Sua Equipe)</span>
-                <div class="max-w-[84%] px-4 py-2.5 rounded-2xl rounded-tr-sm bg-[#0e1014] text-white leading-relaxed shadow-sm">
+                <div class="max-w-[84%] px-4 py-2.5 rounded-2xl rounded-tr-sm bg-[#e6f0ff] border border-sky-200/90 text-slate-800 font-medium leading-relaxed shadow-sm">
                   "Analisamos o perfil da sua empresa e vimos um potencial enorme para aumentar os agendamentos e vendas pelo celular integrando direto com o WhatsApp..."
                 </div>
                 <span class="text-[9px] text-slate-400 mt-1 font-mono">03:45</span>
               </div>
 
-              <!-- Mensagem do Cliente (Alinhada à Esquerda) -->
+              <!-- Mensagem do Cliente (Alinhada à Esquerda — Branco Pérola) -->
               <div class="flex flex-col items-start">
                 <span class="text-[10px] font-bold text-slate-500 mb-1" id="transcriptClientLabel">Cliente (Eduardo)</span>
-                <div class="max-w-[84%] px-4 py-2.5 rounded-2xl rounded-tl-sm bg-white border border-slate-200/95 text-[#0e1014] font-medium leading-relaxed shadow-sm">
+                <div class="max-w-[84%] px-4 py-2.5 rounded-2xl rounded-tl-sm bg-white border border-slate-200/95 text-slate-800 font-medium leading-relaxed shadow-sm">
                   "Gostei da ideia, mas me passaram um orçamento de R$ 2.000 em outro lugar e achei o valor de R$ 4.500 um pouco pesado para fechar hoje."
                 </div>
                 <span class="text-[9px] text-slate-400 mt-1 font-mono">04:02</span>
@@ -1102,11 +1094,11 @@
 
             </div>
 
-            <!-- CARD DE SUGESTÃO DA IA EXECUTIVO EM VIDRO PÉROLA -->
-            <div id="aiSuggestionPanel" class="mb-2.5 rounded-2xl bg-white/95 border border-slate-200/95 border-l-4 border-l-[#0e1014] p-3.5 space-y-2 shrink-0 shadow-sm">
+            <!-- CARD DE SUGESTÃO DA IA SUAVE E LEVE (SEM PRETO PURO) -->
+            <div id="aiSuggestionPanel" class="mb-2.5 rounded-2xl bg-gradient-to-r from-sky-50/90 via-white/95 to-indigo-50/70 border border-sky-200/80 border-l-4 border-l-sky-500 p-3.5 space-y-2 shrink-0 shadow-sm">
               <div class="flex items-center justify-between">
-                <span id="aiAlertTitle" class="text-[11px] font-extrabold text-[#0e1014] uppercase flex items-center gap-1.5">
-                  <i class="fa-solid fa-wand-magic-sparkles text-[#0e1014]"></i> SUGESTÃO DA IA: O QUE FALAR AGORA
+                <span id="aiAlertTitle" class="text-[11px] font-extrabold text-slate-800 uppercase flex items-center gap-1.5">
+                  <i class="fa-solid fa-wand-magic-sparkles text-sky-600"></i> SUGESTÃO DA IA: O QUE FALAR AGORA
                 </span>
                 <span id="aiAlertBadge" class="text-[10px] bg-amber-500/15 text-amber-900 border border-amber-500/30 px-2.5 py-0.5 rounded-md font-extrabold">
                   Contorno de Preço
@@ -1114,24 +1106,24 @@
               </div>
 
               <p id="pitchLine" class="text-[11px] text-slate-700 leading-relaxed">
-                "Compreendo perfeitamente! A diferença é que um site barato demora 7 segundos para abrir e faz você perder clientes todo dia. Se o nosso site salvar <strong class="text-[#0e1014]">apenas UMA venda</strong> neste mês, ele já se pagou 5 vezes. Vamos fechar em <strong class="text-[#0e1014]">3x de R$ 1.500 sem juros</strong> para colocar no ar já na próxima semana?"
+                "Compreendo perfeitamente! A diferença é que um site barato demora 7 segundos para abrir e faz você perder clientes todo dia. Se o nosso site salvar <strong class="text-slate-900">apenas UMA venda</strong> neste mês, ele já se pagou 5 vezes. Vamos fechar em <strong class="text-slate-900">3x de R$ 1.500 sem juros</strong> para colocar no ar já na próxima semana?"
               </p>
 
               <!-- Pílulas das 3 Abordagens + Botão "Usar resposta ↗" -->
               <div class="flex flex-wrap items-center justify-between gap-1.5 pt-0.5">
                 <div class="flex flex-wrap items-center gap-1.5">
-                  <button type="button" onclick="changePitch('parcelado')" id="btnPitch1" class="px-2.5 py-1 rounded-full bg-[#0e1014] text-white font-extrabold text-[10px] shadow-sm transition">
+                  <button type="button" onclick="changePitch('parcelado')" id="btnPitch1" class="px-2.5 py-1 rounded-full bg-sky-600 text-white font-extrabold text-[10px] shadow-sm transition">
                     1. Parcelar 3x (Recomendado)
                   </button>
-                  <button type="button" onclick="changePitch('garantia')" id="btnPitch2" class="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 font-semibold text-[10px] transition">
+                  <button type="button" onclick="changePitch('garantia')" id="btnPitch2" class="px-2.5 py-1 rounded-full bg-white hover:bg-sky-50 text-slate-700 border border-slate-200 font-semibold text-[10px] transition">
                     2. Garantia Velocidade
                   </button>
-                  <button type="button" onclick="changePitch('mvp')" id="btnPitch3" class="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 font-semibold text-[10px] transition">
+                  <button type="button" onclick="changePitch('mvp')" id="btnPitch3" class="px-2.5 py-1 rounded-full bg-white hover:bg-sky-50 text-slate-700 border border-slate-200 font-semibold text-[10px] transition">
                     3. Escopo R$ 3.200
                   </button>
                 </div>
 
-                <button type="button" onclick="applyAiSuggestionToCall()" class="bg-[#0e1014] hover:bg-slate-800 text-white font-extrabold text-[10px] px-3 py-1.5 rounded-lg transition shadow-sm flex items-center gap-1 shrink-0">
+                <button type="button" onclick="applyAiSuggestionToCall()" class="bg-sky-600 hover:bg-sky-500 text-white font-extrabold text-[10px] px-3 py-1.5 rounded-lg transition shadow-sm flex items-center gap-1 shrink-0">
                   Usar resposta <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i>
                 </button>
               </div>
@@ -1139,16 +1131,16 @@
 
             <!-- Barra Inferior com Ícone de Microfone + Input + Botão "Analisar" -->
             <form onsubmit="analyzeCustomCustomerSpeech(event)" class="flex items-center gap-2 shrink-0">
-              <div class="flex-1 flex items-center bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 focus-within:border-[#0e1014] transition shadow-sm">
-                <i class="fa-solid fa-microphone text-slate-500 mr-2.5 text-xs cursor-pointer hover:text-[#0e1014]" onclick="toggleRealMicrophone()" title="Falar no microfone"></i>
+              <div class="flex-1 flex items-center bg-white border border-slate-200/95 rounded-xl px-3.5 py-2.5 focus-within:border-sky-500 transition shadow-sm">
+                <i class="fa-solid fa-microphone text-slate-400 mr-2.5 text-xs cursor-pointer hover:text-sky-600" onclick="toggleRealMicrophone()" title="Falar no microfone"></i>
                 <input 
                   type="text" 
                   id="customSpeechInput" 
                   placeholder="Digite ou fale o que o cliente disse para a IA analisar ao vivo..." 
-                  class="w-full bg-transparent text-xs text-[#0e1014] font-medium placeholder-slate-400 focus:outline-none"
+                  class="w-full bg-transparent text-xs text-slate-800 font-medium placeholder-slate-400 focus:outline-none"
                 >
               </div>
-              <button type="submit" id="btnAnalyzeSpeech" class="bg-[#0e1014] hover:bg-slate-800 text-white font-extrabold text-xs px-4 py-2.5 rounded-xl transition shrink-0 shadow-md">
+              <button type="submit" id="btnAnalyzeSpeech" class="bg-sky-600 hover:bg-sky-500 text-white font-extrabold text-xs px-4 py-2.5 rounded-xl transition shrink-0 shadow-md">
                 Analisar
               </button>
             </form>
@@ -1821,7 +1813,7 @@
     </div>
   </div>
 
-  <script src="js/scroll-3d.js?v=20261126d"></script>
-  <script src="js/app.js?v=20261126d"></script>
+  <script src="js/scroll-3d.js?v=20261126e"></script>
+  <script src="js/app.js?v=20261126e"></script>
 </body>
 </html>

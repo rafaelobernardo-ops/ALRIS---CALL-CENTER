@@ -105,6 +105,7 @@ let sentimentChart = null;
       } else if (view === 'kanban') {
         shell.classList.remove('hidden');
         kanban.classList.remove('hidden');
+        applyWorkspaceHeaderMode('kanban');
         const veil = document.getElementById('workspaceBgVeil');
         if (veil) veil.className = "absolute inset-0 bg-gradient-to-b from-[#0e1014]/50 via-[#0e1014]/20 to-[#0e1014]/55 transition-colors duration-500";
         if (typeof drawWorkspaceFrameOnCanvas === 'function') {
@@ -114,6 +115,7 @@ let sentimentChart = null;
       } else if (view === 'callcenter') {
         shell.classList.remove('hidden');
         callcenter.classList.remove('hidden');
+        applyWorkspaceHeaderMode('callcenter');
         const veil = document.getElementById('workspaceBgVeil');
         if (veil) veil.className = "absolute inset-0 bg-white/10 transition-colors duration-500";
         if (typeof drawWorkspaceFrameOnCanvas === 'function') {
@@ -121,6 +123,77 @@ let sentimentChart = null;
         }
         if (breadcrumb) breadcrumb.innerText = "Etapa Atual: Atendimento ao Vivo & Copiloto IA";
         setTimeout(initSentimentChart, 50);
+      }
+    }
+
+    let isCallToolbarExpanded = false;
+
+    function toggleCallToolbar(forceState) {
+      isCallToolbarExpanded = typeof forceState === 'boolean' ? forceState : !isCallToolbarExpanded;
+      const expanded = document.getElementById('callToolbarExpanded');
+      const chevron = document.getElementById('callToolbarChevron');
+      if (!expanded) return;
+
+      if (isCallToolbarExpanded) {
+        expanded.classList.remove('hidden');
+        expanded.classList.add('flex');
+        if (chevron) chevron.className = "fa-solid fa-chevron-left text-[9px] opacity-75 ml-0.5 transition-transform duration-300";
+      } else {
+        expanded.classList.remove('flex');
+        expanded.classList.add('hidden');
+        if (chevron) chevron.className = "fa-solid fa-sliders text-[10px] opacity-75 ml-0.5 transition-transform duration-300";
+      }
+    }
+
+    function applyWorkspaceHeaderMode(mode) {
+      const header = document.getElementById('workspaceHeader');
+      const logoText = document.getElementById('workspaceLogoText');
+      const logoSub = document.getElementById('workspaceLogoSub');
+      const divider = document.getElementById('headerDividerLeft');
+      const teamPill = document.getElementById('headerKanbanTeamPill');
+      const backBtn = document.getElementById('headerBackKanbanBtn');
+      const searchBox = document.getElementById('headerCenterKanban');
+      const newTicketBtn = document.getElementById('headerNewTicketBtn');
+      const telemetryBtn = document.getElementById('topToggleTelemetryBtn');
+      const profileBtn = document.getElementById('profileMenuBtn');
+      const userName = document.getElementById('navUserName');
+      const island = document.getElementById('callToolbarIsland');
+
+      if (!header) return;
+
+      if (mode === 'callcenter') {
+        header.className = "h-18 py-3 bg-white/84 backdrop-blur-2xl text-slate-800 px-6 lg:px-10 flex items-center justify-between border-b border-white/90 shadow-[0_4px_24px_rgba(15,23,42,0.06)] shrink-0 select-none relative z-40 transition-all duration-300 gap-4";
+        if (logoText) logoText.className = "alris-logo-font text-xl font-black text-slate-900 leading-none block";
+        if (logoSub) logoSub.className = "text-[9px] text-slate-500 font-bold tracking-[0.16em] uppercase mt-0.5";
+        if (divider) divider.className = "hidden md:block h-6 w-px bg-slate-300/80";
+        if (teamPill) teamPill.className = "hidden";
+        if (backBtn) backBtn.className = "flex px-3.5 py-2 rounded-xl bg-white hover:bg-slate-100 text-slate-800 font-bold text-xs transition items-center gap-2 border border-slate-200/90 shadow-sm";
+        if (searchBox) searchBox.classList.add('hidden');
+        if (newTicketBtn) newTicketBtn.classList.add('hidden');
+        if (telemetryBtn) {
+          telemetryBtn.classList.remove('hidden');
+          telemetryBtn.classList.add('flex');
+          telemetryBtn.className = "flex px-3.5 py-2 rounded-xl bg-white hover:bg-sky-50 text-slate-800 border border-slate-200/90 font-extrabold transition items-center gap-2 text-xs shadow-sm whitespace-nowrap";
+        }
+        if (profileBtn) profileBtn.className = "flex items-center gap-2 bg-white hover:bg-slate-50 pl-1.5 pr-3 py-1.5 rounded-xl border border-slate-200/90 shadow-sm transition whitespace-nowrap";
+        if (userName) userName.className = "text-xs font-bold text-slate-800 hidden sm:inline";
+        if (island) island.className = "flex items-center rounded-full border transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] bg-white/95 border-slate-200/90 text-slate-800 shadow-sm overflow-hidden";
+      } else {
+        header.className = "h-18 py-3 bg-[#111318]/45 backdrop-blur-xl text-white px-6 lg:px-10 flex items-center justify-between border-b border-white/10 shrink-0 select-none relative z-40 transition-all duration-300 gap-4";
+        if (logoText) logoText.className = "alris-logo-font text-xl font-black text-white leading-none block";
+        if (logoSub) logoSub.className = "text-[9px] text-slate-300 font-bold tracking-[0.16em] uppercase mt-0.5";
+        if (divider) divider.className = "hidden md:block h-6 w-px bg-white/15";
+        if (teamPill) teamPill.className = "hidden md:flex items-center bg-white/[0.07] rounded-xl px-3 py-1.5 border border-white/15 gap-2 whitespace-nowrap";
+        if (backBtn) backBtn.className = "hidden";
+        if (searchBox) searchBox.classList.remove('hidden');
+        if (newTicketBtn) newTicketBtn.classList.remove('hidden');
+        if (telemetryBtn) {
+          telemetryBtn.classList.remove('flex');
+          telemetryBtn.classList.add('hidden');
+        }
+        if (profileBtn) profileBtn.className = "flex items-center gap-2 bg-white/10 hover:bg-white/15 pl-1.5 pr-3 py-1.5 rounded-xl border border-white/15 transition whitespace-nowrap";
+        if (userName) userName.className = "text-xs font-bold text-white hidden sm:inline";
+        if (island) island.className = "flex items-center rounded-full border transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] bg-white/10 border-white/20 text-white shadow-sm overflow-hidden";
       }
     }
 
@@ -945,19 +1018,19 @@ Responda APENAS com um objeto JSON válido:
       const b1 = document.getElementById('btnPitch1');
       const b2 = document.getElementById('btnPitch2');
       const b3 = document.getElementById('btnPitch3');
-      const activeCls = "px-2.5 py-1 rounded-full bg-[#0e1014] text-white font-extrabold text-[10px] shadow-sm transition";
-      const idleCls = "px-2.5 py-1 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 font-semibold text-[10px] transition";
+      const activeCls = "px-2.5 py-1 rounded-full bg-sky-600 text-white font-extrabold text-[10px] shadow-sm transition";
+      const idleCls = "px-2.5 py-1 rounded-full bg-white hover:bg-sky-50 text-slate-700 border border-slate-200 font-semibold text-[10px] transition";
 
       if (b1) b1.className = mode === 'parcelado' ? activeCls : idleCls;
       if (b2) b2.className = mode === 'garantia' ? activeCls : idleCls;
       if (b3) b3.className = mode === 'mvp' ? activeCls : idleCls;
 
       if (mode === 'parcelado') {
-        pitch.innerHTML = `"Compreendo perfeitamente! A diferença é que um site barato demora 7 segundos para abrir e faz você perder clientes todo dia. Se o nosso site salvar <strong class="text-[#0e1014]">apenas UMA venda</strong> neste mês, ele já se pagou 5 vezes. Vamos fechar em <strong class="text-[#0e1014]">3x de R$ 1.500 sem juros</strong> para colocar no ar já na próxima semana?"`;
+        pitch.innerHTML = `"Compreendo perfeitamente! A diferença é que um site barato demora 7 segundos para abrir e faz você perder clientes todo dia. Se o nosso site salvar <strong class="text-slate-900">apenas UMA venda</strong> neste mês, ele já se pagou 5 vezes. Vamos fechar em <strong class="text-slate-900">3x de R$ 1.500 sem juros</strong> para colocar no ar já na próxima semana?"`;
       } else if (mode === 'garantia') {
-        pitch.innerHTML = `"Colocamos em contrato a garantia de <strong class="text-[#0e1014]">nota acima de 95 no Google PageSpeed</strong>. Seu site vai abrir em menos de 1 segundo no 4G de qualquer cliente."`;
+        pitch.innerHTML = `"Colocamos em contrato a garantia de <strong class="text-slate-900">nota acima de 95 no Google PageSpeed</strong>. Seu site vai abrir em menos de 1 segundo no 4G de qualquer cliente."`;
       } else if (mode === 'mvp') {
-        pitch.innerHTML = `"Se preferir começar mais enxuto, lançamos a <strong class="text-[#0e1014]">Versão Essencial + Botão WhatsApp por R$ 3.200</strong> em 7 dias úteis!"`;
+        pitch.innerHTML = `"Se preferir começar mais enxuto, lançamos a <strong class="text-slate-900">Versão Essencial + Botão WhatsApp por R$ 3.200</strong> em 7 dias úteis!"`;
       }
     }
 
@@ -967,14 +1040,14 @@ Responda APENAS com um objeto JSON válido:
       box.innerHTML += `
         <div class="flex flex-col items-end">
           <span class="text-[10px] font-bold text-slate-500 mb-1">Operador (Sua Equipe)</span>
-          <div class="max-w-[84%] px-4 py-2.5 rounded-2xl rounded-tr-sm bg-[#0e1014] text-white leading-relaxed shadow-sm">
+          <div class="max-w-[84%] px-4 py-2.5 rounded-2xl rounded-tr-sm bg-[#e6f0ff] border border-sky-200/90 text-slate-800 font-medium leading-relaxed shadow-sm">
             ${pitchText}
           </div>
           <span class="text-[9px] text-slate-400 mt-1 font-mono">Agora</span>
         </div>
       `;
       box.scrollTop = box.scrollHeight;
-      updateTelemetry(78, 'RECUPERANDO • POSITIVO', '#0e1014', 'rgba(14, 16, 20, 0.12)', 'Sugestão IA');
+      updateTelemetry(78, 'RECUPERANDO • POSITIVO', '#0284c7', 'rgba(2, 132, 199, 0.12)', 'Sugestão IA');
     }
 
     function simulateEvent(type) {
