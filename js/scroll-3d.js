@@ -8,6 +8,12 @@ const TOTAL_3D_FRAMES = 144;
     let isAnimatingFrames = false;
     let lastScrollTopValue = 0;
 
+    // Estado dedicado para o LED interativo da Página de Login guiado pela seta do mouse
+    let loginTargetFrameFloat = 0;
+    let loginCurrentFrameFloat = 0;
+    let lastDrawnLoginSeqIndex = -1;
+    let isAnimatingLoginFrames = false;
+
     const activeFrameSequence = [];
     for (let i = START_3D_FRAME; i < TOTAL_3D_FRAMES; i++) activeFrameSequence.push(i);
 
@@ -25,12 +31,27 @@ const TOTAL_3D_FRAMES = 144;
       }
     }
 
+    function drawLoginFrameOnCanvas(seqIndex) {
+      const canvas = document.getElementById('loginBgFrameCanvas');
+      if (!canvas) return;
+      const frameNum = activeFrameSequence[seqIndex];
+      const img = preloadedImages.get(frameNum);
+      if (img && img.complete && img.naturalWidth > 0) {
+        const ctx = canvas.getContext('2d', { alpha: false });
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          lastDrawnLoginSeqIndex = seqIndex;
+        }
+      }
+    }
+
     function preloadAll3DFrames() {
-      // Carrega primeiro o frame 004 imediato para exibir sem atraso
+      // Carrega primeiro o frame 004 imediato para exibir sem atraso na Home e no Login
       const firstNum = String(START_3D_FRAME).padStart(3, '0');
       const firstImg = new Image();
       firstImg.onload = () => {
         if (lastDrawnSeqIndex === -1) drawFrameOnCanvas(0);
+        if (lastDrawnLoginSeqIndex === -1) drawLoginFrameOnCanvas(0);
       };
       firstImg.src = `assets/frames/frame_${firstNum}.jpg?v=${FRAME_CACHE_VER}`;
       preloadedImages.set(START_3D_FRAME, firstImg);
@@ -47,7 +68,6 @@ const TOTAL_3D_FRAMES = 144;
     function tickSmooth3DFrames() {
       const diff = targetFrameFloat - currentFrameFloat;
       if (Math.abs(diff) > 0.05) {
-        // Interpolação suave (lerp) a 60fps para eliminar qualquer sensação de peso no scroll
         currentFrameFloat += diff * 0.16;
       } else {
         currentFrameFloat = targetFrameFloat;
@@ -65,6 +85,59 @@ const TOTAL_3D_FRAMES = 144;
       }
     }
 
+    function tickSmoothLogin3DFrames() {
+      const diff = loginTargetFrameFloat - loginCurrentFrameFloat;
+      if (Math.abs(diff) > 0.05) {
+        loginCurrentFrameFloat += diff * 0.14;
+      } else {
+        loginCurrentFrameFloat = loginTargetFrameFloat;
+      }
+
+      const seqIndex = Math.max(0, Math.min(activeFrameSequence.length - 1, Math.round(loginCurrentFrameFloat)));
+      if (seqIndex !== lastDrawnLoginSeqIndex) {
+        drawLoginFrameOnCanvas(seqIndex);
+      }
+
+      if (Math.abs(loginTargetFrameFloat - loginCurrentFrameFloat) > 0.05) {
+        requestAnimationFrame(tickSmoothLogin3DFrames);
+      } else {
+        isAnimatingLoginFrames = false;
+      }
+    }
+
+    // Na página de login: quando a seta do mouse está baixa (abaixo do card), a luz fica apagada (frame 004).
+    // Conforme sobe a seta do mouse, a luz de LED da coluna central sobe e acompanha a altura da seta!
+    function handleLoginMouseMove3D(e) {
+      const vh = Math.max(1, window.innerHeight);
+      const clientY = e.clientY;
+      // Na faixa inferior da tela (abaixo de 82% da altura), fica totalmente apagado (0)
+      // Conforme sobe a seta até o topo (12% da altura), o progresso vai de 0 até 1 (100% aceso no teto)
+      const bottomThreshold = vh * 0.84;
+      const topThreshold = vh * 0.10;
+      const rawUpProgress = (bottomThreshold - clientY) / Math.max(1, bottomThreshold - topThreshold);
+      const clampedProgress = Math.max(0, Math.min(1, rawUpProgress));
+
+      const totalSeq = activeFrameSequence.length;
+      if (clampedProgress <= 0.02) {
+        loginTargetFrameFloat = 0; // Totalmente apagado quando a seta está embaixo
+      } else {
+        loginTargetFrameFloat = clampedProgress * (totalSeq - 1);
+      }
+
+      if (!isAnimatingLoginFrames) {
+        isAnimatingLoginFrames = true;
+        requestAnimationFrame(tickSmoothLogin3DFrames);
+      }
+
+      const loginBadge = document.getElementById('loginFrameCounterBadge');
+      if (loginBadge) {
+        const pct = Math.round(clampedProgress * 100);
+        loginBadge.innerText = pct <= 2
+          ? 'LED APAGADO • SUBA A SETA DO MOUSE PARA ACENDER'
+          : `LED ${pct}% ACESO • ACOMPANHANDO A SETA DO MOUSE`;
+      }
+    }
+
     function handleFullScreenFrameScroll(container) {
       const badge = document.getElementById('frameCounterBadge');
       const planosSection = document.getElementById('planos');
@@ -75,8 +148,6 @@ const TOTAL_3D_FRAMES = 144;
       const isScrollingUp = scrollTop < lastScrollTopValue - 4;
       const isScrollingDown = scrollTop > lastScrollTopValue + 4;
 
-      // Assim que rolar o scroll e a seção inicial de atendimento começar a sair, o cabeçalho sobe e desaparece.
-      // Só volta a aparecer quando subir o scroll ou retornar ao topo.
       if (header) {
         if (scrollTop <= 80) {
           header.style.transform = 'translateY(0)';
@@ -97,8 +168,6 @@ const TOTAL_3D_FRAMES = 144;
       const maxScroll = Math.max(1, planosSection.offsetTop - window.innerHeight * 0.85);
       const rawProgress = Math.max(0, Math.min(1, scrollTop / maxScroll));
 
-      // No topo absoluto (scrollTop === 0) fica no frame 004 (sem luz).
-      // No primeiro movimento do scroll, já entra suavemente no frame 005 onde o LED branco acende na base.
       const totalSeq = activeFrameSequence.length;
       if (scrollTop <= 1) {
         targetFrameFloat = 0;

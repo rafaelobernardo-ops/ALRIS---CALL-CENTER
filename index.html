@@ -380,25 +380,45 @@
   </div>
 
   <!-- ====================================================================== -->
-  <!-- ETAPA 2: PÁGINA DE LOGIN & ASSINATURA (PALETA GRAFITE + CIANO/ESMERALDA) -->
+  <!-- ETAPA 2: PÁGINA DE LOGIN & ASSINATURA (MESMO ESTILO 3D + VIDRO TRANSLÚCIDO DA HOME) -->
   <!-- ====================================================================== -->
-  <div id="view-login" class="hidden flex-1 flex flex-col bg-gradient-to-br from-[#0e1014] via-[#161920] to-[#0e1014] overflow-y-auto">
+  <div id="view-login" onmousemove="handleLoginMouseMove3D(event)" class="hidden flex-1 flex flex-col bg-[#0e1014] relative overflow-y-auto">
     
-    <!-- Topo da Tela de Login com Botão de Voltar para a Página Inicial -->
-    <div class="p-6 flex items-center justify-between max-w-6xl w-full mx-auto">
-      <button onclick="goToView('landing')" class="text-xs font-bold text-slate-200 hover:text-white flex items-center gap-2 bg-[#1d212a] px-4 py-2 rounded-xl border border-white/15 transition">
-        <i class="fa-solid fa-arrow-left text-slate-200"></i> Voltar para a Página Inicial
-      </button>
-      <span class="text-xs text-slate-200 font-semibold"><i class="fa-solid fa-shield-halved mr-1"></i> Ambiente Criptografado SSL • ALRIS</span>
+    <!-- Fundo Arquitetônico 3D da Central ALRIS Guiado pela Posição da Seta do Mouse (Canvas 60fps) -->
+    <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-[#0e1014]">
+      <canvas
+        id="loginBgFrameCanvas"
+        width="1280"
+        height="720"
+        class="w-full h-full object-cover object-center select-none pointer-events-none block"
+      ></canvas>
+      <div class="absolute inset-0 bg-gradient-to-b from-[#0e1014]/55 via-[#111318]/25 to-[#0e1014]/75"></div>
+
+      <!-- Indicador Discreto de Interatividade do LED na Página de Login -->
+      <div class="absolute bottom-5 right-6 z-20 hidden sm:flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-[#15181f]/70 border border-white/20 backdrop-blur-md text-[10px] font-mono text-slate-200">
+        <span class="w-2 h-2 rounded-full bg-white animate-ping"></span>
+        <span id="loginFrameCounterBadge">LED INTERATIVO • SUBA A SETA DO MOUSE PARA ACENDER</span>
+      </div>
     </div>
 
-    <div class="flex-1 flex items-center justify-center p-4">
-      <div class="bg-[#14171e]/95 backdrop-blur-2xl w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-12 border border-white/15">
+    <!-- Topo Translúcido da Tela de Login com Botão de Voltar para a Página Inicial -->
+    <div class="relative z-10 px-6 lg:px-12 py-4 bg-[#111318]/45 backdrop-blur-md flex items-center justify-between w-full">
+      <button onclick="goToView('landing')" class="text-xs font-extrabold text-slate-200 hover:text-white flex items-center gap-2 bg-white/10 hover:bg-white/15 px-4 py-2.5 rounded-xl border border-white/15 backdrop-blur-md transition-all duration-300 hover:scale-[1.03]">
+        <i class="fa-solid fa-arrow-left text-slate-200"></i> Voltar para a Página Inicial
+      </button>
+      <div class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#15181f]/50 border border-white/15 backdrop-blur-md text-[11px] text-slate-200 font-semibold">
+        <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+        <span><i class="fa-solid fa-shield-halved mr-1"></i> Ambiente Criptografado SSL • ALRIS</span>
+      </div>
+    </div>
+
+    <div class="relative z-10 flex-1 flex items-center justify-center p-4 sm:p-6">
+      <div class="bg-[#15181f]/45 hover:bg-[#15181f]/55 backdrop-blur-xl w-full max-w-4xl rounded-3xl shadow-[0_28px_70px_rgba(0,0,0,0.75)] overflow-hidden grid grid-cols-1 md:grid-cols-12 border border-white/20 ring-1 ring-white/10 transition-all duration-300">
         
-        <!-- Lado Esquerdo: Resumo do Acesso ALRIS -->
-        <div class="md:col-span-5 bg-[#0e1014] text-white p-8 flex flex-col justify-between border-r border-white/10">
+        <!-- Lado Esquerdo: Resumo do Acesso ALRIS em Vidro Translúcido Escuro -->
+        <div class="md:col-span-5 bg-[#0e1014]/65 backdrop-blur-lg text-white p-8 flex flex-col justify-between border-b md:border-b-0 md:border-r border-white/15">
           <div>
-            <div class="flex items-center gap-3 mb-6">
+            <div class="flex items-center gap-3.5 mb-7 cursor-pointer group" onclick="goToView('landing')">
               <div class="w-11 h-11 rounded-2xl bg-[#181b22] border border-white/20 shadow-md shadow-black/20 flex items-center justify-center p-1.5">
                 <svg viewBox="0 0 64 64" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M12 48 L26 15 C28.5 9.5 34.5 9.5 37 15 L44 31" stroke="url(#alrisGrad1)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -406,118 +426,208 @@
                 </svg>
               </div>
               <div>
-                <span class="alris-logo-font font-black text-lg block">ALR<span class="text-slate-300">I</span>S</span>
-                <span class="text-[10px] text-slate-300 uppercase tracking-widest font-bold block">Canal de Atendimento</span>
+                <div class="flex items-center gap-2">
+                  <span class="alris-logo-font text-2xl font-black text-white leading-none">ALR<span class="text-slate-300">I</span>S</span>
+                  <span class="text-[9px] bg-white/10 text-slate-200 font-extrabold px-2 py-0.5 rounded-full border border-white/20">IA</span>
+                </div>
+                <span class="text-[10px] text-slate-300 uppercase tracking-[0.16em] font-bold block mt-1">CANAL DE ATENDIMENTO</span>
               </div>
             </div>
 
-            <div id="selectedPlanBanner" class="hidden mb-4 p-3 rounded-xl bg-white/10 border border-white/20 text-xs">
-              <span class="text-[10px] font-bold text-slate-200 uppercase block">Plano Selecionado:</span>
+            <div id="selectedPlanBanner" class="hidden mb-5 p-3.5 rounded-2xl bg-white/10 border border-white/25 backdrop-blur-md text-xs">
+              <span class="text-[10px] font-extrabold text-slate-300 uppercase tracking-wider block">Plano Selecionado:</span>
               <strong id="selectedPlanText" class="text-white text-sm">Plano Pro Growth - R$ 299/mês</strong>
             </div>
 
-            <h2 class="text-2xl font-extrabold leading-snug mb-3 text-white">
-              Entre para Acessar seu Canal de Atendimento
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-[10px] font-extrabold text-slate-200 uppercase tracking-wider mb-3">
+              <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
+              <span>Portal Corporativo</span>
+            </div>
+
+            <h2 class="hero-title-font text-2xl sm:text-3xl font-extrabold leading-tight mb-3 text-white">
+              Entre no seu Canal em <span class="tempo-real-shimmer">Tempo Real</span>
             </h2>
-            <p class="text-xs text-slate-300 leading-relaxed">
-              Após o login, você será direcionado ao <strong>Quadro Kanban da Equipe</strong>, onde poderá criar novos chamados e clicar em qualquer cliente para abrir o <strong>Atendimento ao Vivo com IA</strong>.
+            <p class="text-xs text-slate-200 leading-relaxed">
+              Após validar seu acesso, você entra direto no <strong>Quadro Kanban da Equipe</strong> para gerenciar chamados e abrir o <strong>Copiloto de Voz IA</strong>.
             </p>
           </div>
 
-          <div class="space-y-2.5 pt-6 border-t border-white/10 text-xs">
-            <div class="flex items-center gap-2 text-slate-200 font-semibold">
-              <i class="fa-solid fa-circle-check"></i>
-              <span>Fluxo Sequencial: Login &rarr; Kanban &rarr; Call IA</span>
+          <div class="space-y-3 pt-6 border-t border-white/15 text-xs">
+            <div class="flex items-center gap-2.5 text-slate-200 font-semibold bg-white/5 p-2.5 rounded-xl border border-white/10">
+              <i class="fa-solid fa-building-shield text-white"></i>
+              <span><strong>Administrador:</strong> Gerencia plano, vagas e código</span>
             </div>
-            <div class="flex items-center gap-2 text-slate-200 font-semibold">
-              <i class="fa-solid fa-users"></i>
-              <span>Acesso Isolado p/ Administrador e Equipe</span>
+            <div class="flex items-center gap-2.5 text-slate-200 font-semibold bg-white/5 p-2.5 rounded-xl border border-white/10">
+              <i class="fa-solid fa-ticket text-white"></i>
+              <span><strong>Equipe:</strong> Entra com o código exclusivo da empresa</span>
             </div>
           </div>
         </div>
 
-        <!-- Lado Direito: Seletor Administrador vs Equipe por Código -->
-        <div class="md:col-span-7 p-8 text-xs text-slate-100 bg-[#14171e]">
+        <!-- Lado Direito: Seletor Administrador vs Equipe por Código (Vidro Translúcido) -->
+        <div class="md:col-span-7 p-8 text-xs text-slate-100 bg-[#15181f]/35 backdrop-blur-md">
           
           <!-- Abas de Escolha: Administrador vs Equipe (Código) -->
-          <div class="grid grid-cols-2 gap-2 p-1 bg-[#0e1014] rounded-2xl border border-white/10 mb-6">
-            <button type="button" onclick="switchLoginMode('admin')" id="btnModeAdmin" class="py-2.5 px-3 rounded-xl font-extrabold text-xs bg-gradient-to-r from-white to-slate-300 text-[#0e1014] shadow-sm transition flex items-center justify-center gap-1.5">
+          <div class="grid grid-cols-2 gap-2 p-1.5 bg-[#0e1014]/80 rounded-2xl border border-white/15 mb-6 shadow-inner">
+            <button type="button" onclick="switchLoginMode('admin')" id="btnModeAdmin" class="py-2.5 px-3 rounded-xl font-extrabold text-xs bg-gradient-to-r from-white via-slate-100 to-slate-300 text-[#0e1014] shadow-md transition-all duration-300 flex items-center justify-center gap-1.5">
               <i class="fa-solid fa-building-user"></i> Sou Administrador
             </button>
-            <button type="button" onclick="switchLoginMode('team')" id="btnModeTeam" class="py-2.5 px-3 rounded-xl font-bold text-xs text-slate-300 hover:text-white transition flex items-center justify-center gap-1.5">
+            <button type="button" onclick="switchLoginMode('team')" id="btnModeTeam" class="py-2.5 px-3 rounded-xl font-bold text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all duration-300 flex items-center justify-center gap-1.5">
               <i class="fa-solid fa-ticket"></i> Sou Equipe (Código)
             </button>
           </div>
 
-          <!-- MODO 1: LOGIN DO ADMINISTRADOR (DONO DA EMPRESA) -->
+          <!-- MODO 1: LOGIN E CADASTRO DO ADMINISTRADOR (DONO DA EMPRESA) -->
           <div id="loginBoxAdmin">
-            <div class="mb-5">
-              <h3 class="text-lg font-extrabold text-white">Acesso do Administrador da Empresa</h3>
-              <p class="text-xs text-slate-400 mt-0.5">Gerencie seu plano mensal, crie seu código de convite e monitore sua equipe:</p>
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+              <div>
+                <span class="text-[10px] font-extrabold uppercase tracking-wider bg-white/10 text-slate-200 px-3 py-1 rounded-full border border-white/20">
+                  Painel de Gestão & Faturamento
+                </span>
+                <h3 id="adminAuthTitle" class="hero-title-font text-xl font-extrabold text-white mt-2">Login do Administrador</h3>
+              </div>
+
+              <!-- Seletor Interno: Já Tenho Conta (Login) vs Criar Conta (Cadastro) -->
+              <div class="inline-flex p-1 bg-[#0e1014]/85 rounded-xl border border-white/15">
+                <button type="button" id="btnAdminSubLogin" onclick="switchAdminAuthTab('login')" class="px-3 py-1.5 rounded-lg font-extrabold text-[11px] bg-white text-[#0e1014] shadow transition-all">
+                  <i class="fa-solid fa-right-to-bracket mr-1"></i> Fazer Login
+                </button>
+                <button type="button" id="btnAdminSubRegister" onclick="switchAdminAuthTab('register')" class="px-3 py-1.5 rounded-lg font-bold text-[11px] text-slate-300 hover:text-white transition-all">
+                  <i class="fa-solid fa-user-plus mr-1"></i> Criar Cadastro
+                </button>
+              </div>
             </div>
 
-            <form onsubmit="handleAdminLogin(event)" class="space-y-3.5">
-              <div>
-                <label class="block font-bold text-slate-200 mb-1">Nome da Sua Empresa *</label>
-                <input type="text" id="adminCompanyInput" required value="Agência Rafael Tech" placeholder="Ex: Minha Agência Web" class="w-full bg-[#0e1014] border border-white/15 rounded-xl px-3.5 py-2.5 text-white font-semibold focus:outline-none focus:border-slate-300">
-              </div>
+            <!-- ABA 1A: FAZER LOGIN DO ADMINISTRADOR (JÁ CADASTRADO) -->
+            <div id="adminFormLoginWrap">
+              <p class="text-xs text-slate-300 mb-4">Entre com seu e-mail corporativo e senha para acessar o painel da sua empresa:</p>
 
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <form onsubmit="handleAdminLogin(event)" class="space-y-3.5">
                 <div>
-                  <label class="block font-bold text-slate-200 mb-1">Seu Nome (Admin) *</label>
-                  <input type="text" id="adminNameInput" required value="Rafael" class="w-full bg-[#0e1014] border border-white/15 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-slate-300">
+                  <label class="block font-bold text-slate-200 mb-1">E-mail Corporativo do Administrador *</label>
+                  <input type="email" id="loginEmail" required value="rafael@alris.com.br" placeholder="seuemail@empresa.com.br" class="w-full bg-[#0e1014]/75 backdrop-blur-sm border border-white/20 rounded-xl px-3.5 py-2.5 text-white font-semibold focus:outline-none focus:border-white focus:ring-1 focus:ring-white/30 transition">
                 </div>
+
                 <div>
-                  <label class="block font-bold text-slate-200 mb-1">E-mail Corporativo *</label>
-                  <input type="email" id="loginEmail" required value="rafael@alris.com.br" class="w-full bg-[#0e1014] border border-white/15 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-slate-300">
+                  <div class="flex items-center justify-between mb-1">
+                    <label class="font-bold text-slate-200">Senha de Acesso *</label>
+                    <button type="button" onclick="sendConfirmationEmailDemo()" class="text-[11px] text-slate-300 hover:text-white underline">Esqueci minha senha</button>
+                  </div>
+                  <input type="password" id="loginPass" required value="12345678" placeholder="••••••••" class="w-full bg-[#0e1014]/75 backdrop-blur-sm border border-white/20 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-white focus:ring-1 focus:ring-white/30 transition">
                 </div>
-              </div>
 
-              <div>
-                <label class="block font-bold text-slate-200 mb-1">Senha do Administrador *</label>
-                <input type="password" id="loginPass" required value="12345678" class="w-full bg-[#0e1014] border border-white/15 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-slate-300">
-              </div>
+                <button type="submit" class="w-full bg-gradient-to-r from-white via-slate-100 to-slate-300 hover:from-white hover:to-white hover:scale-[1.015] text-[#0e1014] font-extrabold text-sm py-3.5 rounded-xl shadow-xl shadow-black/40 transition-all duration-300 flex items-center justify-center gap-2">
+                  <i class="fa-solid fa-lock-open"></i> Entrar no Painel do Administrador
+                </button>
+              </form>
 
-              <button type="submit" class="w-full bg-gradient-to-r from-white via-slate-100 to-slate-300 hover:from-white hover:to-white text-[#0e1014] font-extrabold text-sm py-3.5 rounded-xl shadow-lg shadow-black/25 transition flex items-center justify-center gap-2">
-                <i class="fa-solid fa-lock-open"></i> Entrar como Administrador
-              </button>
-            </form>
+              <div class="mt-3 text-center">
+                <span class="text-slate-300 text-[11px]">Ainda não cadastrou sua empresa?</span>
+                <button type="button" onclick="switchAdminAuthTab('register')" class="ml-1 text-white font-extrabold text-[11px] underline hover:text-slate-200">
+                  Criar Cadastro de Administrador &rarr;
+                </button>
+              </div>
+            </div>
+
+            <!-- ABA 1B: CRIAR CADASTRO DO ADMINISTRADOR (NOVA EMPRESA) -->
+            <div id="adminFormRegisterWrap" class="hidden">
+              <p class="text-xs text-slate-300 mb-3.5">Cadastre sua empresa para gerar seu código de equipe exclusivo (<code class="text-white font-mono">ALRIS-XXXX-TEAM</code>):</p>
+
+              <form onsubmit="handleAdminRegister(event)" class="space-y-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label class="block font-bold text-slate-200 mb-1">Nome da Sua Empresa *</label>
+                    <input type="text" id="adminCompanyInput" required value="Agência Rafael Tech" placeholder="Ex: Minha Central / Agência" class="w-full bg-[#0e1014]/75 backdrop-blur-sm border border-white/20 rounded-xl px-3.5 py-2 text-white font-semibold focus:outline-none focus:border-white transition">
+                  </div>
+                  <div>
+                    <label class="block font-bold text-slate-200 mb-1">Seu Nome (Administrador) *</label>
+                    <input type="text" id="adminNameInput" required value="Rafael" placeholder="Seu nome completo" class="w-full bg-[#0e1014]/75 backdrop-blur-sm border border-white/20 rounded-xl px-3.5 py-2 text-white font-semibold focus:outline-none focus:border-white transition">
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label class="block font-bold text-slate-200 mb-1">E-mail Corporativo *</label>
+                    <input type="email" id="regAdminEmail" required value="rafael@alris.com.br" placeholder="admin@suaempresa.com" class="w-full bg-[#0e1014]/75 backdrop-blur-sm border border-white/20 rounded-xl px-3.5 py-2 text-white focus:outline-none focus:border-white transition">
+                  </div>
+                  <div>
+                    <label class="block font-bold text-slate-200 mb-1">WhatsApp / Telefone *</label>
+                    <input type="text" id="regAdminPhone" required value="(11) 99876-5432" placeholder="(00) 90000-0000" class="w-full bg-[#0e1014]/75 backdrop-blur-sm border border-white/20 rounded-xl px-3.5 py-2 text-white focus:outline-none focus:border-white transition">
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label class="block font-bold text-slate-200 mb-1">Criar Senha *</label>
+                    <input type="password" id="regAdminPass" required value="12345678" placeholder="Mínimo 8 caracteres" class="w-full bg-[#0e1014]/75 backdrop-blur-sm border border-white/20 rounded-xl px-3.5 py-2 text-white focus:outline-none focus:border-white transition">
+                  </div>
+                  <div>
+                    <label class="block font-bold text-slate-200 mb-1">Confirmar Senha *</label>
+                    <input type="password" id="regAdminPassConfirm" required value="12345678" placeholder="Repita a senha" class="w-full bg-[#0e1014]/75 backdrop-blur-sm border border-white/20 rounded-xl px-3.5 py-2 text-white focus:outline-none focus:border-white transition">
+                  </div>
+                </div>
+
+                <button type="submit" class="w-full bg-gradient-to-r from-white via-slate-100 to-slate-300 hover:from-white hover:to-white hover:scale-[1.015] text-[#0e1014] font-extrabold text-sm py-3 rounded-xl shadow-xl shadow-black/40 transition-all duration-300 flex items-center justify-center gap-2">
+                  <i class="fa-solid fa-user-check"></i> Concluir Cadastro & Gerar Código da Equipe
+                </button>
+              </form>
+
+              <div class="mt-2.5 text-center">
+                <span class="text-slate-300 text-[11px]">Já possui cadastro de administrador?</span>
+                <button type="button" onclick="switchAdminAuthTab('login')" class="ml-1 text-white font-extrabold text-[11px] underline hover:text-slate-200">
+                  Voltar para o Login &rarr;
+                </button>
+              </div>
+            </div>
 
             <!-- BOTÃO CONTA DEMO DO ADMINISTRADOR (1 CLIQUE) + CONFIRMAÇÃO DE E-MAIL -->
-            <div class="mt-4 pt-4 border-t border-white/10 space-y-2">
-              <button type="button" onclick="loginDemoAdmin()" class="w-full py-3 px-4 rounded-xl bg-white/10 hover:bg-white/20 text-slate-200 border border-white/25 font-extrabold text-xs transition flex items-center justify-center gap-2 shadow-sm">
-                <i class="fa-solid fa-bolt text-slate-200"></i> Acessar Conta Demo Administrador (1 Clique)
+            <div class="mt-4 pt-3.5 border-t border-white/15 space-y-2">
+              <button type="button" onclick="loginDemoAdmin()" class="w-full py-2.5 px-4 rounded-xl bg-white/10 hover:bg-white/20 hover:scale-[1.01] text-white border border-white/25 font-extrabold text-xs transition-all duration-300 flex items-center justify-center gap-2 shadow-sm">
+                <i class="fa-solid fa-bolt text-white"></i> Acessar Conta Demo Administrador (1 Clique)
               </button>
-              <button type="button" onclick="sendConfirmationEmailDemo()" id="btnEmailConfirm" class="w-full py-2 px-3 rounded-lg bg-[#0e1014] hover:bg-white/5 text-slate-300 border border-white/10 font-semibold text-[11px] transition flex items-center justify-center gap-1.5">
+              <button type="button" onclick="sendConfirmationEmailDemo()" id="btnEmailConfirm" class="w-full py-2 px-3 rounded-lg bg-[#0e1014]/60 hover:bg-white/10 text-slate-200 border border-white/15 font-semibold text-[11px] transition flex items-center justify-center gap-1.5">
                 <i class="fa-solid fa-envelope-circle-check text-slate-200"></i> Enviar Link de Confirmação p/ E-mail Corporativo
               </button>
             </div>
           </div>
 
-          <!-- MODO 2: ACESSO DA EQUIPE (APENAS COM CÓDIGO DE CONVITE!) -->
+          <!-- MODO 2: ACESSO E CADASTRO DA EQUIPE (COM CÓDIGO DE CONVITE!) -->
           <div id="loginBoxTeam" class="hidden">
-            <div class="mb-5">
-              <span class="text-[10px] font-extrabold uppercase bg-white/10 text-slate-200 px-2.5 py-0.5 rounded-full border border-white/20">
-                Acesso Rápido de Funcionário
-              </span>
-              <h3 class="text-lg font-extrabold text-white mt-1.5">Entrar na Equipe com Código</h3>
-              <p class="text-xs text-slate-400 mt-0.5">Cole o código fornecido pelo administrador da sua empresa para entrar no Kanban:</p>
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+              <div>
+                <span class="text-[10px] font-extrabold uppercase tracking-wider bg-white/10 text-slate-200 px-3 py-1 rounded-full border border-white/20">
+                  Acesso Rápido de Operador & Equipe
+                </span>
+                <h3 id="teamAuthTitle" class="hero-title-font text-xl font-extrabold text-white mt-2">Entrar na Equipe com Código</h3>
+              </div>
+
+              <!-- Seletor Interno da Equipe: Entrar com Código vs Primeiro Acesso (Cadastro na Equipe) -->
+              <div class="inline-flex p-1 bg-[#0e1014]/85 rounded-xl border border-white/15">
+                <button type="button" id="btnTeamSubLogin" onclick="switchTeamAuthTab('login')" class="px-3 py-1.5 rounded-lg font-extrabold text-[11px] bg-white text-[#0e1014] shadow transition-all">
+                  <i class="fa-solid fa-ticket mr-1"></i> Já Sou da Equipe
+                </button>
+                <button type="button" id="btnTeamSubRegister" onclick="switchTeamAuthTab('register')" class="px-3 py-1.5 rounded-lg font-bold text-[11px] text-slate-300 hover:text-white transition-all">
+                  <i class="fa-solid fa-id-card mr-1"></i> Primeiro Cadastro
+                </button>
+              </div>
             </div>
 
             <form onsubmit="handleTeamCodeLogin(event)" class="space-y-3.5">
-              <div>
-                <label class="block font-bold text-slate-200 mb-1">Código de Acesso da Empresa *</label>
-                <input type="text" id="teamCodeInput" required value="ALRIS-8842-TEAM" placeholder="Ex: ALRIS-8842-TEAM" class="w-full bg-[#0e1014] text-slate-200 border-2 border-white/30 rounded-xl px-4 py-3 font-mono text-base font-black tracking-widest uppercase text-center focus:outline-none focus:border-slate-300">
+              <div class="p-3.5 rounded-2xl bg-[#0e1014]/75 border border-white/20 shadow-inner">
+                <label class="block font-extrabold text-slate-200 text-center uppercase tracking-wider text-[10px] mb-1.5">
+                  <i class="fa-solid fa-key mr-1"></i> Código Exclusivo Fornecido pelo Administrador *
+                </label>
+                <input type="text" id="teamCodeInput" required value="ALRIS-8842-TEAM" placeholder="Ex: ALRIS-8842-TEAM" class="w-full bg-[#15181f]/90 text-white border-2 border-white/30 rounded-xl px-4 py-2.5 font-mono text-lg font-black tracking-[0.2em] uppercase text-center focus:outline-none focus:border-white shadow-md transition">
               </div>
 
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label class="block font-bold text-slate-200 mb-1">Seu Nome *</label>
-                  <input type="text" id="memberLoginName" required value="Lucas Torres" placeholder="Ex: Lucas Torres" class="w-full bg-[#0e1014] border border-white/15 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-slate-300">
+                  <label class="block font-bold text-slate-200 mb-1">Seu Nome Completo *</label>
+                  <input type="text" id="memberLoginName" required value="Lucas Torres" placeholder="Ex: Lucas Torres" class="w-full bg-[#0e1014]/75 backdrop-blur-sm border border-white/20 rounded-xl px-3.5 py-2.5 text-white font-semibold focus:outline-none focus:border-white transition">
                 </div>
                 <div>
-                  <label class="block font-bold text-slate-200 mb-1">Sua Função na Equipe</label>
-                  <select id="memberLoginRole" class="w-full bg-[#0e1014] border border-white/15 rounded-xl px-3 py-2.5 text-white font-semibold focus:outline-none focus:border-slate-300">
+                  <label class="block font-bold text-slate-200 mb-1">Sua Função na Equipe *</label>
+                  <select id="memberLoginRole" class="w-full bg-[#0e1014]/85 backdrop-blur-sm border border-white/20 rounded-xl px-3 py-2.5 text-white font-semibold focus:outline-none focus:border-white transition">
                     <option value="Vendas & Atendimento">Vendas & Atendimento</option>
                     <option value="Design UI/UX">Design UI/UX</option>
                     <option value="Desenvolvedor">Desenvolvedor</option>
@@ -525,9 +635,26 @@
                 </div>
               </div>
 
-              <button type="submit" class="w-full bg-gradient-to-r from-white to-slate-300 hover:from-white hover:to-white text-[#0e1014] font-extrabold text-sm py-3.5 rounded-xl shadow-lg shadow-black/25 transition flex items-center justify-center gap-2">
+              <!-- Campos Extras exibidos quando o Operador clica em "Primeiro Cadastro" -->
+              <div id="teamRegisterExtraFields" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                <div>
+                  <label class="block font-bold text-slate-200 mb-1">Seu E-mail de Operador *</label>
+                  <input type="email" id="memberRegEmail" value="lucas@alris.com.br" placeholder="operador@empresa.com" class="w-full bg-[#0e1014]/75 backdrop-blur-sm border border-white/20 rounded-xl px-3.5 py-2 text-white focus:outline-none focus:border-white transition">
+                </div>
+                <div>
+                  <label class="block font-bold text-slate-200 mb-1">Criar PIN / Senha Pessoal *</label>
+                  <input type="password" id="memberRegPin" value="1234" placeholder="••••" class="w-full bg-[#0e1014]/75 backdrop-blur-sm border border-white/20 rounded-xl px-3.5 py-2 text-white focus:outline-none focus:border-white transition">
+                </div>
+              </div>
+
+              <button type="submit" id="btnTeamSubmitMain" class="w-full bg-gradient-to-r from-white via-slate-100 to-slate-300 hover:from-white hover:to-white hover:scale-[1.015] text-[#0e1014] font-extrabold text-sm py-3.5 rounded-xl shadow-xl shadow-black/40 transition-all duration-300 flex items-center justify-center gap-2">
                 <i class="fa-solid fa-users"></i> Validar Código e Entrar na Equipe
               </button>
+
+              <div class="pt-3 border-t border-white/15 flex items-center justify-between text-[11px] text-slate-300">
+                <span><i class="fa-solid fa-circle-info mr-1 text-white"></i> Código demo pronto para teste</span>
+                <span class="font-mono font-bold text-white bg-white/10 px-2.5 py-0.5 rounded-md border border-white/15">ALRIS-8842-TEAM</span>
+              </div>
             </form>
           </div>
 

@@ -99,6 +99,9 @@ let sentimentChart = null;
         landing.classList.remove('hidden');
       } else if (view === 'login') {
         login.classList.remove('hidden');
+        if (typeof drawLoginFrameOnCanvas === 'function') {
+          drawLoginFrameOnCanvas(0);
+        }
       } else if (view === 'kanban') {
         shell.classList.remove('hidden');
         kanban.classList.remove('hidden');
@@ -195,14 +198,66 @@ let sentimentChart = null;
       if (mode === 'admin') {
         boxAdmin.classList.remove('hidden');
         boxTeam.classList.add('hidden');
-        btnAdmin.className = "py-2.5 px-3 rounded-xl font-extrabold text-xs bg-blue-600 text-white shadow-sm transition flex items-center justify-center gap-1.5";
-        btnTeam.className = "py-2.5 px-3 rounded-xl font-bold text-xs text-slate-600 hover:text-slate-900 transition flex items-center justify-center gap-1.5";
+        btnAdmin.className = "py-2.5 px-3 rounded-xl font-extrabold text-xs bg-gradient-to-r from-white via-slate-100 to-slate-300 text-[#0e1014] shadow-md transition-all duration-300 flex items-center justify-center gap-1.5";
+        btnTeam.className = "py-2.5 px-3 rounded-xl font-bold text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all duration-300 flex items-center justify-center gap-1.5";
       } else {
         boxAdmin.classList.add('hidden');
         boxTeam.classList.remove('hidden');
-        btnTeam.className = "py-2.5 px-3 rounded-xl font-extrabold text-xs bg-purple-600 text-white shadow-sm transition flex items-center justify-center gap-1.5";
-        btnAdmin.className = "py-2.5 px-3 rounded-xl font-bold text-xs text-slate-600 hover:text-slate-900 transition flex items-center justify-center gap-1.5";
+        btnTeam.className = "py-2.5 px-3 rounded-xl font-extrabold text-xs bg-gradient-to-r from-white via-slate-100 to-slate-300 text-[#0e1014] shadow-md transition-all duration-300 flex items-center justify-center gap-1.5";
+        btnAdmin.className = "py-2.5 px-3 rounded-xl font-bold text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all duration-300 flex items-center justify-center gap-1.5";
       }
+      if (typeof drawLoginFrameOnCanvas === 'function' && typeof lastDrawnLoginSeqIndex !== 'undefined') {
+        drawLoginFrameOnCanvas(Math.max(0, lastDrawnLoginSeqIndex));
+      }
+    }
+
+    function switchAdminAuthTab(tab) {
+      const loginWrap = document.getElementById('adminFormLoginWrap');
+      const regWrap = document.getElementById('adminFormRegisterWrap');
+      const btnLogin = document.getElementById('btnAdminSubLogin');
+      const btnReg = document.getElementById('btnAdminSubRegister');
+      const titleEl = document.getElementById('adminAuthTitle');
+
+      if (tab === 'register') {
+        loginWrap?.classList.add('hidden');
+        regWrap?.classList.remove('hidden');
+        if (titleEl) titleEl.innerText = 'Cadastro do Administrador';
+        if (btnReg) btnReg.className = "px-3 py-1.5 rounded-lg font-extrabold text-[11px] bg-white text-[#0e1014] shadow transition-all";
+        if (btnLogin) btnLogin.className = "px-3 py-1.5 rounded-lg font-bold text-[11px] text-slate-300 hover:text-white transition-all";
+      } else {
+        regWrap?.classList.add('hidden');
+        loginWrap?.classList.remove('hidden');
+        if (titleEl) titleEl.innerText = 'Login do Administrador';
+        if (btnLogin) btnLogin.className = "px-3 py-1.5 rounded-lg font-extrabold text-[11px] bg-white text-[#0e1014] shadow transition-all";
+        if (btnReg) btnReg.className = "px-3 py-1.5 rounded-lg font-bold text-[11px] text-slate-300 hover:text-white transition-all";
+      }
+    }
+
+    function switchTeamAuthTab(tab) {
+      const extraFields = document.getElementById('teamRegisterExtraFields');
+      const btnLogin = document.getElementById('btnTeamSubLogin');
+      const btnReg = document.getElementById('btnTeamSubRegister');
+      const titleEl = document.getElementById('teamAuthTitle');
+      const submitBtn = document.getElementById('btnTeamSubmitMain');
+
+      if (tab === 'register') {
+        extraFields?.classList.remove('hidden');
+        if (titleEl) titleEl.innerText = 'Primeiro Cadastro na Equipe';
+        if (submitBtn) submitBtn.innerHTML = '<i class="fa-solid fa-user-plus"></i> Concluir Cadastro & Entrar na Equipe';
+        if (btnReg) btnReg.className = "px-3 py-1.5 rounded-lg font-extrabold text-[11px] bg-white text-[#0e1014] shadow transition-all";
+        if (btnLogin) btnLogin.className = "px-3 py-1.5 rounded-lg font-bold text-[11px] text-slate-300 hover:text-white transition-all";
+      } else {
+        extraFields?.classList.add('hidden');
+        if (titleEl) titleEl.innerText = 'Entrar na Equipe com Código';
+        if (submitBtn) submitBtn.innerHTML = '<i class="fa-solid fa-users"></i> Validar Código e Entrar na Equipe';
+        if (btnLogin) btnLogin.className = "px-3 py-1.5 rounded-lg font-extrabold text-[11px] bg-white text-[#0e1014] shadow transition-all";
+        if (btnReg) btnReg.className = "px-3 py-1.5 rounded-lg font-bold text-[11px] text-slate-300 hover:text-white transition-all";
+      }
+    }
+
+    function handleAdminRegister(e) {
+      if (e) e.preventDefault();
+      handleAdminLogin(e);
     }
 
     function handleAdminLogin(e) {
