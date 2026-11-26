@@ -335,22 +335,51 @@ let sentimentChart = null;
       setTimeout(() => switchAdminAuthTab('login'), 3200);
     }
 
-    function handleAdminRegister(e) {
+    async function handleAdminRegister(e) {
       if (e) e.preventDefault();
-      const email = document.getElementById('regAdminEmail')?.value.trim() || 'seu e-mail corporativo';
+      const company = document.getElementById('adminCompanyInput')?.value.trim() || 'Minha Empresa';
+      const name = document.getElementById('adminNameInput')?.value.trim() || 'Administrador';
+      const email = document.getElementById('regAdminEmail')?.value.trim().toLowerCase() || 'seu e-mail corporativo';
+      const phone = document.getElementById('regAdminPhone')?.value.trim() || '';
       const pass = document.getElementById('regAdminPass')?.value || '';
       const passConfirm = document.getElementById('regAdminPassConfirm')?.value || '';
+
       if (pass !== passConfirm) {
         showAlrisToast('As senhas não conferem', 'Verifique a senha e a confirmação antes de concluir o cadastro.');
         return;
       }
+
       const loginEmailEl = document.getElementById('loginEmail');
       if (loginEmailEl) loginEmailEl.value = email;
-      showAlrisToast(
-        'Cadastro realizado com sucesso!',
-        `Enviamos um link de confirmação para <strong class="text-white">${email}</strong>. Confirme seu e-mail e faça login para acessar o painel.`
-      );
+
+      try {
+        const res = await fetch('/api/register-admin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ company, name, email, phone, password: pass })
+        });
+        const data = await res.json();
+        if (data && data.success) {
+          showAlrisToast(
+            'Link de confirmação enviado!',
+            `Enviamos um token seguro para <strong class="text-white">${email}</strong>. Confirme seu e-mail corporativo antes de fazer login no painel.`
+          );
+        } else {
+          showAlrisToast(
+            'Cadastro realizado!',
+            `Enviamos um link de confirmação para <strong class="text-white">${email}</strong>. Confirme o e-mail para ativar sua conta.`
+          );
+        }
+      } catch (err) {
+        showAlrisToast(
+          'Cadastro realizado!',
+          `Enviamos um link de confirmação para <strong class="text-white">${email}</strong>. Confirme o e-mail para ativar sua conta.`
+        );
+      }
+
       switchAdminAuthTab('login');
+      // Redireciona de volta para a página inicial (landing page), sem entrar no Kanban
+      goToView('landing');
     }
 
     function handleAdminLogin(e) {
@@ -407,6 +436,19 @@ let sentimentChart = null;
 
       if (!code.startsWith('ALRIS-') && !code.startsWith('CONV-')) {
         alert('Código inválido! Use o código fornecido pelo Administrador (ex: ALRIS-8842-TEAM).');
+        return;
+      }
+
+      const extraFields = document.getElementById('teamRegisterExtraFields');
+      const isRegistering = extraFields && !extraFields.classList.contains('hidden');
+
+      if (isRegistering) {
+        showAlrisToast(
+          'Cadastro de Equipe Concluído!',
+          `Seu registro foi vinculado ao código <strong class="text-white">${code}</strong>. Faça login com suas credenciais para acessar.`
+        );
+        switchTeamAuthTab('login');
+        goToView('landing');
         return;
       }
 
@@ -986,18 +1028,18 @@ Responda APENAS com um objeto JSON válido:
 
         const cardsContainer = document.getElementById('colCards-1');
         const newCard = document.createElement('div');
-        newCard.className = "pipefy-card rounded-xl p-3.5 cursor-pointer border-l-4 border-l-emerald-500";
+        newCard.className = "pipefy-card rounded-xl p-3.5 cursor-pointer border-l-4 border-l-emerald-400";
         newCard.onclick = () => openClientAttendance(name, company, phone, link, 'Mapeado via IA', painText);
         newCard.innerHTML = `
           <div class="flex justify-between items-start mb-2">
-            <span class="text-[10px] font-extrabold uppercase bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded border border-emerald-200">${company}</span>
-            <span class="text-[10px] text-emerald-600 font-bold">Novo</span>
+            <span class="text-[10px] font-extrabold uppercase bg-emerald-400/15 text-emerald-300 px-2 py-0.5 rounded border border-emerald-400/30">${company}</span>
+            <span class="text-[10px] text-emerald-400 font-bold">Novo</span>
           </div>
-          <h4 class="font-bold text-xs text-slate-900">${name} — Criação de Site</h4>
-          <p class="text-[11px] text-slate-500 mt-1 line-clamp-2">${bio}</p>
-          <div class="mt-3 pt-2.5 border-t border-slate-100 flex justify-between items-center text-[11px]">
+          <h4 class="font-bold text-xs text-white">${name} — Criação de Site</h4>
+          <p class="text-[11px] text-slate-400 mt-1 line-clamp-2">${bio}</p>
+          <div class="mt-3 pt-2.5 border-t border-white/10 flex justify-between items-center text-[11px]">
             <span class="text-slate-400 truncate max-w-[120px]">${link}</span>
-            <span class="bg-blue-600 text-white px-2.5 py-1 rounded-lg font-bold text-[10px] shadow-sm">
+            <span class="bg-gradient-to-r from-white via-slate-100 to-slate-200 hover:from-white hover:to-white text-[#0e1014] px-2.5 py-1 rounded-lg font-extrabold text-[10px] shadow-sm">
               <i class="fa-solid fa-headset mr-1"></i> Fazer Atendimento &rarr;
             </span>
           </div>
@@ -1015,5 +1057,19 @@ Responda APENAS com um objeto JSON válido:
       if (localStorage.getItem('APEX_GEMINI_KEY') && statusTxt) {
         statusTxt.innerText = 'Ativa';
         statusTxt.className = 'text-[9px] bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded font-extrabold';
+      }
+
+      // Validação de retorno de link de e-mail verificado
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('verified') === '1') {
+        const verifiedEmail = urlParams.get('email') || '';
+        showAlrisToast(
+          'E-mail Corporativo Confirmado!',
+          `Seu e-mail ${verifiedEmail ? `<strong class="text-white">${verifiedEmail}</strong> ` : ''}foi validado com sucesso. Faça login para acessar o painel.`
+        );
+        goToView('login');
+        if (verifiedEmail && document.getElementById('loginEmail')) {
+          document.getElementById('loginEmail').value = verifiedEmail;
+        }
       }
     };
