@@ -107,7 +107,7 @@ let sentimentChart = null;
         kanban.classList.remove('hidden');
         applyWorkspaceHeaderMode('kanban');
         const veil = document.getElementById('workspaceBgVeil');
-        if (veil) veil.className = "absolute inset-0 bg-gradient-to-b from-[#0e1014]/50 via-[#0e1014]/20 to-[#0e1014]/55 transition-colors duration-500";
+        if (veil) veil.className = "absolute inset-0 bg-white/10 transition-colors duration-500";
         if (typeof drawWorkspaceFrameOnCanvas === 'function') {
           drawWorkspaceFrameOnCanvas(Math.round(typeof workspaceCurrentFrameFloat !== 'undefined' ? workspaceCurrentFrameFloat : 0));
         }
@@ -124,6 +124,117 @@ let sentimentChart = null;
         if (breadcrumb) breadcrumb.innerText = "Etapa Atual: Atendimento ao Vivo & Copiloto IA";
         setTimeout(initSentimentChart, 50);
       }
+    }
+
+    // Animação Cinematográfica Cadenciada (~2.2s): Login (Zoom + LED 100%) -> Portal ALRIS -> Cascata das Colunas do Kanban
+    function playLoginToKanbanTransition(welcomeName) {
+      const overlay = document.getElementById('loginTransitionOverlay');
+      const card = document.getElementById('loginTransitionCard');
+      const ring = document.getElementById('loginTransitionRing');
+      const userLabel = document.getElementById('loginTransitionUser');
+      const stepText = document.getElementById('loginTransitionStepText');
+      const loginView = document.getElementById('view-login');
+      const header = document.getElementById('workspaceHeader');
+      const grid = document.getElementById('kanbanColumnsGrid');
+
+      if (!overlay) {
+        goToView('kanban');
+        return;
+      }
+
+      if (userLabel) {
+        userLabel.innerText = welcomeName ? `Bem-vindo, ${welcomeName}` : 'Bem-vindo à Central ALRIS';
+      }
+      if (stepText) {
+        stepText.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-sky-400 animate-ping"></span> Autenticando credenciais de acesso...`;
+      }
+
+      // Ato 1: Acende o LED 3D até o teto e aplica dolly-zoom cinematográfico na tela de Login
+      if (typeof activeFrameSequence !== 'undefined' && typeof tickSmoothLogin3DFrames === 'function') {
+        loginTargetFrameFloat = activeFrameSequence.length - 1;
+        if (!isAnimatingLoginFrames) {
+          isAnimatingLoginFrames = true;
+          requestAnimationFrame(tickSmoothLogin3DFrames);
+        }
+      }
+      if (loginView && !loginView.classList.contains('hidden')) {
+        loginView.style.transition = 'transform 1.4s cubic-bezier(0.22, 1, 0.36, 1), filter 1.1s ease';
+        loginView.style.transform = 'scale(1.09)';
+        loginView.style.filter = 'blur(8px)';
+      }
+
+      // Ato 2: Abre o Portal Cinematográfico ALRIS com varredura circular cadenciada (1.6s)
+      if (ring) {
+        ring.style.transition = 'none';
+        ring.style.strokeDashoffset = '220';
+      }
+      overlay.classList.remove('hidden');
+      requestAnimationFrame(() => {
+        overlay.classList.remove('opacity-0');
+        overlay.classList.add('opacity-100');
+        if (card) {
+          card.classList.remove('scale-95');
+          card.classList.add('scale-100');
+        }
+        setTimeout(() => {
+          if (ring) {
+            ring.style.transition = 'stroke-dashoffset 1550ms cubic-bezier(0.22, 1, 0.36, 1)';
+            ring.style.strokeDashoffset = '0';
+          }
+        }, 80);
+      });
+
+      setTimeout(() => {
+        if (stepText) {
+          stepText.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span> Sincronizando Quadro Kanban & Copiloto IA...`;
+        }
+      }, 820);
+
+      // Ato 3 (após 1.85s): Revela o Kanban com entrada em cascata das 4 colunas e movimento suave da câmera 3D
+      setTimeout(() => {
+        if (loginView) {
+          loginView.style.transform = '';
+          loginView.style.filter = '';
+          loginView.style.transition = '';
+        }
+
+        goToView('kanban');
+
+        if (header) {
+          header.classList.remove('header-glide-enter');
+          void header.offsetWidth;
+          header.classList.add('header-glide-enter');
+        }
+        if (grid) {
+          grid.classList.remove('kanban-cascade-enter');
+          void grid.offsetWidth;
+          grid.classList.add('kanban-cascade-enter');
+        }
+
+        // Avança suavemente os primeiros quadros do vídeo 3D da central ao abrir o Kanban
+        if (typeof TOTAL_WORKSPACE_FRAMES !== 'undefined' && typeof tickSmoothWorkspace3DFrames === 'function') {
+          workspaceCurrentFrameFloat = 0;
+          workspaceTargetFrameFloat = 38;
+          if (!isAnimatingWorkspaceFrames) {
+            isAnimatingWorkspaceFrames = true;
+            requestAnimationFrame(tickSmoothWorkspace3DFrames);
+          }
+        }
+
+        // Dissolve suavemente a cortina do portal (600ms) revelando o Kanban em cascata
+        overlay.classList.remove('opacity-100');
+        overlay.classList.add('opacity-0');
+        if (card) {
+          card.classList.remove('scale-100');
+          card.classList.add('scale-105');
+        }
+
+        setTimeout(() => {
+          overlay.classList.add('hidden');
+          if (card) card.classList.remove('scale-105');
+          if (card) card.classList.add('scale-95');
+        }, 620);
+      }, 1850);
     }
 
     let isCallToolbarExpanded = false;
@@ -153,47 +264,39 @@ let sentimentChart = null;
       const teamPill = document.getElementById('headerKanbanTeamPill');
       const backBtn = document.getElementById('headerBackKanbanBtn');
       const searchBox = document.getElementById('headerCenterKanban');
+      const searchInput = document.getElementById('kanbanSearchInput');
       const newTicketBtn = document.getElementById('headerNewTicketBtn');
-      const telemetryBtn = document.getElementById('topToggleTelemetryBtn');
       const profileBtn = document.getElementById('profileMenuBtn');
       const userName = document.getElementById('navUserName');
       const island = document.getElementById('callToolbarIsland');
 
       if (!header) return;
 
+      // Cabeçalho 100% unificado em Branco Pérola Translúcido tanto no Kanban quanto no Atendimento
+      header.className = "h-18 py-3 bg-white/86 backdrop-blur-2xl text-slate-800 px-6 lg:px-10 flex items-center justify-between border-b border-white/90 shadow-[0_4px_24px_rgba(15,23,42,0.06)] shrink-0 select-none relative z-40 transition-all duration-300 gap-4";
+      if (logoText) logoText.className = "alris-logo-font text-xl font-black text-slate-900 leading-none block";
+      if (logoSub) logoSub.className = "text-[9px] text-slate-500 font-bold tracking-[0.16em] uppercase mt-0.5";
+      if (divider) divider.className = "hidden md:block h-6 w-px bg-slate-300/80";
+      if (profileBtn) profileBtn.className = "flex items-center gap-2 bg-white hover:bg-slate-50 pl-1.5 pr-3 py-1.5 rounded-xl border border-slate-200/90 shadow-sm transition whitespace-nowrap";
+      if (userName) userName.className = "text-xs font-bold text-slate-800 hidden sm:inline";
+      if (island) island.className = "flex items-center rounded-full border transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] bg-white/95 border-slate-200/90 text-slate-800 shadow-sm overflow-hidden";
+
       if (mode === 'callcenter') {
-        header.className = "h-18 py-3 bg-white/84 backdrop-blur-2xl text-slate-800 px-6 lg:px-10 flex items-center justify-between border-b border-white/90 shadow-[0_4px_24px_rgba(15,23,42,0.06)] shrink-0 select-none relative z-40 transition-all duration-300 gap-4";
-        if (logoText) logoText.className = "alris-logo-font text-xl font-black text-slate-900 leading-none block";
-        if (logoSub) logoSub.className = "text-[9px] text-slate-500 font-bold tracking-[0.16em] uppercase mt-0.5";
-        if (divider) divider.className = "hidden md:block h-6 w-px bg-slate-300/80";
         if (teamPill) teamPill.className = "hidden";
         if (backBtn) backBtn.className = "flex px-3.5 py-2 rounded-xl bg-white hover:bg-slate-100 text-slate-800 font-bold text-xs transition items-center gap-2 border border-slate-200/90 shadow-sm";
         if (searchBox) searchBox.classList.add('hidden');
         if (newTicketBtn) newTicketBtn.classList.add('hidden');
-        if (telemetryBtn) {
-          telemetryBtn.classList.remove('hidden');
-          telemetryBtn.classList.add('flex');
-          telemetryBtn.className = "flex px-3.5 py-2 rounded-xl bg-white hover:bg-sky-50 text-slate-800 border border-slate-200/90 font-extrabold transition items-center gap-2 text-xs shadow-sm whitespace-nowrap";
-        }
-        if (profileBtn) profileBtn.className = "flex items-center gap-2 bg-white hover:bg-slate-50 pl-1.5 pr-3 py-1.5 rounded-xl border border-slate-200/90 shadow-sm transition whitespace-nowrap";
-        if (userName) userName.className = "text-xs font-bold text-slate-800 hidden sm:inline";
-        if (island) island.className = "flex items-center rounded-full border transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] bg-white/95 border-slate-200/90 text-slate-800 shadow-sm overflow-hidden";
       } else {
-        header.className = "h-18 py-3 bg-[#111318]/45 backdrop-blur-xl text-white px-6 lg:px-10 flex items-center justify-between border-b border-white/10 shrink-0 select-none relative z-40 transition-all duration-300 gap-4";
-        if (logoText) logoText.className = "alris-logo-font text-xl font-black text-white leading-none block";
-        if (logoSub) logoSub.className = "text-[9px] text-slate-300 font-bold tracking-[0.16em] uppercase mt-0.5";
-        if (divider) divider.className = "hidden md:block h-6 w-px bg-white/15";
-        if (teamPill) teamPill.className = "hidden md:flex items-center bg-white/[0.07] rounded-xl px-3 py-1.5 border border-white/15 gap-2 whitespace-nowrap";
-        if (backBtn) backBtn.className = "hidden";
-        if (searchBox) searchBox.classList.remove('hidden');
-        if (newTicketBtn) newTicketBtn.classList.remove('hidden');
-        if (telemetryBtn) {
-          telemetryBtn.classList.remove('flex');
-          telemetryBtn.classList.add('hidden');
+        if (teamPill) {
+          teamPill.className = "hidden md:flex items-center bg-white/90 rounded-xl px-3 py-1.5 border border-slate-200/90 gap-2 whitespace-nowrap shadow-sm text-slate-800";
         }
-        if (profileBtn) profileBtn.className = "flex items-center gap-2 bg-white/10 hover:bg-white/15 pl-1.5 pr-3 py-1.5 rounded-xl border border-white/15 transition whitespace-nowrap";
-        if (userName) userName.className = "text-xs font-bold text-white hidden sm:inline";
-        if (island) island.className = "flex items-center rounded-full border transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] bg-white/10 border-white/20 text-white shadow-sm overflow-hidden";
+        if (backBtn) backBtn.className = "hidden";
+        if (searchBox) {
+          searchBox.classList.remove('hidden');
+          searchBox.className = "flex items-center bg-white/90 focus-within:bg-white focus-within:border-sky-400 border border-slate-200/90 rounded-xl px-3.5 py-2 text-xs text-slate-800 w-full max-w-xs transition shadow-sm";
+        }
+        if (searchInput) searchInput.className = "bg-transparent border-none focus:outline-none text-xs text-slate-800 placeholder-slate-400 w-full font-medium";
+        if (newTicketBtn) newTicketBtn.classList.remove('hidden');
       }
     }
 
@@ -204,13 +307,12 @@ let sentimentChart = null;
       const wrap = document.getElementById('telemetryColWrap');
       const dock = document.getElementById('telemetryMinimizedDock');
       const maxContent = document.getElementById('telemetryMaximizedContent');
-      const topBtnText = document.getElementById('topToggleTelemetryText');
       const expandHint = document.getElementById('listeningExpandHint');
 
       if (!wrap || !dock || !maxContent) return;
 
       if (isTelemetryExpanded) {
-        wrap.className = "w-full lg:w-[25%] shrink-0 flex flex-col overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]";
+        wrap.className = "w-full lg:w-[25%] shrink-0 flex flex-col overflow-hidden transition-all duration-[280ms] ease-[cubic-bezier(0.22,1,0.36,1)]";
         dock.classList.add('hidden');
         maxContent.classList.remove('hidden');
         maxContent.classList.add('flex');
@@ -218,14 +320,12 @@ let sentimentChart = null;
           maxContent.classList.remove('opacity-0', 'scale-95');
           maxContent.classList.add('opacity-100', 'scale-100');
         });
-        if (topBtnText) topBtnText.innerText = "Minimizar Telemetria";
         if (expandHint) expandHint.classList.add('hidden');
       } else {
-        wrap.className = "w-full lg:w-[60px] shrink-0 flex flex-col overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]";
+        wrap.className = "w-full lg:w-[60px] shrink-0 flex flex-col overflow-hidden transition-all duration-[280ms] ease-[cubic-bezier(0.22,1,0.36,1)]";
         maxContent.classList.remove('opacity-100', 'scale-100', 'flex');
         maxContent.classList.add('opacity-0', 'scale-95', 'hidden');
         dock.classList.remove('hidden');
-        if (topBtnText) topBtnText.innerText = "Abrir Telemetria & Conversão";
         if (expandHint) expandHint.classList.remove('hidden');
       }
     }
@@ -510,7 +610,7 @@ let sentimentChart = null;
         document.getElementById('dropUserName').innerText = `${adminName} — ${company}`;
       }
       renderTeamBar();
-      goToView('kanban');
+      playLoginToKanbanTransition(adminName);
     }
 
     function loginDemoAdmin() {
@@ -532,7 +632,7 @@ let sentimentChart = null;
         document.getElementById('dropPlanInfo').innerText = "Plano: Pro Growth Demo (Até 5 membros)";
       }
       renderTeamBar();
-      goToView('kanban');
+      playLoginToKanbanTransition("Rafael");
     }
 
     function sendConfirmationEmailDemo() {
@@ -589,7 +689,7 @@ let sentimentChart = null;
         document.getElementById('topPlanBadge').innerText = `CÓDIGO: ${code}`;
       }
       renderTeamBar();
-      goToView('kanban');
+      playLoginToKanbanTransition(memberName);
     }
 
     function handleUserLogin(e) {
@@ -1146,23 +1246,27 @@ Responda APENAS com um objeto JSON válido:
 
         const cardsContainer = document.getElementById('colCards-1');
         const newCard = document.createElement('div');
-        newCard.className = "pipefy-card rounded-xl p-3.5 cursor-pointer border-l-4 border-l-emerald-400";
+        newCard.className = "pipefy-card !bg-[#e5ebf4]/86 hover:!bg-[#f1f5fb]/94 backdrop-blur-md border border-white/80 rounded-xl p-3.5 cursor-pointer border-l-4 border-l-emerald-500";
         newCard.onclick = () => openClientAttendance(name, company, phone, link, 'Mapeado via IA', painText);
         newCard.innerHTML = `
           <div class="flex justify-between items-start mb-2">
-            <span class="text-[10px] font-extrabold uppercase bg-emerald-400/15 text-emerald-300 px-2 py-0.5 rounded border border-emerald-400/30">${company}</span>
-            <span class="text-[10px] text-emerald-400 font-bold">Novo</span>
+            <span class="text-[10px] font-extrabold uppercase bg-emerald-500/12 text-emerald-800 px-2 py-0.5 rounded border border-emerald-500/25">${company}</span>
+            <span class="text-[10px] text-emerald-700 font-bold">Novo</span>
           </div>
-          <h4 class="font-bold text-xs text-white">${name} — Criação de Site</h4>
-          <p class="text-[11px] text-slate-400 mt-1 line-clamp-2">${bio}</p>
-          <div class="mt-3 pt-2.5 border-t border-white/10 flex justify-between items-center text-[11px]">
-            <span class="text-slate-400 truncate max-w-[120px]">${link}</span>
-            <span class="bg-gradient-to-r from-white via-slate-100 to-slate-200 hover:from-white hover:to-white text-[#0e1014] px-2.5 py-1 rounded-lg font-extrabold text-[10px] shadow-sm">
+          <h4 class="font-extrabold text-xs text-slate-900">${name} — Criação de Site</h4>
+          <p class="text-[11px] text-slate-600 mt-1 line-clamp-2">${bio}</p>
+          <div class="mt-3 pt-2.5 border-t border-slate-200/80 flex justify-between items-center text-[11px]">
+            <span class="text-slate-500 truncate max-w-[120px]">${link}</span>
+            <span class="bg-sky-600 hover:bg-sky-500 text-white px-2.5 py-1 rounded-lg font-extrabold text-[10px] shadow-sm transition">
               <i class="fa-solid fa-headset mr-1"></i> Fazer Atendimento &rarr;
             </span>
           </div>
         `;
         cardsContainer.prepend(newCard);
+        const countEl = document.getElementById('colCount-1');
+        if (countEl && cardsContainer) {
+          countEl.innerText = cardsContainer.children.length;
+        }
 
         btn.innerHTML = `<i class="fa-solid fa-sparkles"></i> Analisar com IA & Adicionar ao Kanban`;
         closeNewTicketModal();

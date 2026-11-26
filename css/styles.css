@@ -34,19 +34,57 @@
     }
 
     .pipefy-card {
-      background: rgba(14, 16, 20, 0.72) !important;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.18) !important;
-      box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.55);
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      color: #f1f5f9 !important;
+      background: rgba(229, 235, 244, 0.86) !important;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.82) !important;
+      box-shadow: 0 6px 20px -4px rgba(15, 23, 42, 0.10);
+      transition: all 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+      color: #0f172a !important;
     }
     .pipefy-card:hover {
-      border-color: rgba(255, 255, 255, 0.35);
-      box-shadow: 0 10px 30px -4px rgba(0, 0, 0, 0.8), 0 0 16px rgba(255, 255, 255, 0.08);
-      transform: translateY(-2px) scale(1.015);
+      background: rgba(241, 245, 251, 0.94) !important;
+      border-color: rgba(14, 165, 233, 0.45) !important;
+      box-shadow: 0 12px 28px -4px rgba(15, 23, 42, 0.16);
+      transform: translateY(-2px) scale(1.012);
     }
+
+    /* Animação Cinematográfica de Entrada no Kanban Pós-Login */
+    @keyframes kanbanColCascade {
+      0% {
+        opacity: 0;
+        transform: translateY(24px) scale(0.975);
+        filter: blur(4px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+      }
+    }
+
+    @keyframes headerGlideIn {
+      0% {
+        opacity: 0;
+        transform: translateY(-16px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .header-glide-enter {
+      animation: headerGlideIn 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    .kanban-cascade-enter > div {
+      animation: kanbanColCascade 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    .kanban-cascade-enter > div:nth-child(1) { animation-delay: 60ms; }
+    .kanban-cascade-enter > div:nth-child(2) { animation-delay: 135ms; }
+    .kanban-cascade-enter > div:nth-child(3) { animation-delay: 210ms; }
+    .kanban-cascade-enter > div:nth-child(4) { animation-delay: 285ms; }
 
     /* Barra de Rolagem (Scroll) Customizada — Grafite & Prata LED */
     * {

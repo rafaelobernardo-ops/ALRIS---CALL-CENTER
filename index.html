@@ -7,7 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="css/styles.css?v=20261126e">
+  <link rel="stylesheet" href="css/styles.css?v=20261126i">
 </head>
 <body class="h-full flex flex-col bg-[#0e1014] text-slate-100 antialiased selection:bg-white/20 selection:text-white">
 
@@ -647,17 +647,17 @@
 
     <!-- Fundo Dinâmico 3D em Frames (kanban_1.mp4) Guiado pelo Movimento do Mouse em Todo o Kanban / Atendimento / Novo Chamado -->
     <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-[#0e1014]">
-      <canvas id="workspaceBgFrameCanvas" width="1280" height="720" class="w-full h-full object-cover object-center contrast-[1.03]"></canvas>
+      <canvas id="workspaceBgFrameCanvas" width="1280" height="720" class="w-full h-full object-cover object-center contrast-[1.02] blur-[3px] scale-[1.02]"></canvas>
       <div id="workspaceBgVeil" class="absolute inset-0 bg-gradient-to-b from-[#0e1014]/50 via-[#0e1014]/20 to-[#0e1014]/55 transition-colors duration-500"></div>
     </div>
     
-    <!-- Cabeçalho Único, Limpo e Adaptável do Ambiente Logado (Mesma Elegância da Página Inicial, Sem Barras Duplas!) -->
-    <header id="workspaceHeader" class="h-18 py-3 bg-[#111318]/45 backdrop-blur-xl text-white px-6 lg:px-10 flex items-center justify-between border-b border-white/10 shrink-0 select-none relative z-40 transition-all duration-300 gap-4">
+    <!-- Cabeçalho Único Idêntico no Kanban e no Atendimento (Branco Pérola Translúcido, Zero Mudança Brusca!) -->
+    <header id="workspaceHeader" class="h-18 py-3 bg-white/86 backdrop-blur-2xl text-slate-800 px-6 lg:px-10 flex items-center justify-between border-b border-white/90 shadow-[0_4px_24px_rgba(15,23,42,0.06)] shrink-0 select-none relative z-40 transition-all duration-300 gap-4">
       
       <!-- Esquerda: Logo Oficial ALRIS + Ação Contextual (Equipe no Kanban | Voltar ao Kanban no Atendimento) -->
       <div class="flex items-center gap-4 shrink-0">
         <div class="flex items-center gap-3 cursor-pointer group" onclick="goToView('kanban')" title="Ir para o Quadro Kanban">
-          <div id="workspaceLogoBox" class="w-10 h-10 rounded-2xl bg-[#181b22] border border-white/20 shadow-md flex items-center justify-center p-1.5 shrink-0 transition-colors">
+          <div id="workspaceLogoBox" class="w-10 h-10 rounded-2xl bg-[#181b22] border border-slate-300/60 shadow-md flex items-center justify-center p-1.5 shrink-0 transition-colors">
             <svg viewBox="0 0 64 64" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <linearGradient id="alrisGradTop" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -671,41 +671,41 @@
             </svg>
           </div>
           <div>
-            <span id="workspaceLogoText" class="alris-logo-font text-xl font-black text-white leading-none block">ALR<span class="opacity-75">I</span>S</span>
-            <p id="workspaceLogoSub" class="text-[9px] text-slate-300 font-bold tracking-[0.16em] uppercase mt-0.5">CANAL DE ATENDIMENTO</p>
+            <span id="workspaceLogoText" class="alris-logo-font text-xl font-black text-slate-900 leading-none block">ALR<span class="text-slate-500">I</span>S</span>
+            <p id="workspaceLogoSub" class="text-[9px] text-slate-500 font-bold tracking-[0.16em] uppercase mt-0.5">CANAL DE ATENDIMENTO</p>
           </div>
         </div>
 
-        <div id="headerDividerLeft" class="hidden md:block h-6 w-px bg-white/15"></div>
+        <div id="headerDividerLeft" class="hidden md:block h-6 w-px bg-slate-300/80"></div>
 
         <!-- Contextual Esquerda 1 (Visível no Kanban): Equipe + Código -->
-        <div id="headerKanbanTeamPill" class="hidden md:flex items-center bg-white/[0.07] rounded-xl px-3 py-1.5 border border-white/15 gap-2 whitespace-nowrap">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)]"></span>
-          <span class="text-slate-200 font-bold text-[11px]">Equipe (<span id="teamCountLabel">1/1</span>)</span>
+        <div id="headerKanbanTeamPill" class="hidden md:flex items-center bg-white/90 rounded-xl px-3 py-1.5 border border-slate-200/90 gap-2 whitespace-nowrap shadow-sm">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+          <span class="text-slate-700 font-bold text-[11px]">Equipe (<span id="teamCountLabel">1/1</span>)</span>
           <div id="activeTeamAvatars" class="flex items-center -space-x-1">
-            <span class="w-5 h-5 rounded-full bg-white text-[#0e1014] font-extrabold text-[9px] flex items-center justify-center ring-1 ring-black" title="Rafael (Você) - Online">RC</span>
+            <span class="w-5 h-5 rounded-full bg-slate-800 text-white font-extrabold text-[9px] flex items-center justify-center ring-1 ring-white" title="Rafael (Você) - Online">RC</span>
           </div>
-          <button onclick="openTeamInviteModal()" class="ml-1 px-2 py-0.5 rounded-lg bg-white/10 hover:bg-white/20 text-white border border-white/15 text-[10px] font-bold transition flex items-center gap-1" title="Convidar membro por código de acesso">
+          <button onclick="openTeamInviteModal()" class="ml-1 px-2 py-0.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-[10px] font-bold transition flex items-center gap-1" title="Convidar membro por código de acesso">
             <i class="fa-solid fa-user-plus text-[9px]"></i> Código
           </button>
         </div>
 
         <!-- Contextual Esquerda 2 (Visível no Atendimento): Botão Voltar ao Kanban -->
-        <button id="headerBackKanbanBtn" onclick="goToView('kanban')" class="hidden px-3.5 py-2 rounded-xl bg-[#0e1014]/[0.06] hover:bg-[#0e1014] text-[#0e1014] hover:text-white font-extrabold text-xs transition items-center gap-2 border border-slate-300/80">
-          <i class="fa-solid fa-arrow-left text-[11px]"></i> Voltar ao Kanban
+        <button id="headerBackKanbanBtn" onclick="goToView('kanban')" class="hidden px-3.5 py-2 rounded-xl bg-white hover:bg-slate-100 text-slate-800 font-bold text-xs transition items-center gap-2 border border-slate-200/90 shadow-sm">
+          <i class="fa-solid fa-arrow-left text-[11px] text-slate-500"></i> Voltar ao Kanban
         </button>
       </div>
 
       <!-- Centro Contextual: Busca (no Kanban) + Barra Retrátil de Atendimento (Minimiza / Maximiza ao Clicar!) -->
       <div class="hidden lg:flex items-center justify-center gap-3 flex-1 max-w-2xl">
         <!-- Barra de Busca Limpa (Visível no Kanban) -->
-        <div id="headerCenterKanban" class="flex items-center bg-white/[0.07] focus-within:bg-white/[0.12] focus-within:border-white/35 border border-white/15 rounded-xl px-3.5 py-2 text-xs text-white w-full max-w-xs transition">
+        <div id="headerCenterKanban" class="flex items-center bg-white/90 focus-within:bg-white focus-within:border-sky-400 border border-slate-200/90 rounded-xl px-3.5 py-2 text-xs text-slate-800 w-full max-w-xs transition shadow-sm">
           <i class="fa-solid fa-magnifying-glass text-slate-400 mr-2 text-xs"></i>
-          <input type="text" id="kanbanSearchInput" oninput="filterKanbanCards(this.value)" placeholder="Buscar cliente no Kanban..." class="bg-transparent border-none focus:outline-none text-xs text-white placeholder-slate-400 w-full">
+          <input type="text" id="kanbanSearchInput" oninput="filterKanbanCards(this.value)" placeholder="Buscar cliente no Kanban..." class="bg-transparent border-none focus:outline-none text-xs text-slate-800 placeholder-slate-400 w-full font-medium">
         </div>
 
         <!-- Cápsula Dinâmica de Atendimento (Minimizada por Padrão -> Clica p/ Maximizar Microfone, Gravar e Encerrar!) -->
-        <div id="callToolbarIsland" class="flex items-center rounded-full border transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] bg-white/10 border-white/20 text-white shadow-sm overflow-hidden">
+        <div id="callToolbarIsland" class="flex items-center rounded-full border transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] bg-white/95 border-slate-200/90 text-slate-800 shadow-sm overflow-hidden">
           <!-- Gatilho Compacto (Sempre Visível — Clica para Maximizar / Minimizar) -->
           <button
             type="button"
@@ -737,52 +737,46 @@
         </div>
       </div>
 
-      <!-- Direita: Ação Principal Contextual + Perfil Unificado -->
+      <!-- Direita: Ação Principal Contextual + Perfil Unificado (Sem Botão Redundante de Telemetria!) -->
       <div class="flex items-center gap-2.5 shrink-0 relative">
         <!-- Direita 1 (Kanban): "+ Novo Chamado" -->
-        <button id="headerNewTicketBtn" onclick="openNewTicketModal()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-white via-slate-100 to-slate-200 hover:from-white hover:to-white text-[#0e1014] font-extrabold text-xs shadow-md transition flex items-center gap-1.5 whitespace-nowrap">
+        <button id="headerNewTicketBtn" onclick="openNewTicketModal()" class="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-extrabold text-xs shadow-md transition flex items-center gap-1.5 whitespace-nowrap">
           <i class="fa-solid fa-plus text-[10px]"></i> Novo Chamado
-        </button>
-
-        <!-- Direita 2 (Atendimento): Toggle Telemetria -->
-        <button type="button" id="topToggleTelemetryBtn" onclick="toggleTelemetryPanel()" class="hidden px-3.5 py-2 rounded-xl bg-[#0e1014] hover:bg-slate-800 text-white font-extrabold transition items-center gap-2 text-xs shadow-sm whitespace-nowrap">
-          <i class="fa-solid fa-chart-line text-emerald-400 text-[11px]"></i>
-          <span id="topToggleTelemetryText">Abrir Telemetria</span>
         </button>
 
         <!-- Botão de Perfil Unificado -->
         <div class="relative flex items-center">
-          <button onclick="toggleProfileDropdown()" id="profileMenuBtn" class="flex items-center gap-2 bg-white/10 hover:bg-white/15 pl-1.5 pr-3 py-1.5 rounded-xl border border-white/15 transition whitespace-nowrap">
-            <span id="navAvatar" class="w-7 h-7 rounded-lg bg-white text-[#0e1014] font-extrabold text-[10px] flex items-center justify-center shadow-sm">RC</span>
-            <span id="navUserName" class="text-xs font-bold text-white hidden sm:inline">Rafael (ADM)</span>
-            <i class="fa-solid fa-chevron-down text-[9px] opacity-60"></i>
+          <button onclick="toggleProfileDropdown()" id="profileMenuBtn" class="flex items-center gap-2 bg-white/85 hover:bg-white pl-1.5 pr-3 py-1.5 rounded-xl border border-slate-200/90 shadow-sm transition whitespace-nowrap">
+            <span id="navAvatar" class="w-7 h-7 rounded-lg bg-slate-700 text-white font-extrabold text-[10px] flex items-center justify-center shadow-sm">RC</span>
+            <span id="navUserName" class="text-xs font-bold text-slate-800 hidden sm:inline">Rafael (ADM)</span>
+            <i class="fa-solid fa-chevron-down text-[9px] text-slate-500"></i>
           </button>
 
           <!-- MENU SUSPENSO DO PERFIL -->
-          <div id="profileDropdown" class="hidden absolute right-0 top-12 mt-1 w-64 bg-[#0e1014] text-white rounded-2xl shadow-2xl border border-white/20 py-2 z-50 text-xs backdrop-blur-xl">
-            <div class="px-4 py-2.5 border-b border-white/10">
-              <strong class="text-white block text-sm" id="dropUserName">Rafael (Administrador)</strong>
-              <span class="text-[11px] text-slate-400 block" id="dropPlanInfo">Plano Atual: Starter (Limite 1 membro)</span>
+          <div id="profileDropdown" class="hidden absolute right-0 top-12 mt-1 w-64 bg-white/95 text-slate-800 rounded-2xl shadow-2xl border border-slate-200 py-2 z-50 text-xs backdrop-blur-2xl">
+            <div class="px-4 py-2.5 border-b border-slate-100">
+              <strong class="text-slate-900 block text-sm" id="dropUserName">Rafael (Administrador)</strong>
+              <span class="text-[11px] text-slate-500 block" id="dropPlanInfo">Plano Atual: Starter (Limite 1 membro)</span>
             </div>
 
             <div class="py-1">
-              <button onclick="toggleProfileDropdown(); openUpgradeModal();" class="w-full px-4 py-2.5 text-left hover:bg-white/10 flex items-center justify-between font-bold text-amber-300 transition">
-                <span class="flex items-center gap-2.5"><i class="fa-solid fa-crown text-amber-400 w-4"></i> Fazer Upgrade de Plano</span>
-                <span class="text-[9px] bg-amber-400/20 text-amber-300 border border-amber-400/30 px-1.5 py-0.5 rounded font-extrabold">PRO</span>
+              <button onclick="toggleProfileDropdown(); openUpgradeModal();" class="w-full px-4 py-2.5 text-left hover:bg-amber-50 flex items-center justify-between font-bold text-amber-700 transition">
+                <span class="flex items-center gap-2.5"><i class="fa-solid fa-crown text-amber-500 w-4"></i> Fazer Upgrade de Plano</span>
+                <span class="text-[9px] bg-amber-100 text-amber-800 border border-amber-200 px-1.5 py-0.5 rounded font-extrabold">PRO</span>
               </button>
 
-              <button onclick="toggleProfileDropdown(); openTeamInviteModal();" class="w-full px-4 py-2.5 text-left hover:bg-white/10 flex items-center gap-2.5 font-semibold text-slate-200 transition">
-                <i class="fa-solid fa-users-gear text-white w-4"></i> Equipe & Código de Convite
+              <button onclick="toggleProfileDropdown(); openTeamInviteModal();" class="w-full px-4 py-2.5 text-left hover:bg-slate-50 flex items-center gap-2.5 font-semibold text-slate-700 transition">
+                <i class="fa-solid fa-users-gear text-sky-600 w-4"></i> Equipe & Código de Convite
               </button>
 
-              <button onclick="toggleProfileDropdown(); openApiModal();" class="w-full px-4 py-2.5 text-left hover:bg-white/10 flex items-center justify-between font-semibold text-slate-200 transition">
-                <span class="flex items-center gap-2.5"><i class="fa-solid fa-key text-cyan-400 w-4"></i> Configurar API Gemini</span>
-                <span id="apiStatusText" class="text-[9px] bg-white/10 text-slate-300 border border-white/15 px-1.5 py-0.5 rounded font-bold">Padrão</span>
+              <button onclick="toggleProfileDropdown(); openApiModal();" class="w-full px-4 py-2.5 text-left hover:bg-slate-50 flex items-center justify-between font-semibold text-slate-700 transition">
+                <span class="flex items-center gap-2.5"><i class="fa-solid fa-key text-sky-600 w-4"></i> Configurar API Gemini</span>
+                <span id="apiStatusText" class="text-[9px] bg-slate-100 text-slate-600 border border-slate-200 px-1.5 py-0.5 rounded font-bold">Padrão</span>
               </button>
             </div>
 
-            <div class="pt-1 border-t border-white/10">
-              <button onclick="toggleProfileDropdown(); goToView('landing');" class="w-full px-4 py-2.5 text-left hover:bg-rose-500/20 flex items-center gap-2.5 font-bold text-rose-400 transition">
+            <div class="pt-1 border-t border-slate-100">
+              <button onclick="toggleProfileDropdown(); goToView('landing');" class="w-full px-4 py-2.5 text-left hover:bg-rose-50 flex items-center gap-2.5 font-bold text-rose-600 transition">
                 <i class="fa-solid fa-right-from-bracket w-4"></i> Sair da Conta
               </button>
             </div>
@@ -793,51 +787,51 @@
     </header>
 
     <!-- ====================================================================== -->
-    <!-- ETAPA 3: PAINEL DE PROCESSOS (KANBAN) — TELA PRINCIPAL PÓS-LOGIN       -->
+    <!-- ETAPA 3: PAINEL DE PROCESSOS (KANBAN) — BRANCO PÉROLA-PRATA LIGEIRAMENTE MAIS ESCURO -->
     <!-- ====================================================================== -->
-    <div id="view-kanban" class="hidden flex-1 flex flex-col overflow-hidden bg-transparent text-white relative z-10">
+    <div id="view-kanban" class="hidden flex-1 flex flex-col overflow-hidden bg-transparent text-slate-800 relative z-10">
 
-      <!-- Colunas do Kanban (Direto abaixo do Cabeçalho Único, Sem Sub-barra Pesada!) -->
-      <div class="flex-1 px-6 lg:px-10 py-5 overflow-x-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 custom-scroll">
+      <!-- Colunas do Kanban em Pérola-Prata Simétricas em Altura Total sobre o Fundo Suavemente Desfocado -->
+      <div id="kanbanColumnsGrid" class="flex-1 px-6 lg:px-10 py-5 overflow-x-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 custom-scroll">
 
         <!-- Coluna 1: Entrada & Triagem -->
-        <div class="flex flex-col bg-[#0e1014]/55 backdrop-blur-md rounded-2xl p-3.5 border border-white/15 min-w-0 shadow-2xl">
-          <div class="flex items-center justify-between pb-2.5 mb-3 border-b border-white/10 font-bold text-xs text-slate-200">
+        <div class="flex flex-col bg-white/82 backdrop-blur-2xl rounded-2xl p-3.5 border border-white/90 ring-1 ring-slate-900/[0.07] min-w-0 shadow-[0_16px_40px_rgba(15,23,42,0.12)] transition-all duration-300">
+          <div class="flex items-center justify-between pb-2.5 mb-3 border-b border-slate-300/70 font-extrabold text-xs text-slate-800 shrink-0">
             <span class="flex items-center gap-2">
-              <span class="w-2.5 h-2.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]"></span> 1. Entrada & Triagem
+              <span class="w-2.5 h-2.5 rounded-full bg-sky-500 shadow-[0_0_6px_rgba(14,165,233,0.6)]"></span> 1. Entrada & Triagem
             </span>
-            <span class="bg-white/10 text-white border border-white/15 px-2 py-0.5 rounded-full text-[10px]">2</span>
+            <span id="colCount-1" class="bg-white/85 text-slate-700 border border-slate-300/80 px-2 py-0.5 rounded-full text-[10px] font-extrabold">2</span>
           </div>
 
           <div id="colCards-1" class="space-y-3 flex-1 overflow-y-auto custom-scroll pr-1">
             
             <!-- Card 1: AutoMotors -->
-            <div onclick="openClientAttendance('Eduardo Costa', 'AutoMotors Veículos', '5511987654321', '@automotors.veiculos', '48 Carros no Pátio', 'O site atual demora 7 segundos para carregar as fotos dos 48 carros e não tem filtro de parcelas no celular. Os 38k seguidores do Instagram chegam na página e desistem da compra.')" class="pipefy-card !bg-[#0e1014]/72 backdrop-blur-md border border-white/18 hover:border-white/38 rounded-xl p-3.5 cursor-pointer border-l-4 border-l-white">
+            <div onclick="openClientAttendance('Eduardo Costa', 'AutoMotors Veículos', '5511987654321', '@automotors.veiculos', '48 Carros no Pátio', 'O site atual demora 7 segundos para carregar as fotos dos 48 carros e não tem filtro de parcelas no celular. Os 38k seguidores do Instagram chegam na página e desistem da compra.')" class="pipefy-card !bg-[#e5ebf4]/86 hover:!bg-[#f1f5fb]/94 backdrop-blur-md border border-white/80 rounded-xl p-3.5 cursor-pointer border-l-4 border-l-sky-500">
               <div class="flex justify-between items-start mb-2">
-                <span class="text-[10px] font-extrabold uppercase bg-white/10 text-slate-200 px-2 py-0.5 rounded border border-white/15">AutoMotors Veículos</span>
-                <span class="text-[10px] text-amber-400 font-bold"><i class="fa-solid fa-clock"></i> SLA: 1h</span>
+                <span class="text-[10px] font-extrabold uppercase bg-sky-500/12 text-sky-800 px-2 py-0.5 rounded border border-sky-500/25">AutoMotors Veículos</span>
+                <span class="text-[10px] text-amber-700 font-bold"><i class="fa-solid fa-clock"></i> SLA: 1h</span>
               </div>
-              <h4 class="font-bold text-xs text-white">Eduardo Costa — Site de Estoque</h4>
-              <p class="text-[11px] text-slate-400 mt-1">Dor identificada: Lentidão de fotos no 4G e falta de filtro.</p>
-              <div class="mt-3 pt-2.5 border-t border-white/10 flex justify-between items-center text-[11px]">
-                <span class="text-slate-400">Resp: <strong class="text-slate-200">Lucas Torres</strong></span>
-                <span class="bg-gradient-to-r from-white via-slate-100 to-slate-200 hover:from-white hover:to-white text-[#0e1014] px-2.5 py-1 rounded-lg font-extrabold text-[10px] shadow-sm">
+              <h4 class="font-extrabold text-xs text-slate-900">Eduardo Costa — Site de Estoque</h4>
+              <p class="text-[11px] text-slate-600 mt-1">Dor identificada: Lentidão de fotos no 4G e falta de filtro.</p>
+              <div class="mt-3 pt-2.5 border-t border-slate-200/80 flex justify-between items-center text-[11px]">
+                <span class="text-slate-500">Resp: <strong class="text-slate-800">Lucas Torres</strong></span>
+                <span class="bg-sky-600 hover:bg-sky-500 text-white px-2.5 py-1 rounded-lg font-extrabold text-[10px] shadow-sm transition">
                   <i class="fa-solid fa-headset mr-1"></i> Fazer Atendimento &rarr;
                 </span>
               </div>
             </div>
 
             <!-- Card 2: Imobiliária Prime -->
-            <div onclick="openClientAttendance('Roberto Almeida', 'Imobiliária Prime', '5511999887766', '@imobiliariaprime.sp', '120 Imóveis Alto Padrão', 'Lançamento de condomínio em 20 dias sem landing page dedicada. Os anúncios do Instagram estão jogando para o link geral e perdendo 60% dos leads.')" class="pipefy-card !bg-[#0e1014]/72 backdrop-blur-md border border-white/18 hover:border-white/38 rounded-xl p-3.5 cursor-pointer border-l-4 border-l-cyan-400">
+            <div onclick="openClientAttendance('Roberto Almeida', 'Imobiliária Prime', '5511999887766', '@imobiliariaprime.sp', '120 Imóveis Alto Padrão', 'Lançamento de condomínio em 20 dias sem landing page dedicada. Os anúncios do Instagram estão jogando para o link geral e perdendo 60% dos leads.')" class="pipefy-card !bg-[#e5ebf4]/86 hover:!bg-[#f1f5fb]/94 backdrop-blur-md border border-white/80 rounded-xl p-3.5 cursor-pointer border-l-4 border-l-teal-500">
               <div class="flex justify-between items-start mb-2">
-                <span class="text-[10px] font-extrabold uppercase bg-cyan-400/15 text-cyan-300 px-2 py-0.5 rounded border border-cyan-400/30">Imobiliária Prime</span>
-                <span class="text-[10px] text-emerald-400 font-bold">Novo Lead</span>
+                <span class="text-[10px] font-extrabold uppercase bg-teal-500/12 text-teal-800 px-2 py-0.5 rounded border border-teal-500/25">Imobiliária Prime</span>
+                <span class="text-[10px] text-emerald-700 font-bold">Novo Lead</span>
               </div>
-              <h4 class="font-bold text-xs text-white">Roberto Almeida — Landing Page</h4>
-              <p class="text-[11px] text-slate-400 mt-1">Dor identificada: Anúncios sem página de alta conversão.</p>
-              <div class="mt-3 pt-2.5 border-t border-white/10 flex justify-between items-center text-[11px]">
-                <span class="text-slate-400">Resp: <strong class="text-slate-200">Rafael</strong></span>
-                <span class="bg-gradient-to-r from-white via-slate-100 to-slate-200 hover:from-white hover:to-white text-[#0e1014] px-2.5 py-1 rounded-lg font-extrabold text-[10px] shadow-sm">
+              <h4 class="font-extrabold text-xs text-slate-900">Roberto Almeida — Landing Page</h4>
+              <p class="text-[11px] text-slate-600 mt-1">Dor identificada: Anúncios sem página de alta conversão.</p>
+              <div class="mt-3 pt-2.5 border-t border-slate-200/80 flex justify-between items-center text-[11px]">
+                <span class="text-slate-500">Resp: <strong class="text-slate-800">Rafael</strong></span>
+                <span class="bg-sky-600 hover:bg-sky-500 text-white px-2.5 py-1 rounded-lg font-extrabold text-[10px] shadow-sm transition">
                   <i class="fa-solid fa-headset mr-1"></i> Fazer Atendimento &rarr;
                 </span>
               </div>
@@ -847,25 +841,25 @@
         </div>
 
         <!-- Coluna 2: Proposta & Briefing IA -->
-        <div class="flex flex-col bg-[#0e1014]/55 backdrop-blur-md rounded-2xl p-3.5 border border-white/15 min-w-0 shadow-2xl">
-          <div class="flex items-center justify-between pb-2.5 mb-3 border-b border-white/10 font-bold text-xs text-slate-200">
+        <div class="flex flex-col bg-white/82 backdrop-blur-2xl rounded-2xl p-3.5 border border-white/90 ring-1 ring-slate-900/[0.07] min-w-0 shadow-[0_16px_40px_rgba(15,23,42,0.12)] transition-all duration-300">
+          <div class="flex items-center justify-between pb-2.5 mb-3 border-b border-slate-300/70 font-extrabold text-xs text-slate-800">
             <span class="flex items-center gap-2">
-              <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.8)]"></span> 2. Proposta & Negociação
+              <span class="w-2.5 h-2.5 rounded-full bg-indigo-500 shadow-[0_0_6px_rgba(99,102,241,0.6)]"></span> 2. Proposta & Negociação
             </span>
-            <span class="bg-white/10 text-white border border-white/15 px-2 py-0.5 rounded-full text-[10px]">1</span>
+            <span class="bg-white/85 text-slate-700 border border-slate-300/80 px-2 py-0.5 rounded-full text-[10px] font-extrabold">1</span>
           </div>
 
           <div class="space-y-3 flex-1 overflow-y-auto custom-scroll pr-1">
-            <div onclick="openClientAttendance('Dra. Camila Rocha', 'Clínica OdontoViva', '5511977665544', '@odontoviva.clinica', '4 Consultórios', 'Pacientes reclamam que não conseguem agendar avaliação pelo celular e o botão de WhatsApp atual está quebrado.')" class="pipefy-card !bg-[#0e1014]/72 backdrop-blur-md border border-white/18 hover:border-white/38 rounded-xl p-3.5 cursor-pointer border-l-4 border-l-cyan-400">
+            <div onclick="openClientAttendance('Dra. Camila Rocha', 'Clínica OdontoViva', '5511977665544', '@odontoviva.clinica', '4 Consultórios', 'Pacientes reclamam que não conseguem agendar avaliação pelo celular e o botão de WhatsApp atual está quebrado.')" class="pipefy-card !bg-[#e5ebf4]/86 hover:!bg-[#f1f5fb]/94 backdrop-blur-md border border-white/80 rounded-xl p-3.5 cursor-pointer border-l-4 border-l-indigo-500">
               <div class="flex justify-between items-start mb-2">
-                <span class="text-[10px] font-extrabold uppercase bg-cyan-400/15 text-cyan-300 px-2 py-0.5 rounded border border-cyan-400/30">Clínica OdontoViva</span>
-                <span class="text-[10px] text-emerald-400 font-bold font-mono">R$ 4.200</span>
+                <span class="text-[10px] font-extrabold uppercase bg-indigo-500/12 text-indigo-800 px-2 py-0.5 rounded border border-indigo-500/25">Clínica OdontoViva</span>
+                <span class="text-[10px] text-emerald-700 font-bold font-mono">R$ 4.200</span>
               </div>
-              <h4 class="font-bold text-xs text-white">Dra. Camila — Portal Odontológico</h4>
-              <p class="text-[11px] text-slate-400 mt-1">IA gerou escopo e roteiro de quebra de objeção.</p>
-              <div class="mt-3 pt-2.5 border-t border-white/10 flex justify-between items-center text-[11px]">
-                <span class="text-slate-400">Resp: <strong class="text-slate-200">Mariana Alves</strong></span>
-                <span class="bg-gradient-to-r from-white via-slate-100 to-slate-200 hover:from-white hover:to-white text-[#0e1014] px-2.5 py-1 rounded-lg font-extrabold text-[10px] shadow-sm">
+              <h4 class="font-extrabold text-xs text-slate-900">Dra. Camila — Portal Odontológico</h4>
+              <p class="text-[11px] text-slate-600 mt-1">IA gerou escopo e roteiro de quebra de objeção.</p>
+              <div class="mt-3 pt-2.5 border-t border-slate-200/80 flex justify-between items-center text-[11px]">
+                <span class="text-slate-500">Resp: <strong class="text-slate-800">Mariana Alves</strong></span>
+                <span class="bg-indigo-600 hover:bg-indigo-500 text-white px-2.5 py-1 rounded-lg font-extrabold text-[10px] shadow-sm transition">
                   <i class="fa-solid fa-headset mr-1"></i> Retomar Call &rarr;
                 </span>
               </div>
@@ -874,25 +868,25 @@
         </div>
 
         <!-- Coluna 3: Em Desenvolvimento -->
-        <div class="flex flex-col bg-[#0e1014]/55 backdrop-blur-md rounded-2xl p-3.5 border border-white/15 min-w-0 shadow-2xl">
-          <div class="flex items-center justify-between pb-2.5 mb-3 border-b border-white/10 font-bold text-xs text-slate-200">
+        <div class="flex flex-col bg-white/82 backdrop-blur-2xl rounded-2xl p-3.5 border border-white/90 ring-1 ring-slate-900/[0.07] min-w-0 shadow-[0_16px_40px_rgba(15,23,42,0.12)] transition-all duration-300">
+          <div class="flex items-center justify-between pb-2.5 mb-3 border-b border-slate-300/70 font-extrabold text-xs text-slate-800">
             <span class="flex items-center gap-2">
-              <span class="w-2.5 h-2.5 rounded-full bg-purple-400 shadow-[0_0_8px_rgba(192,132,252,0.8)]"></span> 3. Desenvolvimento
+              <span class="w-2.5 h-2.5 rounded-full bg-purple-500 shadow-[0_0_6px_rgba(168,85,247,0.6)]"></span> 3. Desenvolvimento
             </span>
-            <span class="bg-white/10 text-white border border-white/15 px-2 py-0.5 rounded-full text-[10px]">1</span>
+            <span class="bg-white/85 text-slate-700 border border-slate-300/80 px-2 py-0.5 rounded-full text-[10px] font-extrabold">1</span>
           </div>
 
           <div class="space-y-3 flex-1 overflow-y-auto custom-scroll pr-1">
-            <div onclick="openClientAttendance('Dr. Henrique Martins', 'Advocacia Martins', '5511966554433', '@advocaciamartins.sp', 'Portal Jurídico Trabalhista', 'Projeto em produção (85% concluído). Cliente solicitou alinhamento na chamada sobre o botão de plantão trabalhista no WhatsApp e validação final do layout mobile.')" class="pipefy-card !bg-[#0e1014]/72 backdrop-blur-md border border-white/18 hover:border-white/38 rounded-xl p-3.5 cursor-pointer border-l-4 border-l-purple-400">
+            <div onclick="openClientAttendance('Dr. Henrique Martins', 'Advocacia Martins', '5511966554433', '@advocaciamartins.sp', 'Portal Jurídico Trabalhista', 'Projeto em produção (85% concluído). Cliente solicitou alinhamento na chamada sobre o botão de plantão trabalhista no WhatsApp e validação final do layout mobile.')" class="pipefy-card !bg-[#e5ebf4]/86 hover:!bg-[#f1f5fb]/94 backdrop-blur-md border border-white/80 rounded-xl p-3.5 cursor-pointer border-l-4 border-l-purple-500">
               <div class="flex justify-between items-start mb-2">
-                <span class="text-[10px] font-extrabold uppercase bg-purple-400/15 text-purple-300 px-2 py-0.5 rounded border border-purple-400/30">Advocacia Martins</span>
-                <span class="text-[10px] text-purple-300 font-bold">85% Pronto</span>
+                <span class="text-[10px] font-extrabold uppercase bg-purple-500/12 text-purple-800 px-2 py-0.5 rounded border border-purple-500/25">Advocacia Martins</span>
+                <span class="text-[10px] text-purple-700 font-bold">85% Pronto</span>
               </div>
-              <h4 class="font-bold text-xs text-white">Dr. Henrique — Portal Jurídico</h4>
-              <p class="text-[11px] text-slate-400 mt-1">Contrato assinado. Carlos programando em Next.js.</p>
-              <div class="mt-3 pt-2.5 border-t border-white/10 flex justify-between items-center text-[11px]">
-                <span class="text-slate-400">Dev: <strong class="text-slate-200">Carlos Prado</strong></span>
-                <span class="bg-gradient-to-r from-white via-slate-100 to-slate-200 hover:from-white hover:to-white text-[#0e1014] px-2.5 py-1 rounded-lg font-extrabold text-[10px] shadow-sm">
+              <h4 class="font-extrabold text-xs text-slate-900">Dr. Henrique — Portal Jurídico</h4>
+              <p class="text-[11px] text-slate-600 mt-1">Contrato assinado. Carlos programando em Next.js.</p>
+              <div class="mt-3 pt-2.5 border-t border-slate-200/80 flex justify-between items-center text-[11px]">
+                <span class="text-slate-500">Dev: <strong class="text-slate-800">Carlos Prado</strong></span>
+                <span class="bg-purple-600 hover:bg-purple-500 text-white px-2.5 py-1 rounded-lg font-extrabold text-[10px] shadow-sm transition">
                   <i class="fa-solid fa-headset mr-1"></i> Abrir Conversa &rarr;
                 </span>
               </div>
@@ -901,25 +895,25 @@
         </div>
 
         <!-- Coluna 4: Homologado & Entregue -->
-        <div class="flex flex-col bg-[#0e1014]/55 backdrop-blur-md rounded-2xl p-3.5 border border-white/15 min-w-0 shadow-2xl">
-          <div class="flex items-center justify-between pb-2.5 mb-3 border-b border-white/10 font-bold text-xs text-slate-200">
+        <div class="flex flex-col bg-white/82 backdrop-blur-2xl rounded-2xl p-3.5 border border-white/90 ring-1 ring-slate-900/[0.07] min-w-0 shadow-[0_16px_40px_rgba(15,23,42,0.12)] transition-all duration-300">
+          <div class="flex items-center justify-between pb-2.5 mb-3 border-b border-slate-300/70 font-extrabold text-xs text-slate-800">
             <span class="flex items-center gap-2">
-              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]"></span> 4. Entregue (Go-Live)
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.6)]"></span> 4. Entregue (Go-Live)
             </span>
-            <span class="bg-white/10 text-white border border-white/15 px-2 py-0.5 rounded-full text-[10px]">1</span>
+            <span class="bg-white/85 text-slate-700 border border-slate-300/80 px-2 py-0.5 rounded-full text-[10px] font-extrabold">1</span>
           </div>
 
           <div class="space-y-3 flex-1 overflow-y-auto custom-scroll pr-1">
-            <div onclick="openClientAttendance('Chef Marcos Lima', 'Restaurante Sabor', '5511955443322', '@restaurantesabor.sp', 'Cardápio Digital & Reservas', 'Site 100% entregue com domínio apontado e SSL ativo. Atendimento focado em pós-venda, acompanhamento de reservas pelo WhatsApp e renovação de manutenção mensal.')" class="pipefy-card !bg-[#0e1014]/72 backdrop-blur-md border border-white/18 hover:border-white/38 rounded-xl p-3.5 cursor-pointer border-l-4 border-l-emerald-400">
+            <div onclick="openClientAttendance('Chef Marcos Lima', 'Restaurante Sabor', '5511955443322', '@restaurantesabor.sp', 'Cardápio Digital & Reservas', 'Site 100% entregue com domínio apontado e SSL ativo. Atendimento focado em pós-venda, acompanhamento de reservas pelo WhatsApp e renovação de manutenção mensal.')" class="pipefy-card !bg-[#e5ebf4]/86 hover:!bg-[#f1f5fb]/94 backdrop-blur-md border border-white/80 rounded-xl p-3.5 cursor-pointer border-l-4 border-l-emerald-500">
               <div class="flex justify-between items-start mb-2">
-                <span class="text-[10px] font-extrabold uppercase bg-emerald-400/15 text-emerald-300 px-2 py-0.5 rounded border border-emerald-400/30">Restaurante Sabor</span>
-                <span class="text-[10px] text-emerald-400 font-bold"><i class="fa-solid fa-check"></i> No Ar (100%)</span>
+                <span class="text-[10px] font-extrabold uppercase bg-emerald-500/12 text-emerald-800 px-2 py-0.5 rounded border border-emerald-500/25">Restaurante Sabor</span>
+                <span class="text-[10px] text-emerald-700 font-bold"><i class="fa-solid fa-check"></i> No Ar (100%)</span>
               </div>
-              <h4 class="font-bold text-xs text-white">Chef Marcos — Cardápio Digital</h4>
-              <p class="text-[11px] text-slate-400 mt-1">Domínio apontado e SSL ativo com sucesso.</p>
-              <div class="mt-3 pt-2.5 border-t border-white/10 flex justify-between items-center text-[11px]">
-                <span class="text-slate-400">Pós-Venda</span>
-                <span class="bg-gradient-to-r from-white via-slate-100 to-slate-200 hover:from-white hover:to-white text-[#0e1014] px-2.5 py-1 rounded-lg font-extrabold text-[10px] shadow-sm">
+              <h4 class="font-extrabold text-xs text-slate-900">Chef Marcos — Cardápio Digital</h4>
+              <p class="text-[11px] text-slate-600 mt-1">Domínio apontado e SSL ativo com sucesso.</p>
+              <div class="mt-3 pt-2.5 border-t border-slate-200/80 flex justify-between items-center text-[11px]">
+                <span class="text-slate-500">Pós-Venda</span>
+                <span class="bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 py-1 rounded-lg font-extrabold text-[10px] shadow-sm transition">
                   <i class="fa-solid fa-headset mr-1"></i> Abrir Pós-Venda &rarr;
                 </span>
               </div>
@@ -941,7 +935,7 @@
         <!-- ================================================================== -->
         <!-- COLUNA ESQUERDA: PERFIL DO LEAD & CONTEXTO (VIDRO BRANCO PÉROLA)   -->
         <!-- ================================================================== -->
-        <div class="w-full lg:w-[24%] shrink-0 flex flex-col overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]">
+        <div class="w-full lg:w-[24%] shrink-0 flex flex-col overflow-hidden transition-all duration-[280ms] ease-[cubic-bezier(0.22,1,0.36,1)]">
           <div class="flex-1 bg-white/88 backdrop-blur-2xl rounded-2xl p-4 border border-white ring-1 ring-slate-900/[0.07] text-xs flex flex-col justify-between shadow-[0_16px_40px_rgba(15,23,42,0.12)] overflow-y-auto custom-scroll">
             <div class="space-y-3.5">
               
@@ -1049,7 +1043,7 @@
         <!-- ================================================================== -->
         <!-- COLUNA CENTRAL: ESCUTA ATIVA & TRANSCRIÇÃO (VIDRO BRANCO TRANSLÚCIDO + AMPLIADA P/ DIREITA!) -->
         <!-- ================================================================== -->
-        <div id="activeListeningCol" class="w-full flex-1 min-w-0 flex flex-col overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]">
+        <div id="activeListeningCol" class="w-full flex-1 min-w-0 flex flex-col overflow-hidden transition-all duration-[280ms] ease-[cubic-bezier(0.22,1,0.36,1)]">
           <div class="flex-1 bg-white/88 backdrop-blur-2xl rounded-2xl p-4 sm:p-5 border border-white ring-1 ring-slate-900/[0.07] flex flex-col justify-between text-xs shadow-[0_16px_40px_rgba(15,23,42,0.12)] overflow-hidden">
             
             <!-- Topo Interno da Transcrição -->
@@ -1151,7 +1145,7 @@
         <!-- ================================================================== -->
         <!-- COLUNA DIREITA: TELEMETRIA & CONVERSÃO (MENU COMPACTO <-> PAINEL COMPACTO EM VIDRO BRANCO!) -->
         <!-- ================================================================== -->
-        <div id="telemetryColWrap" class="w-full lg:w-[60px] shrink-0 flex flex-col overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]">
+        <div id="telemetryColWrap" class="w-full lg:w-[60px] shrink-0 flex flex-col overflow-hidden transition-all duration-[280ms] ease-[cubic-bezier(0.22,1,0.36,1)]">
           
           <!-- ESTADO 1: MENU COMPACTO MINIMIZADO EM VIDRO BRANCO TRANSLÚCIDO -->
           <button
@@ -1182,7 +1176,7 @@
           </button>
 
           <!-- ESTADO 2: PAINEL COMPACTO MAXIMIZADO EM VIDRO BRANCO TRANSLÚCIDO -->
-          <div id="telemetryMaximizedContent" class="hidden opacity-0 scale-95 flex-col gap-3 overflow-y-auto custom-scroll transition-all duration-400 ease-out">
+          <div id="telemetryMaximizedContent" class="hidden opacity-0 scale-95 flex-col gap-3 overflow-y-auto custom-scroll transition-all duration-[240ms] ease-[cubic-bezier(0.22,1,0.36,1)]">
             
             <!-- Card Único Integrado e Compacto de Telemetria & Sentimento -->
             <div class="bg-white/88 backdrop-blur-2xl rounded-2xl p-4 border border-white ring-1 ring-slate-900/[0.07] shadow-[0_16px_40px_rgba(15,23,42,0.12)] flex flex-col gap-3.5">
@@ -1813,7 +1807,31 @@
     </div>
   </div>
 
-  <script src="js/scroll-3d.js?v=20261126e"></script>
-  <script src="js/app.js?v=20261126e"></script>
+  <!-- ======================================================== -->
+  <!-- OVERLAY DE TRANSIÇÃO CINEMATOGRÁFICA: LOGIN -> KANBAN    -->
+  <!-- ======================================================== -->
+  <div id="loginTransitionOverlay" class="hidden fixed inset-0 z-[90] flex flex-col items-center justify-center bg-[#0e1014]/75 backdrop-blur-2xl opacity-0 transition-all duration-500 pointer-events-none select-none">
+    <div id="loginTransitionCard" class="flex flex-col items-center text-center transform scale-95 transition-all duration-500">
+      <div class="relative w-20 h-20 flex items-center justify-center mb-4">
+        <svg class="w-20 h-20 -rotate-90 absolute inset-0" viewBox="0 0 80 80">
+          <circle cx="40" cy="40" r="35" stroke="rgba(255,255,255,0.12)" stroke-width="3" fill="none" />
+          <circle id="loginTransitionRing" cx="40" cy="40" r="35" stroke="#ffffff" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-dasharray="220" stroke-dashoffset="220" class="transition-all duration-[1600ms] ease-in-out" />
+        </svg>
+        <div class="w-12 h-12 rounded-2xl bg-white/10 border border-white/25 flex items-center justify-center p-2 shadow-lg">
+          <svg viewBox="0 0 64 64" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 48 L26 15 C28.5 9.5 34.5 9.5 37 15 L44 31" stroke="#ffffff" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M14 50 C20 50 28 38 35 31 C41 25 52 27 53 36 C54 43 49 47 46 49 L47 55 L40 51 C35 52 28 49 26 42 C25 36 29 30 33 28" stroke="#cbd5e1" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+      <span id="loginTransitionUser" class="text-base font-extrabold text-white tracking-wide">Bem-vindo à Central ALRIS</span>
+      <span id="loginTransitionStepText" class="text-xs text-slate-300 font-medium mt-1.5 flex items-center gap-2">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span> Autenticando credenciais e preparando seu Kanban...
+      </span>
+    </div>
+  </div>
+
+  <script src="js/scroll-3d.js?v=20261126i"></script>
+  <script src="js/app.js?v=20261126i"></script>
 </body>
 </html>
