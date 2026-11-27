@@ -258,13 +258,13 @@ let sentimentChart = null;
       if (!header) return;
 
       // Cabeçalho 100% unificado em Branco Pérola Translúcido tanto no Kanban quanto no Atendimento
-      header.className = "h-18 py-3 bg-white/86 backdrop-blur-2xl text-slate-800 px-6 lg:px-10 flex items-center justify-between border-b border-white/90 shadow-[0_4px_24px_rgba(15,23,42,0.06)] shrink-0 select-none relative z-40 transition-all duration-300 gap-4";
+      header.className = "h-18 py-3 bg-white/90 backdrop-blur-md text-slate-800 px-6 lg:px-10 flex items-center justify-between border-b border-white/90 shadow-[0_4px_20px_rgba(15,23,42,0.06)] shrink-0 select-none relative z-40 transition-colors duration-150 gap-4";
       if (logoText) logoText.className = "alris-logo-font text-xl font-black text-slate-900 leading-none block";
       if (logoSub) logoSub.className = "text-[9px] text-slate-500 font-bold tracking-[0.16em] uppercase mt-0.5";
       if (divider) divider.className = "hidden md:block h-6 w-px bg-slate-300/80";
       if (profileBtn) profileBtn.className = "flex items-center gap-2 bg-white hover:bg-slate-50 pl-1.5 pr-3 py-1.5 rounded-xl border border-slate-200/90 shadow-sm transition whitespace-nowrap";
       if (userName) userName.className = "text-xs font-bold text-slate-800 hidden sm:inline";
-      if (island) island.className = "flex items-center rounded-full border transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] bg-white/95 border-slate-200/90 text-slate-800 shadow-sm overflow-hidden";
+      if (island) island.className = "flex items-center rounded-full border transition-colors duration-150 bg-white/95 border-slate-200/90 text-slate-800 shadow-sm overflow-hidden";
 
       if (mode === 'callcenter') {
         if (teamPill) teamPill.className = "hidden";
@@ -297,7 +297,7 @@ let sentimentChart = null;
       if (!wrap || !dock || !maxContent) return;
 
       if (isTelemetryExpanded) {
-        wrap.className = "w-full lg:w-[25%] shrink-0 flex flex-col overflow-hidden transition-all duration-[280ms] ease-[cubic-bezier(0.22,1,0.36,1)]";
+        wrap.className = "w-full lg:w-[25%] shrink-0 flex flex-col overflow-hidden transition-[width] duration-150 ease-out";
         dock.classList.add('hidden');
         maxContent.classList.remove('hidden');
         maxContent.classList.add('flex');
@@ -307,7 +307,7 @@ let sentimentChart = null;
         });
         if (expandHint) expandHint.classList.add('hidden');
       } else {
-        wrap.className = "w-full lg:w-[60px] shrink-0 flex flex-col overflow-hidden transition-all duration-[280ms] ease-[cubic-bezier(0.22,1,0.36,1)]";
+        wrap.className = "w-full lg:w-[60px] shrink-0 flex flex-col overflow-hidden transition-[width] duration-150 ease-out";
         maxContent.classList.remove('opacity-100', 'scale-100', 'flex');
         maxContent.classList.add('opacity-0', 'scale-95', 'hidden');
         dock.classList.remove('hidden');
