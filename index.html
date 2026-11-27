@@ -1899,12 +1899,12 @@
   <!-- ======================================================== -->
   <!-- OVERLAY DE TRANSIÇÃO CINEMATOGRÁFICA: LOGIN -> KANBAN    -->
   <!-- ======================================================== -->
-  <div id="loginTransitionOverlay" class="hidden fixed inset-0 z-[90] flex flex-col items-center justify-center bg-[#0e1014]/75 backdrop-blur-2xl opacity-0 transition-all duration-500 pointer-events-none select-none">
-    <div id="loginTransitionCard" class="flex flex-col items-center text-center transform scale-95 transition-all duration-500">
+  <div id="loginTransitionOverlay" class="hidden fixed inset-0 z-[90] flex flex-col items-center justify-center bg-[#0e1014]/75 backdrop-blur-md opacity-0 transition-opacity duration-200 pointer-events-none select-none will-change-[opacity]">
+    <div id="loginTransitionCard" class="flex flex-col items-center text-center transform scale-95 transition-transform duration-200 will-change-transform">
       <div class="relative w-20 h-20 flex items-center justify-center mb-4">
         <svg class="w-20 h-20 -rotate-90 absolute inset-0" viewBox="0 0 80 80">
           <circle cx="40" cy="40" r="35" stroke="rgba(255,255,255,0.12)" stroke-width="3" fill="none" />
-          <circle id="loginTransitionRing" cx="40" cy="40" r="35" stroke="#ffffff" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-dasharray="220" stroke-dashoffset="220" class="transition-all duration-[1600ms] ease-in-out" />
+          <circle id="loginTransitionRing" cx="40" cy="40" r="35" stroke="#ffffff" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-dasharray="220" stroke-dashoffset="220" class="transition-all duration-500 ease-out" />
         </svg>
         <div class="w-12 h-12 rounded-2xl bg-white/10 border border-white/25 flex items-center justify-center p-2 shadow-lg">
           <svg viewBox="0 0 64 64" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">

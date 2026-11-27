@@ -126,7 +126,7 @@ let sentimentChart = null;
       }
     }
 
-    // Animação Cinematográfica Cadenciada (~2.2s): Login (Zoom + LED 100%) -> Portal ALRIS -> Cascata das Colunas do Kanban
+    // Transição Ágil e Suave (~0.7s): Login -> Portal ALRIS -> Entrada leve do Kanban (100% GPU, sem blur pesado)
     function playLoginToKanbanTransition(welcomeName) {
       const overlay = document.getElementById('loginTransitionOverlay');
       const card = document.getElementById('loginTransitionCard');
@@ -146,24 +146,18 @@ let sentimentChart = null;
         userLabel.innerText = welcomeName ? `Bem-vindo, ${welcomeName}` : 'Bem-vindo à Central ALRIS';
       }
       if (stepText) {
-        stepText.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-sky-400 animate-ping"></span> Autenticando credenciais de acesso...`;
+        stepText.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-sky-400 animate-ping"></span> Entrando na Central ALRIS...`;
       }
 
-      // Ato 1: Acende o LED 3D até o teto e aplica dolly-zoom cinematográfico na tela de Login
-      if (typeof activeFrameSequence !== 'undefined' && typeof tickSmoothLogin3DFrames === 'function') {
-        loginTargetFrameFloat = activeFrameSequence.length - 1;
-        if (!isAnimatingLoginFrames) {
-          isAnimatingLoginFrames = true;
-          requestAnimationFrame(tickSmoothLogin3DFrames);
-        }
-      }
+      // Ato 1: Zoom leve acelerado por GPU na tela de Login (sem filter: blur pesado)
       if (loginView && !loginView.classList.contains('hidden')) {
-        loginView.style.transition = 'transform 1.4s cubic-bezier(0.22, 1, 0.36, 1), filter 1.1s ease';
-        loginView.style.transform = 'scale(1.09)';
-        loginView.style.filter = 'blur(8px)';
+        loginView.style.willChange = 'transform, opacity';
+        loginView.style.transition = 'transform 320ms cubic-bezier(0.22, 1, 0.36, 1), opacity 280ms ease';
+        loginView.style.transform = 'scale(1.03)';
+        loginView.style.opacity = '0.35';
       }
 
-      // Ato 2: Abre o Portal Cinematográfico ALRIS com varredura circular cadenciada (1.6s)
+      // Ato 2: Abre o Portal ALRIS rapidamente com anel suave (480ms)
       if (ring) {
         ring.style.transition = 'none';
         ring.style.strokeDashoffset = '220';
@@ -176,26 +170,27 @@ let sentimentChart = null;
           card.classList.remove('scale-95');
           card.classList.add('scale-100');
         }
-        setTimeout(() => {
+        requestAnimationFrame(() => {
           if (ring) {
-            ring.style.transition = 'stroke-dashoffset 1550ms cubic-bezier(0.22, 1, 0.36, 1)';
+            ring.style.transition = 'stroke-dashoffset 480ms cubic-bezier(0.22, 1, 0.36, 1)';
             ring.style.strokeDashoffset = '0';
           }
-        }, 80);
+        });
       });
 
       setTimeout(() => {
         if (stepText) {
-          stepText.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span> Sincronizando Quadro Kanban & Copiloto IA...`;
+          stepText.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Abrindo Quadro Kanban...`;
         }
-      }, 820);
+      }, 260);
 
-      // Ato 3 (após 1.85s): Revela o Kanban com entrada em cascata das 4 colunas e movimento suave da câmera 3D
+      // Ato 3 (após 560ms): Revela o Kanban instantaneamente com cascata leve
       setTimeout(() => {
         if (loginView) {
           loginView.style.transform = '';
-          loginView.style.filter = '';
+          loginView.style.opacity = '';
           loginView.style.transition = '';
+          loginView.style.willChange = '';
         }
 
         goToView('kanban');
@@ -211,17 +206,7 @@ let sentimentChart = null;
           grid.classList.add('kanban-cascade-enter');
         }
 
-        // Avança suavemente os primeiros quadros do vídeo 3D da central ao abrir o Kanban
-        if (typeof TOTAL_WORKSPACE_FRAMES !== 'undefined' && typeof tickSmoothWorkspace3DFrames === 'function') {
-          workspaceCurrentFrameFloat = 0;
-          workspaceTargetFrameFloat = 38;
-          if (!isAnimatingWorkspaceFrames) {
-            isAnimatingWorkspaceFrames = true;
-            requestAnimationFrame(tickSmoothWorkspace3DFrames);
-          }
-        }
-
-        // Dissolve suavemente a cortina do portal (600ms) revelando o Kanban em cascata
+        // Dissolve rapidamente a cortina (220ms)
         overlay.classList.remove('opacity-100');
         overlay.classList.add('opacity-0');
         if (card) {
@@ -233,8 +218,8 @@ let sentimentChart = null;
           overlay.classList.add('hidden');
           if (card) card.classList.remove('scale-105');
           if (card) card.classList.add('scale-95');
-        }, 620);
-      }, 1850);
+        }, 220);
+      }, 560);
     }
 
     let isCallToolbarExpanded = false;

@@ -199,17 +199,23 @@ const TOTAL_3D_FRAMES = 144;
       }
     }
 
+    let cachedWorkspaceCanvas = null;
+    let cachedWorkspaceCtx = null;
+    let lastWorkspaceMouseTick = 0;
+
     function drawWorkspaceFrameOnCanvas(frameIndex) {
-      const canvas = document.getElementById('workspaceBgFrameCanvas');
-      if (!canvas) return;
+      if (!cachedWorkspaceCanvas) {
+        cachedWorkspaceCanvas = document.getElementById('workspaceBgFrameCanvas');
+        if (cachedWorkspaceCanvas) {
+          cachedWorkspaceCtx = cachedWorkspaceCanvas.getContext('2d', { alpha: false });
+        }
+      }
+      if (!cachedWorkspaceCanvas || !cachedWorkspaceCtx) return;
       const clampedIdx = Math.max(0, Math.min(TOTAL_WORKSPACE_FRAMES - 1, frameIndex));
       const img = workspacePreloadedImages.get(clampedIdx);
       if (img && img.complete && img.naturalWidth > 0) {
-        const ctx = canvas.getContext('2d', { alpha: false });
-        if (ctx) {
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          lastDrawnWorkspaceIndex = clampedIdx;
-        }
+        cachedWorkspaceCtx.drawImage(img, 0, 0, cachedWorkspaceCanvas.width, cachedWorkspaceCanvas.height);
+        lastDrawnWorkspaceIndex = clampedIdx;
       }
     }
 
@@ -221,10 +227,10 @@ const TOTAL_3D_FRAMES = 144;
       firstImg.src = `assets/kanban-frames/frame_000.jpg?v=${WORKSPACE_FRAME_VER}`;
       workspacePreloadedImages.set(0, firstImg);
 
-      // Pré-carrega os demais 239 frames da central em lotes suaves
+      // Pré-carrega os demais frames em lotes leves sem disputar CPU/rede com o login
       let i = 1;
       function loadBatch() {
-        const end = Math.min(TOTAL_WORKSPACE_FRAMES, i + 24);
+        const end = Math.min(TOTAL_WORKSPACE_FRAMES, i + 12);
         for (; i < end; i++) {
           const img = new Image();
           const num = String(i).padStart(3, '0');
@@ -232,16 +238,16 @@ const TOTAL_3D_FRAMES = 144;
           workspacePreloadedImages.set(i, img);
         }
         if (i < TOTAL_WORKSPACE_FRAMES) {
-          setTimeout(loadBatch, 40);
+          setTimeout(loadBatch, 110);
         }
       }
-      setTimeout(loadBatch, 100);
+      setTimeout(loadBatch, 600);
     }
 
     function tickSmoothWorkspace3DFrames() {
       const diff = workspaceTargetFrameFloat - workspaceCurrentFrameFloat;
-      if (Math.abs(diff) > 0.05) {
-        workspaceCurrentFrameFloat += diff * 0.12;
+      if (Math.abs(diff) > 0.25) {
+        workspaceCurrentFrameFloat += diff * 0.18;
       } else {
         workspaceCurrentFrameFloat = workspaceTargetFrameFloat;
       }
@@ -251,7 +257,7 @@ const TOTAL_3D_FRAMES = 144;
         drawWorkspaceFrameOnCanvas(idx);
       }
 
-      if (Math.abs(workspaceTargetFrameFloat - workspaceCurrentFrameFloat) > 0.05) {
+      if (Math.abs(workspaceTargetFrameFloat - workspaceCurrentFrameFloat) > 0.25) {
         requestAnimationFrame(tickSmoothWorkspace3DFrames);
       } else {
         isAnimatingWorkspaceFrames = false;
@@ -259,6 +265,10 @@ const TOTAL_3D_FRAMES = 144;
     }
 
     function handleWorkspaceMouseMove3D(e) {
+      const now = performance.now();
+      if (now - lastWorkspaceMouseTick < 32) return; // Limita a ~30fps para manter cliques e cards 100% fluidos
+      lastWorkspaceMouseTick = now;
+
       const shell = document.getElementById('workspace-shell');
       if (!shell || shell.classList.contains('hidden')) return;
 
@@ -266,7 +276,6 @@ const TOTAL_3D_FRAMES = 144;
       const vh = Math.max(1, window.innerHeight);
       const progressX = Math.max(0, Math.min(1, e.clientX / vw));
       const progressY = Math.max(0, Math.min(1, e.clientY / vh));
-      // Combina deslocamento horizontal e vertical do mouse para avançar/voltar suavemente pelos 240 frames
       const combinedProgress = Math.max(0, Math.min(1, progressX * 0.72 + progressY * 0.28));
       workspaceTargetFrameFloat = combinedProgress * (TOTAL_WORKSPACE_FRAMES - 1);
 

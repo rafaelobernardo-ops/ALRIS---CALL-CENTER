@@ -33,40 +33,50 @@
       }
     }
 
+    /* Micro-interações rápidas e suaves em todos os botões */
+    button, [role="button"] {
+      transition-property: transform, background-color, border-color, color, box-shadow, opacity;
+      transition-duration: 140ms;
+      transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+      -webkit-tap-highlight-color: transparent;
+    }
+    button:active:not(:disabled), [role="button"]:active {
+      transform: scale(0.975);
+    }
+
     .pipefy-card {
-      background: rgba(229, 235, 244, 0.86) !important;
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+      background: rgba(229, 235, 244, 0.90) !important;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
       border: 1px solid rgba(255, 255, 255, 0.82) !important;
-      box-shadow: 0 6px 20px -4px rgba(15, 23, 42, 0.10);
-      transition: all 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow: 0 6px 18px -4px rgba(15, 23, 42, 0.10);
+      transition: transform 0.15s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+      will-change: transform;
       color: #0f172a !important;
     }
     .pipefy-card:hover {
-      background: rgba(241, 245, 251, 0.94) !important;
+      background: rgba(241, 245, 251, 0.96) !important;
       border-color: rgba(14, 165, 233, 0.45) !important;
-      box-shadow: 0 12px 28px -4px rgba(15, 23, 42, 0.16);
-      transform: translateY(-2px) scale(1.012);
+      box-shadow: 0 10px 24px -4px rgba(15, 23, 42, 0.15);
+      transform: translateY(-2px);
     }
 
-    /* Animação Cinematográfica de Entrada no Kanban Pós-Login */
+    /* Animação Suave e Rápida de Entrada no Kanban Pós-Login (100% GPU, sem blur) */
     @keyframes kanbanColCascade {
       0% {
         opacity: 0;
-        transform: translateY(24px) scale(0.975);
-        filter: blur(4px);
+        transform: translateY(12px) scale(0.99);
       }
       100% {
         opacity: 1;
         transform: translateY(0) scale(1);
-        filter: blur(0);
       }
     }
 
     @keyframes headerGlideIn {
       0% {
         opacity: 0;
-        transform: translateY(-16px);
+        transform: translateY(-10px);
       }
       100% {
         opacity: 1;
@@ -75,16 +85,18 @@
     }
 
     .header-glide-enter {
-      animation: headerGlideIn 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation: headerGlideIn 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+      will-change: transform, opacity;
     }
 
     .kanban-cascade-enter > div {
-      animation: kanbanColCascade 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation: kanbanColCascade 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+      will-change: transform, opacity;
     }
-    .kanban-cascade-enter > div:nth-child(1) { animation-delay: 60ms; }
-    .kanban-cascade-enter > div:nth-child(2) { animation-delay: 135ms; }
-    .kanban-cascade-enter > div:nth-child(3) { animation-delay: 210ms; }
-    .kanban-cascade-enter > div:nth-child(4) { animation-delay: 285ms; }
+    .kanban-cascade-enter > div:nth-child(1) { animation-delay: 20ms; }
+    .kanban-cascade-enter > div:nth-child(2) { animation-delay: 50ms; }
+    .kanban-cascade-enter > div:nth-child(3) { animation-delay: 80ms; }
+    .kanban-cascade-enter > div:nth-child(4) { animation-delay: 110ms; }
 
     /* Barra de Rolagem (Scroll) Customizada — Grafite & Prata LED */
     * {
