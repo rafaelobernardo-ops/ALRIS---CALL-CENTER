@@ -1,0 +1,13 @@
+{
+  "name": "alris-call-center",
+  "version": "1.0.0",
+  "description": "ALRIS — Canal de Atendimento, Discador WebRTC & Meta WhatsApp Webhook",
+  "main": "server.js",
+  "scripts": {
+    "build": "echo ALRIS static + Node server ready",
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

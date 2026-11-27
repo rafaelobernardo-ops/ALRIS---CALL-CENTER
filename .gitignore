@@ -1,0 +1,8 @@
+.env
+.netlify
+dist/
+backend/voice_gateway_config.json
+backend/call_logs.json
+backend/verifications.json
+__pycache__/
+*.pyc

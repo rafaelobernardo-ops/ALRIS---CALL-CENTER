@@ -716,6 +716,9 @@ let sentimentChart = null;
     }
 
     function endActiveCall() {
+      if (softphoneState === 'connected' || softphoneState === 'connecting' || softphoneState === 'requesting_mic') {
+        endSoftphoneCall();
+      }
       if (pcCallTimerInterval) {
         clearInterval(pcCallTimerInterval);
         pcCallTimerInterval = null;
@@ -726,6 +729,8 @@ let sentimentChart = null;
       }
       const timerTxt = document.getElementById('topCallTimerText');
       if (timerTxt) timerTxt.innerText = "Chamada Finalizada";
+      const dot = document.getElementById('topCallStatusDot');
+      if (dot) dot.className = "w-2 h-2 rounded-full bg-slate-400";
       const badge = document.getElementById('callActiveBadge');
       if (badge) {
         badge.className = "px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200 font-bold text-[10px]";
@@ -785,74 +790,636 @@ let sentimentChart = null;
       }
     }
 
+    // ========================================================
+    // DISCADOR & SOFTPHONE INTEGRADO + VOICE GATEWAY EXTERNO (8081)
+    // ========================================================
+    const VOICE_GATEWAY_URL = `http://${window.location.hostname || 'localhost'}:8081`;
+    let softphoneState = 'idle'; // idle | requesting_mic | connecting | connected
+    let softphoneChannel = 'webrtc'; // webrtc | whatsapp
+    let softphoneTimerInterval = null;
+    let softphoneSeconds = 0;
+    let softphoneMicStream = null;
+    let softphoneIsMuted = false;
+    let softphoneWaveAnimInterval = null;
+    let currentCallSid = null;
+
+    const DTMF_FREQS = {
+      '1': [697, 1209], '2': [697, 1336], '3': [697, 1477],
+      '4': [770, 1209], '5': [770, 1336], '6': [770, 1477],
+      '7': [852, 1209], '8': [852, 1336], '9': [852, 1477],
+      '*': [941, 1209], '0': [941, 1336], '#': [941, 1477]
+    };
+
+    function playDtmfTone(key) {
+      const freqs = DTMF_FREQS[key];
+      if (!freqs) return;
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const osc1 = ctx.createOscillator();
+        const osc2 = ctx.createOscillator();
+        const gainNode = ctx.createGain();
+
+        osc1.frequency.value = freqs[0];
+        osc2.frequency.value = freqs[1];
+        gainNode.gain.setValueAtTime(0.08, ctx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.16);
+
+        osc1.connect(gainNode);
+        osc2.connect(gainNode);
+        gainNode.connect(ctx.destination);
+
+        osc1.start();
+        osc2.start();
+        osc1.stop(ctx.currentTime + 0.16);
+        osc2.stop(ctx.currentTime + 0.16);
+      } catch (err) {}
+    }
+
+    async function saveGatewayCallerId() {
+      const inp = document.getElementById('softphoneCallerIdInput');
+      if (!inp) return;
+      const raw = inp.value.trim();
+      try {
+        const res = await fetch(`${VOICE_GATEWAY_URL}/voice/caller-id`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ caller_id: raw, caller_label: 'ALRIS Central' })
+        });
+        const data = await res.json();
+        if (data.caller_id) inp.value = data.caller_id;
+      } catch (e) {}
+    }
+
+    function refreshChannelTabStyles() {
+      const tabWebRTC = document.getElementById('tabChannelWebRTC');
+      const tabWhatsApp = document.getElementById('tabChannelWhatsApp');
+      const isLocked = softphoneState !== 'idle';
+
+      if (softphoneChannel === 'webrtc') {
+        if (tabWebRTC) {
+          tabWebRTC.className = 'py-1.5 px-2 rounded-lg font-bold text-[11px] transition flex items-center justify-center gap-1.5 bg-sky-600 text-white shadow-sm';
+        }
+        if (tabWhatsApp) {
+          tabWhatsApp.className = `py-1.5 px-2 rounded-lg font-bold text-[11px] transition flex items-center justify-center gap-1.5 ${isLocked ? 'text-slate-600 cursor-not-allowed opacity-50' : 'text-slate-400 hover:text-white cursor-pointer'}`;
+        }
+      } else {
+        if (tabWhatsApp) {
+          tabWhatsApp.className = 'py-1.5 px-2 rounded-lg font-bold text-[11px] transition flex items-center justify-center gap-1.5 bg-emerald-600 text-white shadow-sm';
+        }
+        if (tabWebRTC) {
+          tabWebRTC.className = `py-1.5 px-2 rounded-lg font-bold text-[11px] transition flex items-center justify-center gap-1.5 ${isLocked ? 'text-slate-600 cursor-not-allowed opacity-50' : 'text-slate-400 hover:text-white cursor-pointer'}`;
+        }
+      }
+    }
+
+    function setOutboundChannel(channel) {
+      // Trava troca de canal enquanto houver ligação em andamento!
+      if (softphoneState !== 'idle') {
+        if (channel !== softphoneChannel) {
+          const lockNotice = document.getElementById('channelLockNotice');
+          if (lockNotice) {
+            lockNotice.classList.remove('hidden');
+            setTimeout(() => lockNotice.classList.add('hidden'), 2800);
+          }
+        }
+        return;
+      }
+
+      softphoneChannel = channel;
+      const lockNotice = document.getElementById('channelLockNotice');
+      if (lockNotice) lockNotice.classList.add('hidden');
+      refreshChannelTabStyles();
+
+      const btnActionLabel = document.getElementById('btnSoftphoneActionLabel');
+      const btnAction = document.getElementById('btnSoftphoneAction');
+      if (btnActionLabel) {
+        btnActionLabel.innerText = channel === 'whatsapp' ? 'Ligar Direto (WhatsApp)' : 'Ligar Agora (WebRTC)';
+      }
+      if (btnAction) {
+        btnAction.className = channel === 'whatsapp'
+          ? 'flex-1 py-3 px-4 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs shadow-lg transition flex items-center justify-center gap-2'
+          : 'flex-1 py-3 px-4 rounded-2xl bg-sky-600 hover:bg-sky-500 text-white font-extrabold text-xs shadow-lg transition flex items-center justify-center gap-2';
+      }
+    }
+
+    function dialKey(key) {
+      playDtmfTone(key);
+      const display = document.getElementById('dialerPhoneDisplay');
+      if (display) {
+        if (softphoneState === 'idle') {
+          display.value += key;
+        } else {
+          const badge = document.getElementById('softphoneStateBadge');
+          if (badge) {
+            badge.innerText = `DTMF: ${key}`;
+            setTimeout(() => {
+              if (softphoneState === 'connected') badge.innerText = 'Em Atendimento';
+            }, 700);
+          }
+        }
+      }
+    }
+
+    function backspaceDialerDigit() {
+      const display = document.getElementById('dialerPhoneDisplay');
+      if (display && display.value.length > 0 && softphoneState === 'idle') {
+        display.value = display.value.slice(0, -1);
+      }
+    }
+
+    function updateSoftphoneStateUI(state, customBadgeText) {
+      softphoneState = state;
+      refreshChannelTabStyles();
+
+      const badge = document.getElementById('softphoneStateBadge');
+      const btnAction = document.getElementById('btnSoftphoneAction');
+      const btnActionLabel = document.getElementById('btnSoftphoneActionLabel');
+      const timerLabel = document.getElementById('softphoneTimerLabel');
+      const waves = document.querySelectorAll('#softphoneAudioWaves .wave-bar');
+
+      if (state === 'idle') {
+        if (badge) {
+          badge.innerText = customBadgeText || 'Pronto';
+          badge.className = 'px-2 py-0.5 rounded-full font-bold bg-slate-800 text-slate-300 text-[9px] border border-white/5';
+        }
+        if (btnAction) {
+          btnAction.className = softphoneChannel === 'whatsapp'
+            ? 'flex-1 py-3 px-4 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs shadow-lg transition flex items-center justify-center gap-2'
+            : 'flex-1 py-3 px-4 rounded-2xl bg-sky-600 hover:bg-sky-500 text-white font-extrabold text-xs shadow-lg transition flex items-center justify-center gap-2';
+        }
+        if (btnActionLabel) {
+          btnActionLabel.innerText = softphoneChannel === 'whatsapp' ? 'Ligar Direto (WhatsApp)' : 'Ligar Agora (WebRTC)';
+        }
+        if (timerLabel && !customBadgeText) timerLabel.innerText = '00:00';
+        waves.forEach(w => {
+          w.classList.remove('bg-emerald-400', 'bg-sky-400');
+          w.classList.add('bg-slate-600');
+          w.style.transform = 'scaleY(1)';
+        });
+      } else if (state === 'connecting') {
+        if (badge) {
+          badge.innerText = 'Conectando Rota...';
+          badge.className = 'px-2 py-0.5 rounded-full font-bold bg-sky-500/20 text-sky-300 text-[9px] border border-sky-500/30 animate-pulse';
+        }
+        if (btnAction) {
+          btnAction.className = 'flex-1 py-3 px-4 rounded-2xl bg-rose-600 hover:bg-rose-500 text-white font-extrabold text-xs shadow-lg transition flex items-center justify-center gap-2';
+        }
+        if (btnActionLabel) btnActionLabel.innerText = 'Cancelar Chamada';
+      } else if (state === 'connected') {
+        const chTag = softphoneChannel === 'whatsapp' ? 'WhatsApp Ativo' : 'WebRTC Ativo';
+        if (badge) {
+          badge.innerText = chTag;
+          badge.className = 'px-2 py-0.5 rounded-full font-bold bg-emerald-500/20 text-emerald-300 text-[9px] border border-emerald-500/30';
+        }
+        if (btnAction) {
+          btnAction.className = 'flex-1 py-3 px-4 rounded-2xl bg-rose-600 hover:bg-rose-500 text-white font-extrabold text-xs shadow-lg transition flex items-center justify-center gap-2';
+        }
+        if (btnActionLabel) btnActionLabel.innerText = 'Encerrar Chamada';
+      }
+    }
+
+    function playRingbackTone() {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = 425;
+        gain.gain.setValueAtTime(0.05, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.35);
+      } catch (e) {}
+    }
+
+    function updateProviderBanner(mode, routeText) {
+      const banner = document.getElementById('softphoneProviderBanner');
+      const txt = document.getElementById('softphoneProviderText');
+      if (!banner || !txt) return;
+      if (mode === 'live_provider') {
+        banner.className = 'flex items-center justify-between px-3 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-[10px] text-emerald-200 mb-3';
+        txt.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> ${routeText || 'Gateway 8081 • Operadora Ativa'}`;
+      } else {
+        banner.className = 'flex items-center justify-between px-3 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/25 text-[10px] text-amber-200 mb-3';
+        txt.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span> ${routeText || 'Gateway 8081 • Rota Simulada (.env)'}`;
+      }
+    }
+
+    function minimizeSoftphoneToConversation() {
+      closeVoipDialerModal();
+      goToView('callcenter');
+      if (typeof toggleCallToolbar === 'function') {
+        toggleCallToolbar(true);
+      }
+    }
+
+    async function handleSoftphonePrimaryAction() {
+      if (softphoneState === 'connected' || softphoneState === 'connecting') {
+        endSoftphoneCall();
+        return;
+      }
+
+      const display = document.getElementById('dialerPhoneDisplay');
+      let rawPhone = display ? display.value.trim() : activeClientPhone;
+      if (!rawPhone) rawPhone = activeClientPhone;
+      let digitsOnly = rawPhone.replace(/\D/g, '');
+      let e164Phone = `+${digitsOnly}`;
+      activeClientPhone = digitsOnly;
+
+      const callerIdInput = document.getElementById('softphoneCallerIdInput');
+      const callerId = callerIdInput ? callerIdInput.value.trim() : '+551140040001';
+      const name = document.getElementById('dialerClientName')?.innerText || document.getElementById('liveCardName')?.innerText || 'Cliente';
+      const backendChannel = softphoneChannel === 'whatsapp' ? 'whatsapp_call' : 'webrtc_voice';
+
+      // Disparo rápido paralelo (Microfone + Gateway Externo 8081)
+      updateSoftphoneStateUI('connecting');
+      playRingbackTone();
+
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ audio: true })
+          .then(stream => { softphoneMicStream = stream; })
+          .catch(() => {});
+      }
+
+      let isLiveCarrier = false;
+      let routeLabel = 'BR-SP-IX';
+
+      try {
+        const gwRes = await fetch(`${VOICE_GATEWAY_URL}/voice/dial`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            phone_number: e164Phone,
+            caller_id: callerId,
+            contact_name: name,
+            agent_id: 'agent_rafael',
+            channel: backendChannel
+          })
+        });
+        const gwData = await gwRes.json();
+        currentCallSid = gwData.call?.external_call_sid || `CA_${Date.now()}`;
+        isLiveCarrier = gwData.mode === 'live_provider';
+        routeLabel = gwData.route?.route_pop || 'Gateway 8081';
+        if (gwData.caller_id && callerIdInput) callerIdInput.value = gwData.caller_id;
+
+        if (gwData.provider_error) {
+          updateSoftphoneStateUI('idle', 'Aviso Twilio');
+          updateProviderBanner('sandbox_mock', gwData.provider_error);
+          const box = document.getElementById('transcriptBox');
+          if (box) {
+            box.innerHTML += `
+              <div class="p-2.5 rounded-xl bg-amber-950/70 border border-amber-500/40 text-center text-[11px] font-bold text-amber-200">
+                <i class="fa-solid fa-triangle-exclamation mr-1 text-amber-400"></i> Twilio: ${gwData.provider_error}
+              </div>
+            `;
+            box.scrollTop = box.scrollHeight;
+          }
+          return;
+        }
+        updateProviderBanner(gwData.mode, `${routeLabel}`);
+      } catch (gwErr) {
+        // Fallback automático p/ API 8080 caso a porta 8081 esteja indisponível
+        try {
+          const outRes = await fetch('/api/voice/outbound', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              phone_number: e164Phone,
+              contact_name: name,
+              agent_id: 'agent_rafael',
+              channel: backendChannel
+            })
+          });
+          const outData = await outRes.json();
+          currentCallSid = outData.call?.external_call_sid || `CA_${Date.now()}`;
+          isLiveCarrier = outData.mode === 'live_provider';
+        } catch (e) {
+          currentCallSid = `CA_fast_${Date.now()}`;
+        }
+      }
+
+      // Conexão ultrarrápida (~300ms) sem sair da tela
+      setTimeout(() => {
+        if (softphoneState !== 'connecting') return;
+        updateSoftphoneStateUI('connected');
+        startSoftphoneTimer();
+        startAudioWavesAnimation();
+
+        // Expande automaticamente a cápsula no topo da página de conversa para poder encerrar de lá!
+        if (typeof toggleCallToolbar === 'function') {
+          toggleCallToolbar(true);
+        }
+        const dot = document.getElementById('topCallStatusDot');
+        if (dot) dot.className = 'w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.9)] animate-pulse';
+
+        const badge = document.getElementById('callActiveBadge');
+        if (badge) {
+          badge.className = 'px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold text-[10px]';
+          badge.innerText = softphoneChannel === 'whatsapp' ? 'Ligação WhatsApp Ativa' : 'Ligação WebRTC Ativa';
+        }
+
+        const chLabel = softphoneChannel === 'whatsapp' ? 'WhatsApp Voz (In-App)' : 'Voz WebRTC';
+        const box = document.getElementById('transcriptBox');
+        if (box) {
+          box.innerHTML += `
+            <div class="p-2.5 rounded-xl bg-sky-950/60 border border-sky-500/30 text-center text-[11px] font-bold text-sky-200">
+              <i class="fa-solid fa-phone-volume mr-1 text-emerald-400"></i> ${chLabel} conectado com ${name} (${e164Phone}) • ID exibido: ${callerId}
+            </div>
+          `;
+          box.scrollTop = box.scrollHeight;
+        }
+
+        if (!isListeningMic) toggleRealMicrophone();
+      }, 280);
+    }
+
+    function startSoftphoneTimer() {
+      if (softphoneTimerInterval) clearInterval(softphoneTimerInterval);
+      softphoneSeconds = 0;
+      const timerLabel = document.getElementById('softphoneTimerLabel');
+      const topTimerTxt = document.getElementById('topCallTimerText');
+      const chPrefix = softphoneChannel === 'whatsapp' ? 'WhatsApp' : 'WebRTC';
+
+      if (topTimerTxt) topTimerTxt.innerText = `${chPrefix} • 00:00`;
+
+      softphoneTimerInterval = setInterval(() => {
+        softphoneSeconds++;
+        const mins = String(Math.floor(softphoneSeconds / 60)).padStart(2, '0');
+        const secs = String(softphoneSeconds % 60).padStart(2, '0');
+        const timeStr = `${mins}:${secs}`;
+        if (timerLabel) timerLabel.innerText = timeStr;
+        if (topTimerTxt) topTimerTxt.innerText = `${chPrefix} • ${timeStr}`;
+      }, 1000);
+    }
+
+    function startAudioWavesAnimation() {
+      if (softphoneWaveAnimInterval) clearInterval(softphoneWaveAnimInterval);
+      const waves = document.querySelectorAll('#softphoneAudioWaves .wave-bar');
+      waves.forEach(w => {
+        w.classList.remove('bg-slate-600');
+        w.classList.add('bg-emerald-400');
+      });
+
+      softphoneWaveAnimInterval = setInterval(() => {
+        waves.forEach(w => {
+          const scale = 0.5 + Math.random() * 1.5;
+          w.style.transform = `scaleY(${scale.toFixed(2)})`;
+        });
+      }, 140);
+    }
+
+    async function endSoftphoneCall() {
+      if (softphoneTimerInterval) {
+        clearInterval(softphoneTimerInterval);
+        softphoneTimerInterval = null;
+      }
+      if (softphoneWaveAnimInterval) {
+        clearInterval(softphoneWaveAnimInterval);
+        softphoneWaveAnimInterval = null;
+      }
+
+      if (softphoneMicStream) {
+        softphoneMicStream.getTracks().forEach(t => t.stop());
+        softphoneMicStream = null;
+      }
+
+      const dur = softphoneSeconds;
+      const sidToClose = currentCallSid || `CA_${Date.now()}`;
+      // Destrava imediatamente o seletor de canais voltando para 'idle'!
+      updateSoftphoneStateUI('idle', 'Finalizada');
+
+      const topTimerTxt = document.getElementById('topCallTimerText');
+      if (topTimerTxt) topTimerTxt.innerText = 'Chamada Encerrada';
+      const dot = document.getElementById('topCallStatusDot');
+      if (dot) dot.className = 'w-2 h-2 rounded-full bg-slate-400';
+
+      // Encerrar sessão no Gateway Externo (8081) + Backend (8080)
+      fetch(`${VOICE_GATEWAY_URL}/voice/hangup`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ external_call_sid: sidToClose, duration_seconds: dur })
+      }).catch(() => {
+        fetch('/api/voice/webhook', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ external_call_sid: sidToClose, status: 'completed', duration_seconds: dur })
+        }).catch(() => {});
+      });
+
+      const box = document.getElementById('transcriptBox');
+      if (box) {
+        const mins = String(Math.floor(dur / 60)).padStart(2, '0');
+        const secs = String(dur % 60).padStart(2, '0');
+        box.innerHTML += `
+          <div class="p-2 rounded-xl bg-slate-800/80 border border-slate-700 text-center text-[10px] text-slate-300 font-medium">
+            <i class="fa-solid fa-phone-slash mr-1 text-rose-400"></i> Chamada finalizada • Duração total: ${mins}:${secs}
+          </div>
+        `;
+        box.scrollTop = box.scrollHeight;
+      }
+    }
+
+    function toggleSoftphoneMute() {
+      softphoneIsMuted = !softphoneIsMuted;
+      const btn = document.getElementById('btnSoftphoneMute');
+      if (softphoneMicStream) {
+        softphoneMicStream.getAudioTracks().forEach(track => {
+          track.enabled = !softphoneIsMuted;
+        });
+      }
+      if (btn) {
+        if (softphoneIsMuted) {
+          btn.className = 'w-11 h-11 rounded-2xl bg-rose-600/20 text-rose-400 border border-rose-500/40 flex items-center justify-center text-sm transition';
+          btn.innerHTML = '<i class="fa-solid fa-microphone-slash"></i>';
+        } else {
+          btn.className = 'w-11 h-11 rounded-2xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/5 flex items-center justify-center text-sm transition';
+          btn.innerHTML = '<i class="fa-solid fa-microphone"></i>';
+        }
+      }
+    }
+
+    function toggleSoftphoneSpeaker() {
+      const btn = document.getElementById('btnSoftphoneSpeaker');
+      if (btn) {
+        btn.classList.toggle('text-sky-400');
+        btn.classList.toggle('bg-sky-500/20');
+      }
+    }
+
+    function openSoftphoneModal(name, phone, preferredChannel) {
+      const dName = document.getElementById('dialerClientName');
+      const dPhone = document.getElementById('dialerPhoneDisplay');
+      if (dName && softphoneState === 'idle') dName.innerText = name || 'Cliente ALRIS';
+      if (dPhone && softphoneState === 'idle') {
+        let p = (phone || activeClientPhone || '').toString();
+        if (!p.startsWith('+') && p) p = `+${p}`;
+        dPhone.value = p || '+5511987654321';
+      }
+      if (preferredChannel && softphoneState === 'idle') {
+        setOutboundChannel(preferredChannel);
+      }
+      const modal = document.getElementById('voipDialerModal');
+      if (modal) modal.classList.remove('hidden');
+
+      fetch(`${VOICE_GATEWAY_URL}/voice/status`)
+        .then(r => r.json())
+        .then(d => {
+          const cidInp = document.getElementById('softphoneCallerIdInput');
+          if (cidInp && d.caller_id) cidInp.value = d.caller_id;
+          const isLive = softphoneChannel === 'whatsapp' ? d.whatsapp_voice_configured : d.pstn_configured;
+          updateProviderBanner(isLive ? 'live_provider' : 'sandbox_mock', `Gateway 8081 Online • ${d.region.split(' ')[0]}`);
+        })
+        .catch(() => {});
+    }
+
+    function toggleVoipCredsDrawer() {
+      const d = document.getElementById('voipCredsDrawer');
+      if (d) d.classList.toggle('hidden');
+    }
+
+    async function saveVoipProviderCreds() {
+      const sid = document.getElementById('voipAccountSidInput')?.value.trim() || '';
+      const token = document.getElementById('voipAuthTokenInput')?.value.trim() || '';
+      const cid = document.getElementById('softphoneCallerIdInput')?.value.trim() || '';
+      const btn = document.getElementById('btnSaveVoipCreds');
+      if (!sid || !token) {
+        if (btn) {
+          btn.innerText = 'Preencha Account SID e Auth Token!';
+          setTimeout(() => { btn.innerText = 'Salvar & Liberar Chamadas Reais'; }, 2000);
+        }
+        return;
+      }
+      try {
+        const res = await fetch(`${VOICE_GATEWAY_URL}/voice/configure-provider`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ account_sid: sid, auth_token: token, caller_id: cid })
+        });
+        const data = await res.json();
+        if (data.pstn_configured) {
+          updateProviderBanner('live_provider', `Twilio Ativo (${data.account_sid_masked})`);
+          const d = document.getElementById('voipCredsDrawer');
+          if (d) d.classList.add('hidden');
+        }
+      } catch (e) {
+        if (btn) btn.innerText = 'Erro ao salvar no Gateway 8081';
+      }
+    }
+
     function closeVoipDialerModal() {
       const m = document.getElementById('voipDialerModal');
       if (m) m.classList.add('hidden');
+      if (softphoneState === 'connected' || softphoneState === 'connecting') {
+        if (typeof toggleCallToolbar === 'function') toggleCallToolbar(true);
+      }
     }
 
     function triggerSystemTelCall() {
-      window.location.href = `tel:+${activeClientPhone}`;
+      const dPhone = document.getElementById('dialerPhoneDisplay');
+      const raw = dPhone ? dPhone.value.trim() : `+${activeClientPhone}`;
+      const digits = raw.replace(/\D/g, '');
+      window.location.href = `tel:+${digits || activeClientPhone}`;
       closeVoipDialerModal();
     }
 
     function startNormalPhoneCall() {
-      const name = document.getElementById('liveCardName').innerText;
-      const phone = activeClientPhone;
-      const btn = document.getElementById('btnNormalCall');
-      const softLine = document.getElementById('softphoneStatusLine');
-      const timerTxt = document.getElementById('topCallTimerText');
-
-      const dName = document.getElementById('dialerClientName');
-      const dPhone = document.getElementById('dialerPhoneDisplay');
-      if (dName) dName.innerText = name;
-      if (dPhone) dPhone.innerText = `+${phone}`;
-      const modal = document.getElementById('voipDialerModal');
-      if (modal) modal.classList.remove('hidden');
-
-      if (!pcCallTimerInterval) {
-        pcCallSeconds = 252;
-        btn.className = "w-8 h-8 rounded-lg bg-blue-600 text-white border border-blue-700 flex items-center justify-center transition shadow-sm animate-pulse";
-
-        pcCallTimerInterval = setInterval(() => {
-          pcCallSeconds++;
-          const mins = String(Math.floor(pcCallSeconds / 60)).padStart(2, '0');
-          const secs = String(pcCallSeconds % 60).padStart(2, '0');
-          if (timerTxt) timerTxt.innerText = `Em Atendimento • ${mins}:${secs}`;
-          if (softLine) softLine.innerText = `VoIP WebRTC Conectado (${mins}:${secs})`;
-        }, 1000);
-      }
-      
-      if (!isListeningMic) toggleRealMicrophone();
-
-      const box = document.getElementById('transcriptBox');
-      box.innerHTML += `
-        <div class="p-2.5 rounded-xl bg-blue-50 border border-blue-200 text-center text-[11px] font-bold text-blue-800">
-          <i class="fa-solid fa-headset mr-1"></i> Central VoIP & Microfone IA ativados para ${name} (+${phone})!
-        </div>
-      `;
-      box.scrollTop = box.scrollHeight;
+      const name = document.getElementById('liveCardName')?.innerText || 'Eduardo Costa';
+      const phone = activeClientPhone || '5511987654321';
+      openSoftphoneModal(name, phone, softphoneState === 'idle' ? 'webrtc' : null);
     }
 
+    let whatsappChatMode = false;
+
     function startWhatsAppCall() {
-      const name = document.getElementById('liveCardName').innerText;
-      const phone = activeClientPhone;
-      const btn = document.getElementById('btnWhatsCall');
+      // Ativa o modo de mensagem direta no WhatsApp dentro do próprio card de mensagens (sem abrir o discador!)
+      whatsappChatMode = true;
+      const name = document.getElementById('liveCardName')?.innerText || 'Eduardo Costa';
+      const phone = activeClientPhone || '5511987654321';
+      const input = document.getElementById('customSpeechInput');
+      const wrap = document.getElementById('chatPadInputWrap');
+      const btnW = document.getElementById('btnWhatsCall');
 
-      btn.className = "w-8 h-8 rounded-lg bg-emerald-600 text-white border border-emerald-700 flex items-center justify-center transition shadow-sm";
+      if (btnW) {
+        btnW.className = 'w-8 h-8 rounded-xl bg-emerald-600 text-white border border-emerald-700 flex items-center justify-center transition shadow-sm';
+      }
+      if (wrap) {
+        wrap.className = 'flex-1 flex items-center bg-emerald-50/70 border-2 border-emerald-500 rounded-xl px-3.5 py-2.5 transition shadow-sm';
+      }
+      if (input) {
+        input.placeholder = `Mensagem direta no WhatsApp para ${name} (+${phone})...`;
+        input.focus();
+      }
+    }
 
-      if (!isListeningMic) toggleRealMicrophone();
+    function handleChatPadSubmit(event) {
+      if (whatsappChatMode) {
+        event.preventDefault();
+        sendDirectWhatsAppFromPad();
+        return;
+      }
+      analyzeCustomCustomerSpeech(event);
+    }
 
-      const msgText = `Olá ${name}, tudo bem? Estou entrando em contato sobre o novo site da sua empresa!`;
-      const webUrl = `https://web.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(msgText)}`;
+    async function sendDirectWhatsAppFromPad() {
+      const input = document.getElementById('customSpeechInput');
+      const text = input ? input.value.trim() : '';
+      const name = document.getElementById('liveCardName')?.innerText || 'Cliente';
+      const phone = activeClientPhone || '5521967574092';
+      const btn = document.getElementById('btnSendWhatsAppPad');
+
+      if (!text) {
+        startWhatsAppCall();
+        return;
+      }
+
+      const nowStr = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+      if (btn) btn.disabled = true;
+
+      let statusTag = 'Enviado via WhatsApp Meta API ✓✓';
+      let isError = false;
+      try {
+        const res = await fetch(`${VOICE_GATEWAY_URL}/whatsapp/send`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone_number: phone, message_text: text, contact_name: name })
+        });
+        const data = await res.json();
+        if (!data.success) {
+          isError = true;
+          statusTag = `Aviso Meta: ${data.error || 'Falha no envio'}`;
+        } else if (data.type === 'template') {
+          statusTag = 'Template Oficial WhatsApp enviado ✓✓ (fora da janela 24h)';
+        }
+      } catch (e) {
+        isError = true;
+        statusTag = 'Gateway 8081 offline — mensagem registrada localmente';
+      }
+
+      if (btn) btn.disabled = false;
+      if (input) input.value = '';
 
       const box = document.getElementById('transcriptBox');
-      box.innerHTML += `
-        <div class="p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-center text-[11px] font-bold text-emerald-800">
-          <i class="fa-brands fa-whatsapp mr-1"></i> WhatsApp Web aberto diretamente no navegador para ${name} (+${phone}) — IA escutando em tempo real...
-        </div>
-      `;
-      box.scrollTop = box.scrollHeight;
-      window.open(webUrl, '_blank');
+      if (box) {
+        const safeText = text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        box.innerHTML += `
+          <div class="flex flex-col items-end">
+            <span class="text-[10px] font-bold ${isError ? 'text-amber-600' : 'text-emerald-700'} mb-1">
+              <i class="fa-brands fa-whatsapp mr-1"></i> ${statusTag}
+            </span>
+            <div class="max-w-[84%] px-4 py-2.5 rounded-2xl rounded-tr-sm ${isError ? 'bg-amber-50 border-amber-300 text-amber-900' : 'bg-emerald-50 border-emerald-200 text-slate-800'} border font-medium leading-relaxed shadow-sm">
+              ${safeText}
+            </div>
+            <span class="text-[9px] text-slate-400 mt-1 font-mono">${nowStr} • +${phone}</span>
+          </div>
+        `;
+        box.scrollTop = box.scrollHeight;
+      }
     }
 
     function sendWhatsAppContract() {
