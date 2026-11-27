@@ -1,132 +1,110 @@
 # 📋 Resumo Executivo & Técnico de Handoff — ALRIS Call Center & Omnichannel
 
-> **Data de Atualização:** 26 de Novembro de 2026  
-> **Status do Projeto:** Em desenvolvimento / Transição para Discador WebRTC Integrado  
-> **Workspace Ativo:** `/home/rafael/.gemini/antigravity/scratch/agency-portal`  
-> **Espelho do Repositório:** `/home/rafael/ALRIS-Call-Center`  
-> **Porta de Execução Local:** `http://localhost:8080/`
+> **Data de Atualização:** 27 de Novembro de 2026  
+> **Status do Projeto:** Em Produção (Render + GitHub) com Telefonia Twilio, Meta WhatsApp Cloud API e Pagamentos Mercado Pago integrados  
+> **Workspace Principal:** `/home/rafael/.gemini/antigravity/scratch/agency-portal`  
+> **Espelho Local (VS Code):** `/home/rafael/ALRIS-Call-Center`  
+> **Servidor Produção (Render):** `https://alris-call-center.onrender.com`  
+> **Preview Estático (Netlify):** `https://alris-call-center.netlify.app`  
+> **Ambiente Local:** `http://localhost:8080/` (Portal) e `http://localhost:8081/` (Gateway Externo Voz/WhatsApp)
 
 ---
 
-## 1. Visão Geral & Escopo
+## 1. Visão Geral & Arquitetura
 
-O **ALRIS** é uma plataforma SaaS de Call Center & Atendimento Omnichannel projetada para alta performance operacional, com visual refinado dark/tech executivo, suporte a CRM Kanban, IA de argumentação em tempo real (Google Gemini) e agora a incorporação de **Telefonia WebRTC Click-to-Call** no navegador.
+O **ALRIS** é uma plataforma SaaS de Call Center & Atendimento Omnichannel com CRM Kanban, Copiloto IA em tempo real, Softphone WebRTC integrado, envio/recebimento via Meta WhatsApp Cloud API e checkout de planos via Mercado Pago.
 
-### Principais Objetivos da Fase Atual
-1. **Discador WebRTC (Click-to-Call):** Permitir que os operadores realizem e recebam chamadas de voz diretamente pelo navegador, sem necessidade de telefone celular, aparelhos SIP físicos ou abertura de programas externos.
-2. **Softphone com Teclado DTMF:** Interface virtual na tela com teclado numérico (0–9, `*`, `#`) para navegação em URAs de atendimento, medidor de ondas sonoras, mute/unmute e cronômetro em tempo real.
-3. **Persistência & Multi-Tenant no Supabase:** Armazenamento seguro de logs de chamadas, durações, gravações e status operacionais via Row Level Security (RLS).
-4. **Resolução de Regressões de UI:** Unificação de cabeçalho em branco pérola translúcido, eliminação de sobreposição de elementos na tela inicial e animação cinematográfica de transição pós-login.
-
----
-
-## 2. Entregas Realizadas
-
-### 🔹 2.1 Backend & Telefonia (`backend/server.py`)
-- **Geração Segura de Token:** `POST /api/voice/token`
-  - Cria tokens efêmeros assinados com HMAC-SHA256 para autenticação segura do operador WebRTC.
-  - Não expõe `API_SECRET` ou `AUTH_TOKEN` no frontend.
-- **Disparo de Chamadas:** `POST /api/voice/outbound`
-  - Valida o payload e o número de destino em padrão E.164 (`^\+[1-9]\d{7,14}$`).
-  - Suporte a múltiplos canais: `webrtc_voice` (PSTN/VoIP) e `whatsapp_call`.
-  - Modo híbrido com fallback automático para `sandbox_mock` caso credenciais de produção estejam ausentes.
-- **Webhook de Eventos:** `POST /api/voice/webhook`
-  - Recepção de status em tempo real (`ringing`, `connected`, `completed`, `failed`), cálculo de duração e URLs de gravação.
-- **Histórico & Logs:** `GET /api/voice/logs`
-  - Persistência imediata em `backend/call_logs.json` e sincronização assíncrona com Supabase.
-
-### 🔹 2.2 Banco de Dados Supabase (`supabase/migrations/20261126_create_call_logs.sql`)
-- Criação da tabela `call_logs` com schema completo:
-  - `id` (UUID, Chave Primária)
-  - `organization_id` (UUID, isolamento multi-empresa)
-  - `agent_id` (UUID, identificação do operador)
-  - `contact_name` (Texto)
-  - `phone_number` (Texto, formato E.164)
-  - `channel` (`'webrtc_voice'` ou `'whatsapp_call'`)
-  - `direction` (`'outbound'` ou `'inbound'`)
-  - `status` (`'initiated'`, `'ringing'`, `'connected'`, `'completed'`, `'failed'`)
-  - `duration_seconds` (Inteiro, padrão 0)
-  - `external_call_sid` (Texto, ID da operadora Twilio/Telnyx)
-  - `recording_url` (Texto, opcional)
-  - `created_at` e `ended_at` (Timestamps com timezone)
-- **Segurança:** Políticas de RLS (Row Level Security) ativas por organização e agente.
-
-### 🔹 2.3 Refinamento de Interface & Experiência do Usuário (Frontend)
-- **Correção da Hierarquia HTML (`index.html`):** Estrutura revalidada com `assert depth == 0`, corrigindo falha de layout onde o Kanban vazava na tela de login/home.
-- **Header Pérola Translúcido (`css/styles.css`):** Cabeçalho unificado com efeito de vidro suave (`backdrop-blur-2xl`, borda clara sutil), garantindo consistência visual entre as visões de Kanban e Atendimento.
-- **Barra de Chamada Retrátil (`callToolbarIsland`):** Pílula flutuante que expande com cronômetro, áudio e controles essenciais.
-- **Animação Cinematográfica de Login:** Transição de ~2 segundos com subida da luz LED 3D até o teto, anel SVG de sincronização ALRIS e carregamento em cascata das colunas do Kanban.
+### Fluxo de Infraestrutura
+- **Frontend SPA:** `index.html`, `css/styles.css`, `js/app.js`, `js/scroll-3d.js`
+- **Servidor Produção (Node.js zero-dependências):** `server.js` (hospedado no **Render**, auto-deploy via branch `main` do GitHub)
+- **Servidor Local + Gateway:** `backend/server.py` (porta `8080`) e `backend/voice_gateway.py` (porta `8081`)
 
 ---
 
-## 3. Estado Atual & Diagnóstico do Discador
+## 2. Entregas Concluídas
 
-### ⚠️ Situação Encontrada
-O usuário relatou: *"Eu clico e ela não retorna o discador... Ele vai fazer o quê? O teclado numérico é do celular que está usando?"*
+### 🔹 2.1 Interface, Kanban & Performance (Frontend)
+- **Otimização de Performance & GPU:**
+  - Transição pós-login (*"Bem-vindo"*) reduzida de ~2,5s para **~0,7s**, removendo `filter: blur()` pesado em tela cheia.
+  - Entrada em cascata do Kanban otimizada para `0.32s` 100% acelerada por GPU (`transform` + `opacity`).
+  - Cards `.pipefy-card` otimizados (`backdrop-filter: blur(6px)`, `will-change: transform`) e botões globais com resposta tátil rápida (`140ms`, `active:scale(0.975)`).
+  - Fundo 3D (`js/scroll-3d.js`) com cache de contexto 2D e throttle de ~30fps no movimento do mouse para manter cliques fluidos.
+- **Kanban & Chamados:**
+  - Campo de busca de clientes no cabeçalho do Kanban com fundo transparente.
+  - Modal de **Novo Chamado** com campo de telefone limpo (sem número pré-preenchido).
+  - Ícone do WhatsApp no card do cliente ativa o modo de mensagem direta no painel central (`sendDirectWhatsAppFromPad`).
 
-- **Causa Raiz:** O botão "Ligar" no card de lead ainda invocava `startNormalPhoneCall()`, abrindo um modal básico de cópia/protocolo `tel:` legado, em vez do novo componente de **Softphone WebRTC na tela**.
-- **Comportamento Esperado:** Um painel/modal flutuante de **Softphone Virtual** deve se abrir diretamente no navegador, permitindo:
-  1. Digitar números no teclado DTMF virtual (sem usar o celular).
-  2. Ver status da conexão (`Chamando...`, `Conectado`, `00:45`).
-  3. Visualizar indicador dinâmico de ondas de áudio (microfone do computador).
-  4. Mute/Unmute e Encerramento com gravação de histórico.
+### 🔹 2.2 Softphone WebRTC & Telefonia (Twilio)
+- **Modal Softphone (`#voipDialerModal`):** Teclado DTMF com síntese de áudio via Web Audio API, botão Mute/Unmute, visualizador de ondas, cronômetro em tempo real, campo de Caller ID e seletor de canal (`Voz WebRTC` vs `Ligação WhatsApp`, travado durante chamadas ativas).
+- **Cápsula de Chamada no Topo (`callToolbarIsland`):** Sincronizada com botões `Discador` e `Encerrar` (enviando encerramento remoto `Status=completed` na Twilio).
+- **Gateway Externo (`backend/voice_gateway.py`):** Rotas `/voice/status`, `/voice/dial`, `/voice/hangup` e `/voice/caller-id` integradas à Twilio.
+
+### 🔹 2.3 Meta WhatsApp Cloud API & Webhook Oficial
+- **Envio de Mensagens:** `POST /whatsapp/send` no gateway local integrado à Graph API da Meta (`v25.0`).
+- **Webhook em Produção no Render:**
+  - `GET /api/whatsapp/webhook` — Validação do desafio `hub.challenge` da Meta com `WHATSAPP_VERIFY_TOKEN` (verificado com HTTP 200 em produção).
+  - `POST /api/whatsapp/webhook` — Recebimento de eventos e mensagens recebidas.
+- **Documentação Compartilhável:** Guia passo a passo 100% anonimizado em `DOCS_META_WHATSAPP_RENDER.md`.
+
+### 🔹 2.4 Pagamentos Automáticos (Mercado Pago)
+- **Rotas implementadas no `server.js` (zero dependências externas):**
+  - `POST /api/payments/pix` — Gera cobrança Pix real via API do Mercado Pago (`/v1/payments`) retornando QR Code base64 e código Copia e Cola oficial.
+  - `POST /api/payments/checkout` — Cria preferência **Checkout Pro** (`/checkout/preferences`) para pagamento seguro via Cartão de Crédito/Débito na página criptografada do Mercado Pago.
+  - `GET /api/payments/status?id=<payment_id>` — Valida o status real do pagamento antes de liberar o plano no frontend.
+  - `POST /api/payments/webhook` — Recebe notificações automáticas de aprovação do Mercado Pago.
+- **Frontend (`index.html` + `js/app.js`):** Modal de checkout atualizado para exibir o QR Code real gerado pelo Mercado Pago, verificar pagamento real no botão Pix e abrir o Checkout Pro oficial na aba Cartão.
 
 ---
 
-## 4. Estrutura de Arquivos
+## 3. Estrutura de Arquivos
 
-```
+```text
 agency-portal/
-├── backend/
-│   ├── server.py                 # Servidor HTTP/API Python (Porta 8080)
-│   ├── call_logs.json            # Histórico local de chamadas registradas
-│   └── mock_data.json            # Base mock de leads e métricas
+├── server.js                         # Servidor Node.js de produção (Render: Webhooks Meta + Mercado Pago + SPA)
+├── package.json                      # Configuração de start ("npm start" -> "node server.js")
+├── index.html                        # Interface principal (Landing, Login, Kanban, Softphone, Checkout)
 ├── css/
-│   └── styles.css                # Estilos globais, Glassmorphism, temas e animações
+│   └── styles.css                    # Estilos globais, animações GPU e micro-interações dos botões
 ├── js/
-│   └── app.js                    # Lógica da aplicação, áudio WebRTC, transições e Kanban
+│   ├── app.js                        # Lógica SPA, Kanban, Softphone, WhatsApp e Checkout Mercado Pago
+│   └── scroll-3d.js                  # Canvas 3D otimizado com throttle e cache de contexto
+├── backend/
+│   ├── server.py                     # Servidor local Python (porta 8080)
+│   └── voice_gateway.py              # Gateway local de Voz (Twilio) e WhatsApp Cloud API (porta 8081)
 ├── supabase/
 │   └── migrations/
-│       └── 20261126_create_call_logs.sql # Migration SQL da tabela call_logs
-├── index.html                    # Interface principal (SPA)
-├── .env.example                  # Variáveis de ambiente documentadas
-└── HANDOFF.md                    # Este documento
+│       └── 20261126_create_call_logs.sql
+├── DOCS_META_WHATSAPP_RENDER.md      # Guia público sanitizado (Meta + Render)
+└── HANDOFF.md                        # Este documento
 ```
 
 ---
 
-## 5. Variáveis de Ambiente Necessárias (`.env`)
+## 4. Variáveis de Ambiente (Render & `.env` Local)
+
+> **Segurança:** Nunca versionar chaves reais no GitHub. Configure-as no painel **Environment** do Render e no `.env` local (ignorado pelo `.gitignore`).
 
 ```ini
-# Provedor WebRTC / Voz (Twilio, Telnyx ou SIP)
-VOICE_ACCOUNT_SID=AC_mock_twilio_account_sid
-VOICE_API_KEY=SK_mock_voice_api_key
-VOICE_API_SECRET=mock_voice_api_secret_key
-VOICE_APP_SID=AP_mock_twiml_application_sid
-VOICE_CALLER_ID=+551140040001
-WEBHOOK_BASE_URL=http://localhost:8080
+# Meta WhatsApp Cloud API
+WHATSAPP_VERIFY_TOKEN=alris_meta_webhook_2026
+WHATSAPP_ACCESS_TOKEN=<seu_token_meta>
+WHATSAPP_PHONE_NUMBER_ID=<seu_phone_number_id>
+WHATSAPP_WABA_ID=<seu_waba_id>
 
-# Supabase
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_ANON_KEY=eyJhbGciOi...
-SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOi...
+# Mercado Pago (Pagamentos Reais Pix & Cartão)
+MP_ACCESS_TOKEN=<seu_access_token_mercado_pago>
+PUBLIC_BASE_URL=https://alris-call-center.onrender.com
 
-# Inteligência Artificial (Google Gemini)
-GEMINI_API_KEY=AIzaSy...
+# Telefonia / Voz (Twilio)
+VOICE_ACCOUNT_SID=<seu_account_sid>
+VOICE_AUTH_TOKEN=<seu_auth_token>
+VOICE_CALLER_ID=<seu_numero_twilio>
+TWILIO_TEMPLATE_URL=https://webhooks.twilio.com/v1/Voice/Template/voice_speech_recognition
 ```
 
 ---
 
-## 6. Próximos Passos de Implementação
-
-1. **Substituir o Modal Legado em `index.html`:**
-   - Inserir o componente de **Softphone WebRTC Flutuante** com teclado DTMF completo (0-9, *, #), medidor de áudio e seletor (WebRTC PSTN vs WhatsApp).
-2. **Atualizar `js/app.js`:**
-   - Integrar `navigator.mediaDevices.getUserMedia({ audio: true })`.
-   - Adicionar o gerenciador de Web Audio API para desenhar as ondas de fala.
-   - Enviar eventos de encerramento para o backend e atualizar o Supabase.
-3. **Garantir o Servidor Backend Ativo:**
-   - Executar: `python3 backend/server.py` na porta `8080`.
-4. **Sincronização:**
-   - Espelhar alterações para `/home/rafael/ALRIS-Call-Center/`.
-   - Realizar commit no Git.
+## 5. Próximos Passos Recomendados
+1. **Ativar Pagamentos Reais:** Inserir `MP_ACCESS_TOKEN` nas variáveis de ambiente do **Render** e testar um Pix/Checkout Pro real.
+2. **Persistência de Assinaturas:** Salvar os pagamentos aprovados do webhook (`/api/payments/webhook`) no banco de dados (Supabase) vinculados ao usuário/organização.
+3. **Verificação Empresarial Meta (Opcional):** Quando houver CNPJ/MEI, concluir a verificação no Meta Business Manager para liberar número de produção e chamadas de voz no WhatsApp.

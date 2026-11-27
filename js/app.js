@@ -318,6 +318,100 @@ let sentimentChart = null;
     let selectedCheckoutPlanName = "Plano Pro Growth";
     let selectedCheckoutPlanPrice = "299,00";
     let selectedCheckoutPlanSeats = 5;
+    let currentMpPaymentId = null;
+    let currentMpConfigured = false;
+
+    async function createMercadoPagoPix(planName, priceStr) {
+      const qrBox = document.getElementById('pixQrContainer');
+      const pixInput = document.getElementById('pixCopyInput');
+      const badge = document.getElementById('pixGatewayStatusBadge');
+      const help = document.getElementById('pixGatewayHelpText');
+      currentMpPaymentId = null;
+      currentMpConfigured = false;
+
+      if (pixInput) pixInput.value = '';
+      if (badge) {
+        badge.className = 'inline-block px-2.5 py-0.5 rounded-full bg-sky-100 text-sky-800 font-extrabold text-[10px] uppercase';
+        badge.innerText = 'Gerando Pix Oficial...';
+      }
+      if (qrBox) {
+        qrBox.innerHTML = `<div class="text-center text-[10px] font-bold text-slate-400"><i class="fa-solid fa-spinner fa-spin text-xl text-emerald-600 mb-1 block"></i>Gerando QR...</div>`;
+      }
+
+      try {
+        const payerEmail = document.getElementById('loginEmail')?.value?.trim() || 'cliente@alris.com.br';
+        const resp = await fetch('/api/payments/pix', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ planName, amount: priceStr, payerEmail }),
+        });
+        const data = await resp.json();
+
+        if (!data.configured) {
+          if (badge) {
+            badge.className = 'inline-block px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 font-extrabold text-[10px] uppercase';
+            badge.innerText = 'Aguardando MP_ACCESS_TOKEN no Render';
+          }
+          if (help) help.innerText = 'Adicione a variável MP_ACCESS_TOKEN nas configurações do Render para gerar QR Codes Pix reais na sua conta.';
+          if (qrBox) {
+            qrBox.innerHTML = `<div class="text-center text-[10px] font-bold text-amber-600 px-1"><i class="fa-solid fa-key text-xl mb-1 block"></i>Token MP<br>pendente</div>`;
+          }
+          return;
+        }
+
+        if (data.error || !data.qr_code) {
+          if (badge) {
+            badge.className = 'inline-block px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-800 font-extrabold text-[10px] uppercase';
+            badge.innerText = 'Erro ao gerar Pix';
+          }
+          if (help) help.innerText = data.error || 'Não foi possível gerar a cobrança Pix no momento.';
+          return;
+        }
+
+        currentMpConfigured = true;
+        currentMpPaymentId = data.payment_id;
+        if (pixInput) pixInput.value = data.qr_code;
+        if (badge) {
+          badge.className = 'inline-block px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-extrabold text-[10px] uppercase';
+          badge.innerText = `Pix Oficial Gerado • #${data.payment_id}`;
+        }
+        if (help) help.innerText = 'Escaneie o QR Code no app do seu banco ou copie o código abaixo. Após pagar, clique no botão verde para confirmar.';
+        if (qrBox && data.qr_code_base64) {
+          qrBox.innerHTML = `<img src="data:image/png;base64,${data.qr_code_base64}" alt="QR Code Pix Mercado Pago" class="w-full h-full object-contain">`;
+        }
+      } catch {
+        if (badge) {
+          badge.className = 'inline-block px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 font-extrabold text-[10px] uppercase';
+          badge.innerText = 'Disponível no servidor Render';
+        }
+      }
+    }
+
+    async function openMercadoPagoCheckout() {
+      const btnCard = document.getElementById('btnConfirmCardPay');
+      const originalHtml = btnCard ? btnCard.innerHTML : '';
+      if (btnCard) btnCard.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Abrindo Checkout Mercado Pago...`;
+
+      try {
+        const resp = await fetch('/api/payments/checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ planName: selectedCheckoutPlanName, amount: selectedCheckoutPlanPrice }),
+        });
+        const data = await resp.json();
+        if (!data.configured) {
+          alert('Configure a variável MP_ACCESS_TOKEN no Render para abrir o Checkout Pro do Mercado Pago.');
+        } else if (data.init_point) {
+          window.open(data.init_point, '_blank', 'noopener');
+        } else {
+          alert(data.error || 'Não foi possível abrir o checkout do Mercado Pago.');
+        }
+      } catch {
+        alert('O Checkout do Mercado Pago funciona pelo servidor oficial no Render.');
+      } finally {
+        if (btnCard) btnCard.innerHTML = originalHtml;
+      }
+    }
 
     function openPaymentCheckout(planName, priceStr, seatsLimit) {
       selectedCheckoutPlanName = planName;
@@ -331,6 +425,8 @@ let sentimentChart = null;
       document.getElementById('checkoutPlanTitle').innerText = planName;
       document.getElementById('checkoutPlanPrice').innerText = priceStr;
       document.getElementById('checkoutPlanSeats').innerText = seatsLimit > 20 ? 'Ilimitados (∞)' : `Até ${seatsLimit} membro(s)`;
+
+      createMercadoPagoPix(planName, priceStr);
     }
 
     function backToPlanSelection() {
@@ -367,17 +463,31 @@ let sentimentChart = null;
       }, 2000);
     }
 
-    function processFinalPayment(methodLabel) {
+    async function processFinalPayment(methodLabel) {
       const btnPix = document.getElementById('btnConfirmPixPay');
-      const btnCard = document.getElementById('btnConfirmCardPay');
-      if (btnPix) btnPix.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Validando Pagamento (${methodLabel})...`;
-      if (btnCard) btnCard.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Processando Cartão...`;
+      const originalHtml = btnPix ? btnPix.innerHTML : '';
 
-      setTimeout(() => {
-        confirmSubscriptionUpgrade(`${selectedCheckoutPlanName} (R$ ${selectedCheckoutPlanPrice}/mês via ${methodLabel})`);
-        if (btnPix) btnPix.innerHTML = `<i class="fa-solid fa-circle-check"></i> Pagamento Aprovado — Plano Ativo!`;
-        if (btnCard) btnCard.innerHTML = `<i class="fa-solid fa-circle-check"></i> Assinatura Ativada no Cartão!`;
-      }, 650);
+      if (currentMpConfigured && currentMpPaymentId) {
+        if (btnPix) btnPix.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Verificando pagamento no Mercado Pago...`;
+        try {
+          const resp = await fetch(`/api/payments/status?id=${encodeURIComponent(currentMpPaymentId)}`);
+          const data = await resp.json();
+          if (data.status === 'approved') {
+            confirmSubscriptionUpgrade(`${selectedCheckoutPlanName} (R$ ${selectedCheckoutPlanPrice}/mês via Pix Mercado Pago)`);
+            if (btnPix) btnPix.innerHTML = `<i class="fa-solid fa-circle-check"></i> Pagamento Aprovado — Plano Ativo!`;
+          } else {
+            if (btnPix) btnPix.innerHTML = originalHtml;
+            alert(`Pagamento ainda com status "${data.status || 'pendente'}" no Mercado Pago. Se você acabou de pagar no banco, aguarde alguns segundos e clique novamente.`);
+          }
+          return;
+        } catch {
+          if (btnPix) btnPix.innerHTML = originalHtml;
+          alert('Não foi possível validar o pagamento agora. Tente novamente em instantes.');
+          return;
+        }
+      }
+
+      alert('Para validar pagamentos reais, configure a variável MP_ACCESS_TOKEN no painel do Render.');
     }
 
     function selectPlan(planName) {
