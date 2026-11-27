@@ -35,6 +35,9 @@ const TOTAL_3D_FRAMES = 144;
         const ctx = canvas.getContext('2d', { alpha: false });
         if (ctx) {
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          
+
+
           lastDrawnSeqIndex = seqIndex;
         }
       }
