@@ -116,6 +116,53 @@ const server = http.createServer(async (req, res) => {
   }
 
   // ------------------------------------------------------------------
+  // 2.4. GET Configuração Pública do Meta Embedded Signup (sem expor secrets)
+  //      POST Troca do Authorization Code pelo Access Token Oficial (OAuth Meta)
+  // ------------------------------------------------------------------
+  if (req.method === 'GET' && pathname === '/api/meta/config') {
+    return sendJson(res, 200, {
+      app_id: (process.env.META_APP_ID || '').trim(),
+      config_id: (process.env.META_CONFIG_ID || '').trim(),
+      cloud_api_configured: Boolean(WA_ACCESS_TOKEN && WA_PHONE_NUMBER_ID),
+      phone_number_id: WA_PHONE_NUMBER_ID ? `...${WA_PHONE_NUMBER_ID.slice(-4)}` : '',
+    });
+  }
+
+  if (req.method === 'POST' && pathname === '/api/meta/exchange-token') {
+    const body = await readBody(req);
+    const code = String(body.code || '').trim();
+    const appId = (process.env.META_APP_ID || '').trim();
+    const appSecret = (process.env.META_APP_SECRET || '').trim();
+
+    if (!code) return sendJson(res, 400, { ok: false, error: 'Código OAuth da Meta não recebido.' });
+    if (!appId || !appSecret) {
+      return sendJson(res, 200, {
+        ok: false,
+        configured: false,
+        error: 'Configure META_APP_ID e META_APP_SECRET no Render para concluir a troca automática do token.',
+      });
+    }
+
+    try {
+      const url = `https://graph.facebook.com/v25.0/oauth/access_token?client_id=${encodeURIComponent(appId)}&client_secret=${encodeURIComponent(appSecret)}&code=${encodeURIComponent(code)}`;
+      const resp = await fetch(url);
+      const data = await resp.json().catch(() => ({}));
+      if (!resp.ok || !data.access_token) {
+        return sendJson(res, resp.status || 400, { ok: false, error: data?.error?.message || 'Erro ao trocar código na Meta.' });
+      }
+      return sendJson(res, 200, {
+        ok: true,
+        configured: true,
+        token_type: data.token_type || 'bearer',
+        phone_number_id: body.phone_number_id || '',
+        waba_id: body.waba_id || '',
+      });
+    } catch {
+      return sendJson(res, 502, { ok: false, error: 'Falha ao comunicar com graph.facebook.com.' });
+    }
+  }
+
+  // ------------------------------------------------------------------
   // 2.5. POST Envio Oficial via Meta WhatsApp Business Cloud API (v25.0)
   //      com Roteamento por ID de Atendente ("*Fulano:* mensagem")
   // ------------------------------------------------------------------

@@ -1998,10 +1998,36 @@
             </div>
 
             <div class="flex flex-wrap items-center gap-2.5 pt-1">
-              <button type="button" onclick="triggerMetaEmbeddedSignupPreview()" class="px-5 py-3 rounded-xl bg-[#1877F2] hover:bg-blue-700 text-white font-extrabold text-xs shadow-md flex items-center gap-2">
+              <button type="button" onclick="launchMetaEmbeddedSignup()" id="btnMetaConnectFb" class="px-5 py-3 rounded-xl bg-[#1877F2] hover:bg-blue-700 text-white font-extrabold text-xs shadow-md flex items-center gap-2">
                 <i class="fa-brands fa-facebook text-sm"></i> Conectar WhatsApp com Facebook (Meta Oficial)
               </button>
-              <span class="text-[10px] text-slate-500 font-semibold">Embedded Signup • 100% Oficial Meta</span>
+              <button type="button" onclick="toggleMetaAppConfigBox()" class="px-3.5 py-3 rounded-xl bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 font-bold text-[11px] flex items-center gap-1.5">
+                <i class="fa-solid fa-key text-slate-500"></i> Configurar App ID Meta
+              </button>
+            </div>
+
+            <!-- Feedback inline limpo (sem alert popup) -->
+            <div id="metaConnectFeedback" class="hidden p-3 rounded-xl text-[11px] font-semibold"></div>
+
+            <!-- Caixa inline de configuração do Meta App ID & Config ID -->
+            <div id="metaAppConfigBox" class="hidden p-4 rounded-xl bg-white border border-slate-200 space-y-3">
+              <div class="text-[11px] font-extrabold text-slate-800">Credenciais do App Meta (developers.facebook.com)</div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <div>
+                  <label class="block text-[10px] font-bold text-slate-500 mb-1">Meta App ID</label>
+                  <input type="text" id="metaAppIdInput" placeholder="Ex: 123456789012345" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-xs font-mono text-slate-800">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-slate-500 mb-1">Embedded Signup Config ID</label>
+                  <input type="text" id="metaConfigIdInput" placeholder="Ex: 987654321098765" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-xs font-mono text-slate-800">
+                </div>
+              </div>
+              <div class="flex items-center justify-between gap-2 flex-wrap">
+                <span class="text-[10px] text-slate-500">Também pode definir <code>META_APP_ID</code> e <code>META_CONFIG_ID</code> no Render.</span>
+                <button type="button" onclick="saveMetaAppConfig()" class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-[11px]">
+                  Salvar & Abrir Login Meta
+                </button>
+              </div>
             </div>
           </div>
 

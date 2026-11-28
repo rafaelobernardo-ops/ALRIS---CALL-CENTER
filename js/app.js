@@ -1954,8 +1954,149 @@ Responda APENAS com um objeto JSON válido:
       renderAiMemoryList();
     }
 
-    function triggerMetaEmbeddedSignupPreview() {
-      alert('Fluxo Meta Embedded Signup pronto na interface! Para ativar em produção para outras empresas, basta habilitar o produto "Login com Facebook para Empresas" no seu App Meta (Tech Provider) e inserir o META_APP_ID no Render.');
+    let metaSdkLoaded = false;
+    let lastMetaSessionInfo = { phone_number_id: '', waba_id: '' };
+
+    // Listener oficial da Meta para capturar phone_number_id e waba_id escolhidos no popup Embedded Signup
+    window.addEventListener('message', (event) => {
+      if (event.origin !== 'https://www.facebook.com' && event.origin !== 'https://web.facebook.com') return;
+      try {
+        const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+        if (data && data.type === 'WA_EMBEDDED_SIGNUP' && data.event === 'FINISH') {
+          lastMetaSessionInfo = {
+            phone_number_id: data.data?.phone_number_id || '',
+            waba_id: data.data?.waba_id || '',
+          };
+        }
+      } catch {}
+    });
+
+    function setMetaConnectFeedback(msg, tone) {
+      const box = document.getElementById('metaConnectFeedback');
+      if (!box) return;
+      box.classList.remove('hidden', 'bg-amber-50', 'text-amber-900', 'border-amber-200', 'bg-emerald-50', 'text-emerald-900', 'border-emerald-200', 'bg-sky-50', 'text-sky-900', 'border-sky-200');
+      const styles = {
+        warn: ['bg-amber-50', 'text-amber-900', 'border', 'border-amber-200'],
+        ok: ['bg-emerald-50', 'text-emerald-900', 'border', 'border-emerald-200'],
+        info: ['bg-sky-50', 'text-sky-900', 'border', 'border-sky-200'],
+      }[tone || 'info'];
+      box.classList.add(...styles);
+      box.innerHTML = msg;
+    }
+
+    function toggleMetaAppConfigBox(forceOpen) {
+      const box = document.getElementById('metaAppConfigBox');
+      if (!box) return;
+      if (forceOpen === true) box.classList.remove('hidden');
+      else box.classList.toggle('hidden');
+      const appInput = document.getElementById('metaAppIdInput');
+      const cfgInput = document.getElementById('metaConfigIdInput');
+      if (appInput && !appInput.value) appInput.value = localStorage.getItem('alris_meta_app_id') || '';
+      if (cfgInput && !cfgInput.value) cfgInput.value = localStorage.getItem('alris_meta_config_id') || '';
+    }
+
+    function saveMetaAppConfig() {
+      const appId = document.getElementById('metaAppIdInput')?.value?.trim() || '';
+      const configId = document.getElementById('metaConfigIdInput')?.value?.trim() || '';
+      if (!appId) {
+        setMetaConnectFeedback('Informe o <strong>Meta App ID</strong> (do painel developers.facebook.com) para abrir o login oficial do Facebook.', 'warn');
+        return;
+      }
+      try {
+        localStorage.setItem('alris_meta_app_id', appId);
+        if (configId) localStorage.setItem('alris_meta_config_id', configId);
+      } catch {}
+      document.getElementById('metaAppConfigBox')?.classList.add('hidden');
+      launchMetaEmbeddedSignup();
+    }
+
+    async function launchMetaEmbeddedSignup() {
+      let appId = localStorage.getItem('alris_meta_app_id') || '';
+      let configId = localStorage.getItem('alris_meta_config_id') || '';
+
+      if (!appId) {
+        try {
+          const resp = await fetch('/api/meta/config');
+          const cfg = await resp.json();
+          if (cfg.app_id) appId = cfg.app_id;
+          if (cfg.config_id) configId = cfg.config_id;
+        } catch {}
+      }
+
+      if (!appId) {
+        toggleMetaAppConfigBox(true);
+        setMetaConnectFeedback(
+          'Falta apenas informar o <strong>Meta App ID</strong> (e o <strong>Config ID</strong> do Embedded Signup) abaixo ou nas variáveis do Render para abrir o popup oficial do Facebook.',
+          'warn'
+        );
+        return;
+      }
+
+      setMetaConnectFeedback('Carregando SDK oficial do Facebook para Empresas...', 'info');
+
+      const startLogin = () => {
+        if (!window.FB) {
+          setMetaConnectFeedback('Não foi possível carregar o SDK do Facebook (verifique bloqueador de anúncios ou rede).', 'warn');
+          return;
+        }
+        window.FB.init({ appId, autoLogAppEvents: true, xfbml: true, version: 'v25.0' });
+        const loginOpts = configId
+          ? { config_id: configId, response_type: 'code', override_default_response_type: true, extras: { setup: {}, featureType: '', sessionInfoVersion: '2' } }
+          : { scope: 'whatsapp_business_management,whatsapp_business_messaging' };
+
+        window.FB.login(async (response) => {
+          if (response && response.authResponse) {
+            const code = response.authResponse.code || '';
+            const pill = document.getElementById('metaConnectStatusPill');
+            if (code) {
+              setMetaConnectFeedback('Autorização recebida! Validando token oficial no servidor Render...', 'info');
+              try {
+                const exResp = await fetch('/api/meta/exchange-token', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ code, ...lastMetaSessionInfo }),
+                });
+                const exData = await exResp.json();
+                if (exData.ok) {
+                  if (pill) {
+                    pill.className = 'px-2.5 py-1 rounded-full bg-emerald-600 text-white font-extrabold text-[10px] uppercase';
+                    pill.innerText = '✓ Conectado à Meta';
+                  }
+                  setMetaConnectFeedback('<strong>✓ WhatsApp Business conectado e ativado automaticamente!</strong> Número e WABA vinculados com sucesso.', 'ok');
+                  return;
+                }
+                setMetaConnectFeedback(exData.error || 'Código recebido, mas falta META_APP_SECRET no Render para trocar pelo token.', 'warn');
+                return;
+              } catch {}
+            }
+            if (pill) {
+              pill.className = 'px-2.5 py-1 rounded-full bg-emerald-600 text-white font-extrabold text-[10px] uppercase';
+              pill.innerText = '✓ Conectado à Meta';
+            }
+            setMetaConnectFeedback('<strong>✓ Conta Meta autorizada com sucesso!</strong>', 'ok');
+          } else {
+            setMetaConnectFeedback('Login cancelado ou aguardando conclusão na janela da Meta.', 'warn');
+          }
+        }, loginOpts);
+      };
+
+      if (metaSdkLoaded && window.FB) {
+        startLogin();
+        return;
+      }
+
+      const script = document.createElement('script');
+      script.src = 'https://connect.facebook.net/en_US/sdk.js';
+      script.async = true;
+      script.defer = true;
+      script.onload = () => {
+        metaSdkLoaded = true;
+        startLogin();
+      };
+      script.onerror = () => {
+        setMetaConnectFeedback('Não foi possível carregar connect.facebook.net. Verifique sua conexão ou bloqueador.', 'warn');
+      };
+      document.head.appendChild(script);
     }
 
     function saveCompanyCallerId() {
