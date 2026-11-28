@@ -207,30 +207,30 @@ let sentimentChart = null;
 
       if (!header) return;
 
-      // Cabeçalho 100% unificado em Branco Pérola Translúcido tanto no Kanban quanto no Atendimento
-      header.className = "h-18 py-3 bg-white/90 backdrop-blur-md text-slate-800 px-6 lg:px-10 flex items-center justify-between border-b border-white/90 shadow-[0_4px_20px_rgba(15,23,42,0.06)] shrink-0 select-none relative z-40 transition-colors duration-150 gap-4";
-      if (logoText) logoText.className = "alris-logo-font text-xl font-black text-slate-900 leading-none block";
-      if (logoSub) logoSub.className = "text-[9px] text-slate-500 font-bold tracking-[0.16em] uppercase mt-0.5";
-      if (divider) divider.className = "hidden md:block h-6 w-px bg-slate-300/80";
-      if (profileBtn) profileBtn.className = "flex items-center gap-2 bg-white hover:bg-slate-50 pl-1.5 pr-3 py-1.5 rounded-xl border border-slate-200/90 shadow-sm transition whitespace-nowrap";
-      if (userName) userName.className = "text-xs font-bold text-slate-800 hidden sm:inline";
-      if (island) island.className = "flex items-center rounded-full border transition-colors duration-150 bg-white/95 border-slate-200/90 text-slate-800 shadow-sm overflow-hidden";
+      // Cabeçalho 100% unificado na cor da Página Inicial (#111318 Grafite Executivo Translúcido)
+      header.className = "h-18 py-3 bg-[#111318]/80 backdrop-blur-md text-slate-100 px-6 lg:px-10 flex items-center justify-between border-b border-white/10 shadow-[0_6px_24px_rgba(0,0,0,0.35)] shrink-0 select-none relative z-40 gap-4";
+      if (logoText) logoText.className = "alris-logo-font text-xl font-black text-white leading-none block";
+      if (logoSub) logoSub.className = "text-[9px] text-slate-400 font-bold tracking-[0.16em] uppercase mt-0.5";
+      if (divider) divider.className = "hidden md:block h-6 w-px bg-white/15";
+      if (profileBtn) profileBtn.className = "flex items-center gap-2 bg-white/10 hover:bg-white/20 pl-1.5 pr-3 py-1.5 rounded-xl border border-white/15 whitespace-nowrap";
+      if (userName) userName.className = "text-xs font-bold text-slate-100 hidden sm:inline";
+      if (island) island.className = "flex items-center rounded-full border bg-white/10 border-white/15 text-slate-100 overflow-hidden";
 
       if (mode === 'callcenter') {
         if (teamPill) teamPill.className = "hidden";
-        if (backBtn) backBtn.className = "flex px-3.5 py-2 rounded-xl bg-white hover:bg-slate-100 text-slate-800 font-bold text-xs transition items-center gap-2 border border-slate-200/90 shadow-sm";
+        if (backBtn) backBtn.className = "flex px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs items-center gap-2 border border-white/15";
         if (searchBox) searchBox.classList.add('hidden');
         if (newTicketBtn) newTicketBtn.classList.add('hidden');
       } else {
         if (teamPill) {
-          teamPill.className = "hidden md:flex items-center bg-white/90 rounded-xl px-3 py-1.5 border border-slate-200/90 gap-2 whitespace-nowrap shadow-sm text-slate-800";
+          teamPill.className = "hidden md:flex items-center bg-white/10 rounded-xl px-3 py-1.5 border border-white/15 gap-2 whitespace-nowrap text-slate-100";
         }
         if (backBtn) backBtn.className = "hidden";
         if (searchBox) {
           searchBox.classList.remove('hidden');
-          searchBox.className = "flex items-center bg-white/90 focus-within:bg-white focus-within:border-sky-400 border border-slate-200/90 rounded-xl px-3.5 py-2 text-xs text-slate-800 w-full max-w-xs transition shadow-sm";
+          searchBox.className = "flex items-center bg-white/10 hover:bg-white/15 focus-within:bg-white/20 focus-within:border-sky-400/80 border border-white/15 rounded-xl px-3.5 py-2 text-xs text-white w-full max-w-xs";
         }
-        if (searchInput) searchInput.className = "bg-transparent border-none focus:outline-none text-xs text-slate-800 placeholder-slate-400 w-full font-medium";
+        if (searchInput) searchInput.className = "bg-transparent border-none focus:outline-none text-xs text-white placeholder-slate-400 w-full font-medium";
         if (newTicketBtn) newTicketBtn.classList.remove('hidden');
       }
     }

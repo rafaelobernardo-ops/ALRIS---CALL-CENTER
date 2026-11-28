@@ -645,19 +645,19 @@
   <!-- ====================================================================== -->
   <div id="workspace-shell" class="hidden flex-1 flex flex-col overflow-hidden relative bg-[#0e1014]">
 
-    <!-- Fundo Dinâmico 3D em Frames (kanban_1.mp4) Guiado pelo Movimento do Mouse em Todo o Kanban / Atendimento / Novo Chamado -->
+    <!-- Fundo Estático Cinematográfico do Ambiente Logado (Kanban + Perfil do Lead — Zero Frames/Lag!) -->
     <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-[#0e1014]">
-      <canvas id="workspaceBgFrameCanvas" width="1280" height="720" class="w-full h-full object-cover object-center contrast-[1.02] blur-[3px] scale-[1.02]"></canvas>
-      <div id="workspaceBgVeil" class="absolute inset-0 bg-gradient-to-b from-[#0e1014]/50 via-[#0e1014]/20 to-[#0e1014]/55 transition-colors duration-500"></div>
+      <img src="assets/workspace-bg.webp" alt="" class="w-full h-full object-cover object-center" decoding="async">
+      <div id="workspaceBgVeil" class="absolute inset-0 bg-gradient-to-b from-[#0e1014]/55 via-[#0e1014]/25 to-[#0e1014]/60"></div>
     </div>
     
-    <!-- Cabeçalho Único Idêntico no Kanban e no Atendimento (Branco Pérola Translúcido, Zero Mudança Brusca!) -->
-    <header id="workspaceHeader" class="h-18 py-3 bg-white/86 backdrop-blur-2xl text-slate-800 px-6 lg:px-10 flex items-center justify-between border-b border-white/90 shadow-[0_4px_24px_rgba(15,23,42,0.06)] shrink-0 select-none relative z-40 transition-all duration-300 gap-4">
+    <!-- Cabeçalho Único na Cor da Página Inicial (Grafite Executivo Translúcido #111318) -->
+    <header id="workspaceHeader" class="h-18 py-3 bg-[#111318]/80 backdrop-blur-md text-slate-100 px-6 lg:px-10 flex items-center justify-between border-b border-white/10 shadow-[0_6px_24px_rgba(0,0,0,0.35)] shrink-0 select-none relative z-40 gap-4">
       
       <!-- Esquerda: Logo Oficial ALRIS + Ação Contextual (Equipe no Kanban | Voltar ao Kanban no Atendimento) -->
       <div class="flex items-center gap-4 shrink-0">
         <div class="flex items-center gap-3 cursor-pointer group" onclick="goToView('kanban')" title="Ir para o Quadro Kanban">
-          <div id="workspaceLogoBox" class="w-10 h-10 rounded-2xl bg-[#181b22] border border-slate-300/60 shadow-md flex items-center justify-center p-1.5 shrink-0 transition-colors">
+          <div id="workspaceLogoBox" class="w-10 h-10 rounded-2xl bg-[#181b22] border border-white/20 shadow-md flex items-center justify-center p-1.5 shrink-0">
             <svg viewBox="0 0 64 64" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <linearGradient id="alrisGradTop" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -671,41 +671,41 @@
             </svg>
           </div>
           <div>
-            <span id="workspaceLogoText" class="alris-logo-font text-xl font-black text-slate-900 leading-none block">ALR<span class="text-slate-500">I</span>S</span>
-            <p id="workspaceLogoSub" class="text-[9px] text-slate-500 font-bold tracking-[0.16em] uppercase mt-0.5">CANAL DE ATENDIMENTO</p>
+            <span id="workspaceLogoText" class="alris-logo-font text-xl font-black text-white leading-none block">ALR<span class="text-slate-400">I</span>S</span>
+            <p id="workspaceLogoSub" class="text-[9px] text-slate-400 font-bold tracking-[0.16em] uppercase mt-0.5">CANAL DE ATENDIMENTO</p>
           </div>
         </div>
 
-        <div id="headerDividerLeft" class="hidden md:block h-6 w-px bg-slate-300/80"></div>
+        <div id="headerDividerLeft" class="hidden md:block h-6 w-px bg-white/15"></div>
 
         <!-- Contextual Esquerda 1 (Visível no Kanban): Equipe + Código -->
-        <div id="headerKanbanTeamPill" class="hidden md:flex items-center bg-white/90 rounded-xl px-3 py-1.5 border border-slate-200/90 gap-2 whitespace-nowrap shadow-sm">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-          <span class="text-slate-700 font-bold text-[11px]">Equipe (<span id="teamCountLabel">1/1</span>)</span>
+        <div id="headerKanbanTeamPill" class="hidden md:flex items-center bg-white/10 rounded-xl px-3 py-1.5 border border-white/15 gap-2 whitespace-nowrap text-slate-100">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+          <span class="text-slate-100 font-bold text-[11px]">Equipe (<span id="teamCountLabel">1/1</span>)</span>
           <div id="activeTeamAvatars" class="flex items-center -space-x-1">
-            <span class="w-5 h-5 rounded-full bg-slate-800 text-white font-extrabold text-[9px] flex items-center justify-center ring-1 ring-white" title="Rafael (Você) - Online">RC</span>
+            <span class="w-5 h-5 rounded-full bg-slate-700 text-white font-extrabold text-[9px] flex items-center justify-center ring-1 ring-white/40" title="Rafael (Você) - Online">RC</span>
           </div>
-          <button onclick="openTeamInviteModal()" class="ml-1 px-2 py-0.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-[10px] font-bold transition flex items-center gap-1" title="Convidar membro por código de acesso">
+          <button onclick="openTeamInviteModal()" class="ml-1 px-2 py-0.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-[10px] font-bold flex items-center gap-1" title="Convidar membro por código de acesso">
             <i class="fa-solid fa-user-plus text-[9px]"></i> Código
           </button>
         </div>
 
         <!-- Contextual Esquerda 2 (Visível no Atendimento): Botão Voltar ao Kanban -->
-        <button id="headerBackKanbanBtn" onclick="goToView('kanban')" class="hidden px-3.5 py-2 rounded-xl bg-white hover:bg-slate-100 text-slate-800 font-bold text-xs transition items-center gap-2 border border-slate-200/90 shadow-sm">
-          <i class="fa-solid fa-arrow-left text-[11px] text-slate-500"></i> Voltar ao Kanban
+        <button id="headerBackKanbanBtn" onclick="goToView('kanban')" class="hidden px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs items-center gap-2 border border-white/15">
+          <i class="fa-solid fa-arrow-left text-[11px] text-slate-300"></i> Voltar ao Kanban
         </button>
       </div>
 
       <!-- Centro Contextual: Busca (no Kanban) + Barra Retrátil de Atendimento (Minimiza / Maximiza ao Clicar!) -->
       <div class="hidden lg:flex items-center justify-center gap-3 flex-1 max-w-2xl">
         <!-- Barra de Busca Limpa (Visível no Kanban) -->
-        <div id="headerCenterKanban" class="flex items-center bg-transparent hover:bg-white/40 focus-within:bg-white/70 focus-within:border-sky-400/90 border border-slate-300/60 rounded-xl px-3.5 py-2 text-xs text-slate-800 w-full max-w-xs transition">
+        <div id="headerCenterKanban" class="flex items-center bg-white/10 hover:bg-white/15 focus-within:bg-white/20 focus-within:border-sky-400/80 border border-white/15 rounded-xl px-3.5 py-2 text-xs text-white w-full max-w-xs">
           <i class="fa-solid fa-magnifying-glass text-slate-400 mr-2 text-xs"></i>
-          <input type="text" id="kanbanSearchInput" oninput="filterKanbanCards(this.value)" placeholder="Buscar cliente no Kanban..." class="bg-transparent border-none focus:outline-none text-xs text-slate-800 placeholder-slate-400 w-full font-medium">
+          <input type="text" id="kanbanSearchInput" oninput="filterKanbanCards(this.value)" placeholder="Buscar cliente no Kanban..." class="bg-transparent border-none focus:outline-none text-xs text-white placeholder-slate-400 w-full font-medium">
         </div>
 
         <!-- Cápsula Dinâmica de Atendimento (Minimizada por Padrão -> Clica p/ Maximizar Microfone, Discador, Gravar e Encerrar!) -->
-        <div id="callToolbarIsland" class="flex items-center rounded-full border transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] bg-white/95 border-slate-200/90 text-slate-800 shadow-sm overflow-hidden">
+        <div id="callToolbarIsland" class="flex items-center rounded-full border bg-white/10 border-white/15 text-slate-100 overflow-hidden">
           <!-- Gatilho Compacto (Sempre Visível — Clica para Maximizar / Minimizar) -->
           <button
             type="button"
@@ -749,10 +749,10 @@
 
         <!-- Botão de Perfil Unificado -->
         <div class="relative flex items-center">
-          <button onclick="toggleProfileDropdown()" id="profileMenuBtn" class="flex items-center gap-2 bg-white/85 hover:bg-white pl-1.5 pr-3 py-1.5 rounded-xl border border-slate-200/90 shadow-sm transition whitespace-nowrap">
+          <button onclick="toggleProfileDropdown()" id="profileMenuBtn" class="flex items-center gap-2 bg-white/10 hover:bg-white/20 pl-1.5 pr-3 py-1.5 rounded-xl border border-white/15 whitespace-nowrap">
             <span id="navAvatar" class="w-7 h-7 rounded-lg bg-slate-700 text-white font-extrabold text-[10px] flex items-center justify-center shadow-sm">RC</span>
-            <span id="navUserName" class="text-xs font-bold text-slate-800 hidden sm:inline">Rafael (ADM)</span>
-            <i class="fa-solid fa-chevron-down text-[9px] text-slate-500"></i>
+            <span id="navUserName" class="text-xs font-bold text-slate-100 hidden sm:inline">Rafael (ADM)</span>
+            <i class="fa-solid fa-chevron-down text-[9px] text-slate-400"></i>
           </button>
 
           <!-- MENU SUSPENSO DO PERFIL -->
@@ -803,7 +803,7 @@
       <div id="kanbanColumnsGrid" class="flex-1 px-6 lg:px-10 py-5 overflow-x-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 custom-scroll">
 
         <!-- Coluna 1: Entrada & Triagem -->
-        <div class="flex flex-col bg-white/95 rounded-2xl p-3.5 border border-white/95 ring-1 ring-slate-900/[0.07] min-w-0 shadow-[0_10px_28px_rgba(15,23,42,0.10)]">
+        <div class="flex flex-col bg-white/78 backdrop-blur-md rounded-2xl p-3.5 border border-white/85 ring-1 ring-slate-900/[0.07] min-w-0 shadow-[0_12px_32px_rgba(15,23,42,0.10)]">
           <div class="flex items-center justify-between pb-2.5 mb-3 border-b border-slate-300/70 font-extrabold text-xs text-slate-800 shrink-0">
             <span class="flex items-center gap-2">
               <span class="w-2.5 h-2.5 rounded-full bg-sky-500 shadow-[0_0_6px_rgba(14,165,233,0.6)]"></span> 1. Entrada & Triagem
@@ -849,7 +849,7 @@
         </div>
 
         <!-- Coluna 2: Proposta & Briefing IA -->
-        <div class="flex flex-col bg-white/95 rounded-2xl p-3.5 border border-white/95 ring-1 ring-slate-900/[0.07] min-w-0 shadow-[0_10px_28px_rgba(15,23,42,0.10)]">
+        <div class="flex flex-col bg-white/78 backdrop-blur-md rounded-2xl p-3.5 border border-white/85 ring-1 ring-slate-900/[0.07] min-w-0 shadow-[0_12px_32px_rgba(15,23,42,0.10)]">
           <div class="flex items-center justify-between pb-2.5 mb-3 border-b border-slate-300/70 font-extrabold text-xs text-slate-800">
             <span class="flex items-center gap-2">
               <span class="w-2.5 h-2.5 rounded-full bg-indigo-500 shadow-[0_0_6px_rgba(99,102,241,0.6)]"></span> 2. Proposta & Negociação
@@ -876,7 +876,7 @@
         </div>
 
         <!-- Coluna 3: Em Desenvolvimento -->
-        <div class="flex flex-col bg-white/95 rounded-2xl p-3.5 border border-white/95 ring-1 ring-slate-900/[0.07] min-w-0 shadow-[0_10px_28px_rgba(15,23,42,0.10)]">
+        <div class="flex flex-col bg-white/78 backdrop-blur-md rounded-2xl p-3.5 border border-white/85 ring-1 ring-slate-900/[0.07] min-w-0 shadow-[0_12px_32px_rgba(15,23,42,0.10)]">
           <div class="flex items-center justify-between pb-2.5 mb-3 border-b border-slate-300/70 font-extrabold text-xs text-slate-800">
             <span class="flex items-center gap-2">
               <span class="w-2.5 h-2.5 rounded-full bg-purple-500 shadow-[0_0_6px_rgba(168,85,247,0.6)]"></span> 3. Desenvolvimento
@@ -903,7 +903,7 @@
         </div>
 
         <!-- Coluna 4: Homologado & Entregue -->
-        <div class="flex flex-col bg-white/95 rounded-2xl p-3.5 border border-white/95 ring-1 ring-slate-900/[0.07] min-w-0 shadow-[0_10px_28px_rgba(15,23,42,0.10)]">
+        <div class="flex flex-col bg-white/78 backdrop-blur-md rounded-2xl p-3.5 border border-white/85 ring-1 ring-slate-900/[0.07] min-w-0 shadow-[0_12px_32px_rgba(15,23,42,0.10)]">
           <div class="flex items-center justify-between pb-2.5 mb-3 border-b border-slate-300/70 font-extrabold text-xs text-slate-800">
             <span class="flex items-center gap-2">
               <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.6)]"></span> 4. Entregue (Go-Live)
