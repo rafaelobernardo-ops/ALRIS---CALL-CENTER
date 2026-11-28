@@ -126,16 +126,12 @@ let sentimentChart = null;
       }
     }
 
-    // Transição Ágil e Suave (~0.7s): Login -> Portal ALRIS -> Entrada leve do Kanban (100% GPU, sem blur pesado)
+    // Transição Ultra-Leve (~0.35s): apenas opacidade pura (sem blur, sem zoom, sem cascata pesada)
     function playLoginToKanbanTransition(welcomeName) {
       const overlay = document.getElementById('loginTransitionOverlay');
-      const card = document.getElementById('loginTransitionCard');
       const ring = document.getElementById('loginTransitionRing');
       const userLabel = document.getElementById('loginTransitionUser');
       const stepText = document.getElementById('loginTransitionStepText');
-      const loginView = document.getElementById('view-login');
-      const header = document.getElementById('workspaceHeader');
-      const grid = document.getElementById('kanbanColumnsGrid');
 
       if (!overlay) {
         goToView('kanban');
@@ -146,80 +142,34 @@ let sentimentChart = null;
         userLabel.innerText = welcomeName ? `Bem-vindo, ${welcomeName}` : 'Bem-vindo à Central ALRIS';
       }
       if (stepText) {
-        stepText.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-sky-400 animate-ping"></span> Entrando na Central ALRIS...`;
+        stepText.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Abrindo Triagens...`;
       }
 
-      // Ato 1: Zoom leve acelerado por GPU na tela de Login (sem filter: blur pesado)
-      if (loginView && !loginView.classList.contains('hidden')) {
-        loginView.style.willChange = 'transform, opacity';
-        loginView.style.transition = 'transform 320ms cubic-bezier(0.22, 1, 0.36, 1), opacity 280ms ease';
-        loginView.style.transform = 'scale(1.03)';
-        loginView.style.opacity = '0.35';
-      }
-
-      // Ato 2: Abre o Portal ALRIS rapidamente com anel suave (480ms)
       if (ring) {
         ring.style.transition = 'none';
         ring.style.strokeDashoffset = '220';
       }
+
       overlay.classList.remove('hidden');
       requestAnimationFrame(() => {
         overlay.classList.remove('opacity-0');
         overlay.classList.add('opacity-100');
-        if (card) {
-          card.classList.remove('scale-95');
-          card.classList.add('scale-100');
+        if (ring) {
+          ring.style.transition = 'stroke-dashoffset 220ms ease-out';
+          ring.style.strokeDashoffset = '0';
         }
-        requestAnimationFrame(() => {
-          if (ring) {
-            ring.style.transition = 'stroke-dashoffset 480ms cubic-bezier(0.22, 1, 0.36, 1)';
-            ring.style.strokeDashoffset = '0';
-          }
-        });
       });
 
+      // Abre as triagens imediatamente após 260ms, com fade-out rápido de 130ms
       setTimeout(() => {
-        if (stepText) {
-          stepText.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Abrindo Quadro Kanban...`;
-        }
-      }, 260);
-
-      // Ato 3 (após 560ms): Revela o Kanban instantaneamente com cascata leve
-      setTimeout(() => {
-        if (loginView) {
-          loginView.style.transform = '';
-          loginView.style.opacity = '';
-          loginView.style.transition = '';
-          loginView.style.willChange = '';
-        }
-
         goToView('kanban');
-
-        if (header) {
-          header.classList.remove('header-glide-enter');
-          void header.offsetWidth;
-          header.classList.add('header-glide-enter');
-        }
-        if (grid) {
-          grid.classList.remove('kanban-cascade-enter');
-          void grid.offsetWidth;
-          grid.classList.add('kanban-cascade-enter');
-        }
-
-        // Dissolve rapidamente a cortina (220ms)
         overlay.classList.remove('opacity-100');
         overlay.classList.add('opacity-0');
-        if (card) {
-          card.classList.remove('scale-100');
-          card.classList.add('scale-105');
-        }
 
         setTimeout(() => {
           overlay.classList.add('hidden');
-          if (card) card.classList.remove('scale-105');
-          if (card) card.classList.add('scale-95');
-        }, 220);
-      }, 560);
+        }, 140);
+      }, 260);
     }
 
     let isCallToolbarExpanded = false;
@@ -297,19 +247,15 @@ let sentimentChart = null;
       if (!wrap || !dock || !maxContent) return;
 
       if (isTelemetryExpanded) {
-        wrap.className = "w-full lg:w-[25%] shrink-0 flex flex-col overflow-hidden transition-[width] duration-150 ease-out";
+        wrap.className = "w-full lg:w-[25%] shrink-0 flex flex-col overflow-hidden";
         dock.classList.add('hidden');
-        maxContent.classList.remove('hidden');
+        maxContent.classList.remove('hidden', 'opacity-0', 'scale-95');
         maxContent.classList.add('flex');
-        requestAnimationFrame(() => {
-          maxContent.classList.remove('opacity-0', 'scale-95');
-          maxContent.classList.add('opacity-100', 'scale-100');
-        });
         if (expandHint) expandHint.classList.add('hidden');
       } else {
-        wrap.className = "w-full lg:w-[60px] shrink-0 flex flex-col overflow-hidden transition-[width] duration-150 ease-out";
-        maxContent.classList.remove('opacity-100', 'scale-100', 'flex');
-        maxContent.classList.add('opacity-0', 'scale-95', 'hidden');
+        wrap.className = "w-full lg:w-[60px] shrink-0 flex flex-col overflow-hidden";
+        maxContent.classList.remove('flex', 'opacity-100', 'scale-100');
+        maxContent.classList.add('hidden');
         dock.classList.remove('hidden');
         if (expandHint) expandHint.classList.remove('hidden');
       }
@@ -1718,6 +1664,7 @@ Responda APENAS com um objeto JSON válido:
       document.getElementById('pitchLine').innerHTML = result.sugestao_fala;
       document.getElementById('aiAlertBadge').innerText = `${result.status_curto}`;
       document.getElementById('clientTone').innerText = result.tom_cliente;
+      refreshDynamicAiSuggestions(speech);
 
       const color = result.probabilidade < 45 ? '#e11d48' : (result.probabilidade < 75 ? '#d97706' : '#059669');
       const bg = result.probabilidade < 45 ? 'rgba(225, 29, 72, 0.15)' : (result.probabilidade < 75 ? 'rgba(217, 119, 6, 0.15)' : 'rgba(5, 150, 105, 0.15)');
@@ -1796,8 +1743,230 @@ Responda APENAS com um objeto JSON válido:
       }
     }
 
+    // =========================================================================
+    // MEMÓRIA MENTAL DA IA (GEMINI) + SUGESTÕES DINÂMICAS + CONFIGURAÇÕES
+    // =========================================================================
+    const AI_MEMORY_KEY = 'alris_ai_memory_v1';
+    const AI_SETTINGS_KEY = 'alris_ai_settings_v1';
+
+    const DEFAULT_AI_MEMORY = [
+      { id: 'm1', label: 'Parcelar 3x', text: 'Compreendo perfeitamente! Se o nosso sistema salvar apenas UMA venda neste mês, ele já se pagou 5 vezes. Vamos fechar em 3x sem juros para colocar no ar já na próxima semana?', uses: 4, pinned: true },
+      { id: 'm2', label: 'Garantia Velocidade', text: 'Colocamos em contrato a garantia de nota acima de 95 no Google PageSpeed. Seu atendimento e página abrem em menos de 1 segundo no 4G de qualquer cliente.', uses: 3, pinned: false },
+      { id: 'm3', label: 'Escopo Enxuto', text: 'Se preferir começar mais enxuto, podemos iniciar no plano essencial hoje e escalar para a equipe completa assim que os primeiros resultados entrarem.', uses: 2, pinned: false },
+      { id: 'm4', label: 'Prova Social', text: 'Clientes do mesmo segmento que ativaram o Kanban + WhatsApp Oficial reduziram o tempo de resposta de 40 minutos para 2 minutos na primeira semana.', uses: 2, pinned: false },
+      { id: 'm5', label: 'Fechamento Direto', text: 'Para garantir a agenda de implantação desta semana, já posso liberar seu acesso agora e enviar o Pix ou link de cartão de qualquer banco?', uses: 1, pinned: false },
+    ];
+
+    let currentDynamicSuggestions = [...DEFAULT_AI_MEMORY];
+    let activeSuggestionIdx = 0;
+
+    function getAiSettings() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(AI_SETTINGS_KEY) || '{}');
+        return { count: Number(saved.count) || 5, tone: saved.tone || 'Consultivo' };
+      } catch {
+        return { count: 5, tone: 'Consultivo' };
+      }
+    }
+
+    function getAiMemory() {
+      try {
+        const raw = localStorage.getItem(AI_MEMORY_KEY);
+        if (!raw) return [...DEFAULT_AI_MEMORY];
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) && parsed.length ? parsed : [...DEFAULT_AI_MEMORY];
+      } catch {
+        return [...DEFAULT_AI_MEMORY];
+      }
+    }
+
+    function saveAiMemory(list) {
+      try { localStorage.setItem(AI_MEMORY_KEY, JSON.stringify(list)); } catch {}
+    }
+
+    function renderDynamicSuggestionPills() {
+      const wrap = document.getElementById('aiDynamicPills');
+      const pitch = document.getElementById('pitchLine');
+      if (!wrap) return;
+      const settings = getAiSettings();
+      const visible = currentDynamicSuggestions.slice(0, settings.count);
+      if (!visible.length) return;
+      if (activeSuggestionIdx >= visible.length) activeSuggestionIdx = 0;
+
+      wrap.innerHTML = visible.map((item, idx) => {
+        const isActive = idx === activeSuggestionIdx;
+        const star = item.fromMemory ? '★ ' : '';
+        const cls = isActive
+          ? 'px-2.5 py-1 rounded-full bg-sky-600 text-white font-extrabold text-[10px] shadow-sm'
+          : 'px-2.5 py-1 rounded-full bg-white hover:bg-sky-50 text-slate-700 border border-slate-200 font-semibold text-[10px]';
+        return `<button type="button" onclick="selectDynamicSuggestion(${idx})" class="${cls}">${idx + 1}. ${star}${item.label}</button>`;
+      }).join('');
+
+      if (pitch && visible[activeSuggestionIdx]) {
+        pitch.innerText = `"${visible[activeSuggestionIdx].text}"`;
+      }
+    }
+
+    function selectDynamicSuggestion(idx) {
+      activeSuggestionIdx = idx;
+      renderDynamicSuggestionPills();
+    }
+
+    async function refreshDynamicAiSuggestions(speech) {
+      const settings = getAiSettings();
+      const memory = getAiMemory().sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0) || (b.uses || 0) - (a.uses || 0));
+      const clientName = document.getElementById('liveCardName')?.innerText || 'Cliente';
+      const clientContext = document.getElementById('liveCardPain')?.innerText || '';
+
+      try {
+        const resp = await fetch('/api/ai/suggest', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            speech,
+            clientName,
+            clientContext,
+            tone: settings.tone,
+            count: settings.count,
+            memoryPatterns: memory.slice(0, 5),
+          }),
+        });
+        const data = await resp.json();
+        if (data.configured && Array.isArray(data.suggestions) && data.suggestions.length) {
+          const topMem = memory[0] ? [{ label: memory[0].label, text: memory[0].text, fromMemory: true }] : [];
+          currentDynamicSuggestions = [...topMem, ...data.suggestions].slice(0, settings.count);
+          activeSuggestionIdx = 0;
+          renderDynamicSuggestionPills();
+          return;
+        }
+      } catch {}
+
+      // Fallback inteligente contextual combinando Memória Mental + fala atual
+      const lower = (speech || '').toLowerCase();
+      const dynamicFallback = [];
+      if (lower.includes('caro') || lower.includes('preço') || lower.includes('valor')) {
+        dynamicFallback.push({ label: 'Quebra de Preço', text: `Entendo a preocupação com o valor, ${clientName.split(' ')[0]}. Se compararmos com o custo de perder leads todos os dias, parcelando em 3x o retorno já cobre o investimento no primeiro mês.` });
+      } else if (lower.includes('pensar') || lower.includes('sócio') || lower.includes('depois')) {
+        dynamicFallback.push({ label: 'Agendar Decisão', text: `Perfeito! Que tal eu já enviar um resumo objetivo de 3 linhas no seu WhatsApp para você mostrar ao seu sócio e confirmarmos amanhã às 10h?` });
+      }
+      const memFormatted = memory.map(m => ({ label: m.label, text: m.text, fromMemory: (m.uses || 0) >= 2 || m.pinned }));
+      currentDynamicSuggestions = [...dynamicFallback, ...memFormatted].slice(0, settings.count);
+      activeSuggestionIdx = 0;
+      renderDynamicSuggestionPills();
+    }
+
+    function openAccountSettingsModal(tab) {
+      const modal = document.getElementById('accountSettingsModal');
+      if (!modal) return;
+      modal.classList.remove('hidden');
+      const settings = getAiSettings();
+      const countSel = document.getElementById('aiSuggestCountSelect');
+      const toneSel = document.getElementById('aiToneSelect');
+      if (countSel) countSel.value = String(settings.count);
+      if (toneSel) toneSel.value = settings.tone;
+      const callerInput = document.getElementById('settingsCallerIdInput');
+      if (callerInput) callerInput.value = localStorage.getItem('alris_company_caller_id') || '+17372508034';
+      renderAiMemoryList();
+      switchSettingsTab(tab || 'ai');
+    }
+
+    function closeAccountSettingsModal() {
+      document.getElementById('accountSettingsModal')?.classList.add('hidden');
+    }
+
+    function switchSettingsTab(tab) {
+      const pAi = document.getElementById('settingsPanelAi');
+      const pWa = document.getElementById('settingsPanelWa');
+      const bAi = document.getElementById('settingsTabBtnAi');
+      const bWa = document.getElementById('settingsTabBtnWa');
+      if (!pAi || !pWa) return;
+      const activeCls = 'px-4 py-2.5 rounded-t-xl text-xs font-extrabold bg-white text-sky-700 border border-b-0 border-slate-200 flex items-center gap-2';
+      const idleCls = 'px-4 py-2.5 rounded-t-xl text-xs font-bold text-slate-600 hover:text-slate-900 flex items-center gap-2';
+      if (tab === 'whatsapp') {
+        pAi.classList.add('hidden');
+        pWa.classList.remove('hidden');
+        if (bWa) bWa.className = activeCls;
+        if (bAi) bAi.className = idleCls;
+      } else {
+        pWa.classList.add('hidden');
+        pAi.classList.remove('hidden');
+        if (bAi) bAi.className = activeCls;
+        if (bWa) bWa.className = idleCls;
+      }
+    }
+
+    function saveAiSettings() {
+      const count = Number(document.getElementById('aiSuggestCountSelect')?.value || 5);
+      const tone = document.getElementById('aiToneSelect')?.value || 'Consultivo';
+      try { localStorage.setItem(AI_SETTINGS_KEY, JSON.stringify({ count, tone })); } catch {}
+      renderDynamicSuggestionPills();
+    }
+
+    function renderAiMemoryList() {
+      const listEl = document.getElementById('aiMemoryList');
+      const badge = document.getElementById('memoryCountBadge');
+      if (!listEl) return;
+      const mem = getAiMemory().sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0) || (b.uses || 0) - (a.uses || 0));
+      if (badge) badge.innerText = `${mem.length} padrões aprendidos`;
+      listEl.innerHTML = mem.map((item) => `
+        <div class="p-3 rounded-xl bg-white border ${item.pinned ? 'border-amber-300 bg-amber-50/30' : 'border-slate-200'} flex items-start justify-between gap-3">
+          <div class="space-y-1 flex-1">
+            <div class="flex items-center gap-2">
+              <strong class="text-slate-900">${item.label}</strong>
+              <span class="px-1.5 py-0.5 rounded bg-sky-100 text-sky-800 text-[9px] font-extrabold">${item.uses || 1}x usado</span>
+              ${item.pinned ? '<span class="text-amber-500 text-[10px] font-black">★ Fixado</span>' : ''}
+            </div>
+            <p class="text-[11px] text-slate-600 leading-snug">"${item.text}"</p>
+          </div>
+          <div class="flex items-center gap-1 shrink-0">
+            <button type="button" onclick="togglePinMemory('${item.id}')" title="Fixar no topo" class="w-7 h-7 rounded-lg border border-slate-200 hover:bg-amber-50 text-amber-500 flex items-center justify-center"><i class="fa-solid fa-star text-[10px]"></i></button>
+            <button type="button" onclick="deleteMemoryPattern('${item.id}')" title="Remover" class="w-7 h-7 rounded-lg border border-slate-200 hover:bg-rose-50 text-rose-500 flex items-center justify-center"><i class="fa-solid fa-trash text-[10px]"></i></button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function addManualMemoryPattern() {
+      const labelEl = document.getElementById('newMemLabelInput');
+      const textEl = document.getElementById('newMemTextInput');
+      const label = labelEl?.value?.trim();
+      const text = textEl?.value?.trim();
+      if (!label || !text) return;
+      const mem = getAiMemory();
+      mem.unshift({ id: `m_${Date.now()}`, label, text, uses: 1, pinned: true });
+      saveAiMemory(mem);
+      if (labelEl) labelEl.value = '';
+      if (textEl) textEl.value = '';
+      currentDynamicSuggestions = mem.map(m => ({ label: m.label, text: m.text, fromMemory: true }));
+      renderAiMemoryList();
+      renderDynamicSuggestionPills();
+    }
+
+    function togglePinMemory(id) {
+      const mem = getAiMemory().map(m => m.id === id ? { ...m, pinned: !m.pinned } : m);
+      saveAiMemory(mem);
+      renderAiMemoryList();
+    }
+
+    function deleteMemoryPattern(id) {
+      const mem = getAiMemory().filter(m => m.id !== id);
+      saveAiMemory(mem);
+      renderAiMemoryList();
+    }
+
+    function triggerMetaEmbeddedSignupPreview() {
+      alert('Fluxo Meta Embedded Signup pronto na interface! Para ativar em produção para outras empresas, basta habilitar o produto "Login com Facebook para Empresas" no seu App Meta (Tech Provider) e inserir o META_APP_ID no Render.');
+    }
+
+    function saveCompanyCallerId() {
+      const val = document.getElementById('settingsCallerIdInput')?.value?.trim();
+      if (!val) return;
+      try { localStorage.setItem('alris_company_caller_id', val); } catch {}
+      alert(`Número de saída (${val}) salvo nas configurações da conta!`);
+    }
+
     function applyAiSuggestionToCall() {
-      const pitchText = document.getElementById('pitchLine').innerText;
+      const pitchText = document.getElementById('pitchLine').innerText.replace(/^"|"$/g, '');
       const box = document.getElementById('transcriptBox');
       box.innerHTML += `
         <div class="flex flex-col items-end">
@@ -1810,6 +1979,17 @@ Responda APENAS com um objeto JSON válido:
       `;
       box.scrollTop = box.scrollHeight;
       updateTelemetry(78, 'RECUPERANDO • POSITIVO', '#0284c7', 'rgba(2, 132, 199, 0.12)', 'Sugestão IA');
+
+      // Aprende automaticamente na Memória Mental de Padrões que dão certo!
+      const mem = getAiMemory();
+      const existing = mem.find(m => m.text === pitchText);
+      if (existing) {
+        existing.uses = (existing.uses || 1) + 1;
+      } else {
+        const activeLabel = currentDynamicSuggestions[activeSuggestionIdx]?.label || 'Resposta Campeã';
+        mem.unshift({ id: `m_${Date.now()}`, label: activeLabel, text: pitchText, uses: 1, pinned: false });
+      }
+      saveAiMemory(mem);
     }
 
     function simulateEvent(type) {

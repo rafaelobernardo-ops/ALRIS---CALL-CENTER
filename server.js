@@ -12,9 +12,14 @@ const { URL } = require('url');
 const PORT = parseInt(process.env.PORT || '8080', 10);
 const ROOT_DIR = __dirname;
 const VERIFY_TOKEN = process.env.WHATSAPP_VERIFY_TOKEN || 'alris_meta_webhook_2026';
+const WA_ACCESS_TOKEN = (process.env.WHATSAPP_ACCESS_TOKEN || '').trim();
+const WA_PHONE_NUMBER_ID = (process.env.WHATSAPP_PHONE_NUMBER_ID || '').trim();
+const GEMINI_API_KEY = (process.env.GEMINI_API_KEY || '').trim();
 const MP_ACCESS_TOKEN = (process.env.MP_ACCESS_TOKEN || '').trim();
 const PUBLIC_BASE_URL = (process.env.PUBLIC_BASE_URL || 'https://alris-call-center.onrender.com').replace(/\/$/, '');
 const approvedPayments = new Map();
+// Tabela de roteamento Multi-Atendente (1 número oficial -> N funcionários identificados por agent_id)
+const leadRoutingTable = new Map();
 
 async function mpRequest(method, endpoint, bodyObj, idempotencyKey) {
   const headers = {
@@ -111,6 +116,136 @@ const server = http.createServer(async (req, res) => {
   }
 
   // ------------------------------------------------------------------
+  // 2.5. POST Envio Oficial via Meta WhatsApp Business Cloud API (v25.0)
+  //      com Roteamento por ID de Atendente ("*Fulano:* mensagem")
+  // ------------------------------------------------------------------
+  if (req.method === 'POST' && pathname === '/api/whatsapp/send') {
+    const body = await readBody(req);
+    const to = String(body.to || body.phone || '').replace(/\D/g, '');
+    const rawMessage = String(body.message || body.text || '').trim();
+    const agentId = String(body.agent_id || 'admin_default').trim();
+    const agentName = String(body.agent_name || '').trim();
+    const organizationId = String(body.organization_id || 'org_default').trim();
+
+    if (!to || !rawMessage) {
+      return sendJson(res, 400, { ok: false, error: 'Número de destino e mensagem são obrigatórios.' });
+    }
+
+    // Associa o número do cliente ao funcionário responsável (roteamento 1 número -> N atendentes)
+    leadRoutingTable.set(to, {
+      agent_id: agentId,
+      agent_name: agentName || 'Atendimento ALRIS',
+      organization_id: organizationId,
+      updated_at: new Date().toISOString(),
+    });
+
+    const formattedMessage = agentName ? `*${agentName}:*\n${rawMessage}` : rawMessage;
+
+    if (!WA_ACCESS_TOKEN || !WA_PHONE_NUMBER_ID) {
+      return sendJson(res, 200, {
+        ok: false,
+        configured: false,
+        provider: 'meta_cloud_api_official',
+        routed_to: leadRoutingTable.get(to),
+        error: 'Configure WHATSAPP_ACCESS_TOKEN e WHATSAPP_PHONE_NUMBER_ID no Render para envio oficial em nuvem.',
+      });
+    }
+
+    try {
+      const resp = await fetch(`https://graph.facebook.com/v25.0/${encodeURIComponent(WA_PHONE_NUMBER_ID)}/messages`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${WA_ACCESS_TOKEN}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          messaging_product: 'whatsapp',
+          recipient_type: 'individual',
+          to,
+          type: 'text',
+          text: { preview_url: false, body: formattedMessage },
+        }),
+      });
+      const data = await resp.json().catch(() => ({}));
+      if (!resp.ok) {
+        return sendJson(res, resp.status, {
+          ok: false,
+          configured: true,
+          provider: 'meta_cloud_api_official',
+          error: data?.error?.message || 'Erro na Meta Cloud API.',
+        });
+      }
+      return sendJson(res, 200, {
+        ok: true,
+        configured: true,
+        provider: 'meta_cloud_api_official',
+        routed_to: leadRoutingTable.get(to),
+        message_id: data?.messages?.[0]?.id || '',
+      });
+    } catch (err) {
+      return sendJson(res, 502, { ok: false, provider: 'meta_cloud_api_official', error: 'Falha de conexão com a Meta Cloud API.' });
+    }
+  }
+
+  // ------------------------------------------------------------------
+  // 2.6. POST Sugestões Dinâmicas em Tempo Real (Gemini Flash + Memória Mental)
+  // ------------------------------------------------------------------
+  if (req.method === 'POST' && pathname === '/api/ai/suggest') {
+    const body = await readBody(req);
+    const speech = String(body.speech || '').trim();
+    const clientName = String(body.clientName || 'Cliente').trim();
+    const clientContext = String(body.clientContext || '').trim();
+    const tone = String(body.tone || 'Consultivo').trim();
+    const count = Math.max(3, Math.min(6, parseInt(body.count || '5', 10) || 5));
+    const memoryPatterns = Array.isArray(body.memoryPatterns) ? body.memoryPatterns.slice(0, 6) : [];
+
+    if (!GEMINI_API_KEY) {
+      return sendJson(res, 200, { configured: false, suggestions: [] });
+    }
+
+    const memoryHint = memoryPatterns.length
+      ? `Padrões de resposta que mais funcionam para este operador (use o estilo deles como referência): ${memoryPatterns.map((m, i) => `${i + 1}) "${m.text}" (${m.uses || 1}x)`).join(' | ')}`
+      : '';
+
+    const prompt = [
+      `Você é um Copiloto de Vendas em tempo real (baixa latência) em português do Brasil.`,
+      `Tom desejado: ${tone}. Lead: ${clientName}. Contexto: ${clientContext || 'Atendimento comercial'}.`,
+      memoryHint,
+      `Última fala do cliente: "${speech || 'Cliente entrou na ligação aguardando proposta.'}"`,
+      `Retorne APENAS um JSON válido com o formato exato: {"status_curto":"...","tom_cliente":"...","probabilidade":75,"suggestions":[{"label":"Título curto (max 3 palavras)","text":"Fala pronta persuasiva e natural para o operador ler agora"}]}`,
+      `Gere exatamente ${count} itens em "suggestions" com abordagens diferentes (ex: ROI/Valor, Parcelamento, Prova Social, Urgência, Fechamento Direto). Sem markdown.`,
+    ].join('\n');
+
+    try {
+      const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(GEMINI_API_KEY)}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: {
+            temperature: 0.6,
+            maxOutputTokens: 700,
+            responseMimeType: 'application/json',
+          },
+        }),
+      });
+      const data = await resp.json().catch(() => ({}));
+      const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+      const parsedAi = JSON.parse(rawText);
+      return sendJson(res, 200, {
+        configured: true,
+        model: 'gemini-2.5-flash',
+        status_curto: parsedAi.status_curto || 'ANÁLISE AO VIVO',
+        tom_cliente: parsedAi.tom_cliente || 'Engajado',
+        probabilidade: Number(parsedAi.probabilidade) || 72,
+        suggestions: Array.isArray(parsedAi.suggestions) ? parsedAi.suggestions.slice(0, count) : [],
+      });
+    } catch (err) {
+      return sendJson(res, 200, { configured: true, fallback: true, suggestions: [] });
+    }
+  }
+
+  // ------------------------------------------------------------------
   // 3. Health & Status da API
   // ------------------------------------------------------------------
   if (req.method === 'GET' && (pathname === '/api/health' || pathname === '/api/status' || pathname === '/health')) {
@@ -118,6 +253,8 @@ const server = http.createServer(async (req, res) => {
       status: 'ok',
       service: 'ALRIS Call Center & Meta Webhook Server',
       webhook_ready: true,
+      whatsapp_official_configured: Boolean(WA_ACCESS_TOKEN && WA_PHONE_NUMBER_ID),
+      gemini_configured: Boolean(GEMINI_API_KEY),
       mercadopago_configured: Boolean(MP_ACCESS_TOKEN),
       webrtc_mode: process.env.VOICE_ACCOUNT_SID ? 'live_provider' : 'sandbox_mock',
     });

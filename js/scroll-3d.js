@@ -26,34 +26,40 @@ const TOTAL_3D_FRAMES = 144;
     const activeFrameSequence = [];
     for (let i = START_3D_FRAME; i < TOTAL_3D_FRAMES; i++) activeFrameSequence.push(i);
 
+    const CANVAS_FRAME_INTERVAL_MS = 34; // ~30 FPS fixo nos loops de render para máxima leveza
+    let cachedMainCanvas = null;
+    let cachedMainCtx = null;
+    let cachedLoginCanvas = null;
+    let cachedLoginCtx = null;
+    let lastMainRafTime = 0;
+    let lastLoginRafTime = 0;
+    let lastWorkspaceRafTime = 0;
+
     function drawFrameOnCanvas(seqIndex) {
-      const canvas = document.getElementById('fullScreenFrameCanvas');
-      if (!canvas) return;
+      if (!cachedMainCanvas) {
+        cachedMainCanvas = document.getElementById('fullScreenFrameCanvas');
+        if (cachedMainCanvas) cachedMainCtx = cachedMainCanvas.getContext('2d', { alpha: false });
+      }
+      if (!cachedMainCanvas || !cachedMainCtx) return;
       const frameNum = activeFrameSequence[seqIndex];
       const img = preloadedImages.get(frameNum);
       if (img && img.complete && img.naturalWidth > 0) {
-        const ctx = canvas.getContext('2d', { alpha: false });
-        if (ctx) {
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          
-
-
-          lastDrawnSeqIndex = seqIndex;
-        }
+        cachedMainCtx.drawImage(img, 0, 0, cachedMainCanvas.width, cachedMainCanvas.height);
+        lastDrawnSeqIndex = seqIndex;
       }
     }
 
     function drawLoginFrameOnCanvas(seqIndex) {
-      const canvas = document.getElementById('loginBgFrameCanvas');
-      if (!canvas) return;
+      if (!cachedLoginCanvas) {
+        cachedLoginCanvas = document.getElementById('loginBgFrameCanvas');
+        if (cachedLoginCanvas) cachedLoginCtx = cachedLoginCanvas.getContext('2d', { alpha: false });
+      }
+      if (!cachedLoginCanvas || !cachedLoginCtx) return;
       const frameNum = activeFrameSequence[seqIndex];
       const img = preloadedImages.get(frameNum);
       if (img && img.complete && img.naturalWidth > 0) {
-        const ctx = canvas.getContext('2d', { alpha: false });
-        if (ctx) {
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          lastDrawnLoginSeqIndex = seqIndex;
-        }
+        cachedLoginCtx.drawImage(img, 0, 0, cachedLoginCanvas.width, cachedLoginCanvas.height);
+        lastDrawnLoginSeqIndex = seqIndex;
       }
     }
 
@@ -77,10 +83,16 @@ const TOTAL_3D_FRAMES = 144;
       });
     }
 
-    function tickSmooth3DFrames() {
+    function tickSmooth3DFrames(now) {
+      if (now && now - lastMainRafTime < CANVAS_FRAME_INTERVAL_MS) {
+        requestAnimationFrame(tickSmooth3DFrames);
+        return;
+      }
+      lastMainRafTime = now || performance.now();
+
       const diff = targetFrameFloat - currentFrameFloat;
-      if (Math.abs(diff) > 0.05) {
-        currentFrameFloat += diff * 0.16;
+      if (Math.abs(diff) > 0.15) {
+        currentFrameFloat += diff * 0.24;
       } else {
         currentFrameFloat = targetFrameFloat;
       }
@@ -90,17 +102,23 @@ const TOTAL_3D_FRAMES = 144;
         drawFrameOnCanvas(seqIndex);
       }
 
-      if (Math.abs(targetFrameFloat - currentFrameFloat) > 0.05) {
+      if (Math.abs(targetFrameFloat - currentFrameFloat) > 0.15) {
         requestAnimationFrame(tickSmooth3DFrames);
       } else {
         isAnimatingFrames = false;
       }
     }
 
-    function tickSmoothLogin3DFrames() {
+    function tickSmoothLogin3DFrames(now) {
+      if (now && now - lastLoginRafTime < CANVAS_FRAME_INTERVAL_MS) {
+        requestAnimationFrame(tickSmoothLogin3DFrames);
+        return;
+      }
+      lastLoginRafTime = now || performance.now();
+
       const diff = loginTargetFrameFloat - loginCurrentFrameFloat;
-      if (Math.abs(diff) > 0.05) {
-        loginCurrentFrameFloat += diff * 0.14;
+      if (Math.abs(diff) > 0.15) {
+        loginCurrentFrameFloat += diff * 0.22;
       } else {
         loginCurrentFrameFloat = loginTargetFrameFloat;
       }
@@ -110,7 +128,7 @@ const TOTAL_3D_FRAMES = 144;
         drawLoginFrameOnCanvas(seqIndex);
       }
 
-      if (Math.abs(loginTargetFrameFloat - loginCurrentFrameFloat) > 0.05) {
+      if (Math.abs(loginTargetFrameFloat - loginCurrentFrameFloat) > 0.15) {
         requestAnimationFrame(tickSmoothLogin3DFrames);
       } else {
         isAnimatingLoginFrames = false;
@@ -244,10 +262,16 @@ const TOTAL_3D_FRAMES = 144;
       setTimeout(loadBatch, 600);
     }
 
-    function tickSmoothWorkspace3DFrames() {
+    function tickSmoothWorkspace3DFrames(now) {
+      if (now && now - lastWorkspaceRafTime < CANVAS_FRAME_INTERVAL_MS) {
+        requestAnimationFrame(tickSmoothWorkspace3DFrames);
+        return;
+      }
+      lastWorkspaceRafTime = now || performance.now();
+
       const diff = workspaceTargetFrameFloat - workspaceCurrentFrameFloat;
-      if (Math.abs(diff) > 0.25) {
-        workspaceCurrentFrameFloat += diff * 0.18;
+      if (Math.abs(diff) > 0.35) {
+        workspaceCurrentFrameFloat += diff * 0.24;
       } else {
         workspaceCurrentFrameFloat = workspaceTargetFrameFloat;
       }
@@ -257,7 +281,7 @@ const TOTAL_3D_FRAMES = 144;
         drawWorkspaceFrameOnCanvas(idx);
       }
 
-      if (Math.abs(workspaceTargetFrameFloat - workspaceCurrentFrameFloat) > 0.25) {
+      if (Math.abs(workspaceTargetFrameFloat - workspaceCurrentFrameFloat) > 0.35) {
         requestAnimationFrame(tickSmoothWorkspace3DFrames);
       } else {
         isAnimatingWorkspaceFrames = false;

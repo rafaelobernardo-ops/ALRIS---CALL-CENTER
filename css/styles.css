@@ -33,15 +33,15 @@
       }
     }
 
-    /* Micro-interações rápidas e suaves em todos os botões */
+    /* Micro-interações instantâneas em todos os botões */
     button, [role="button"] {
       transition-property: transform, background-color, border-color, color, box-shadow, opacity;
-      transition-duration: 140ms;
-      transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+      transition-duration: 75ms;
+      transition-timing-function: ease-out;
       -webkit-tap-highlight-color: transparent;
     }
     button:active:not(:disabled), [role="button"]:active {
-      transform: scale(0.975);
+      transform: scale(0.98);
     }
 
     .pipefy-card {
@@ -50,7 +50,7 @@
       -webkit-backdrop-filter: blur(6px);
       border: 1px solid rgba(255, 255, 255, 0.82) !important;
       box-shadow: 0 6px 18px -4px rgba(15, 23, 42, 0.10);
-      transition: transform 0.15s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+      transition: transform 75ms ease-out, box-shadow 75ms ease-out, border-color 75ms ease-out, background-color 75ms ease-out;
       will-change: transform;
       color: #0f172a !important;
     }
