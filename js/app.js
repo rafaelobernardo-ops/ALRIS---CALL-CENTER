@@ -2024,10 +2024,12 @@ Responda APENAS com um objeto JSON válido:
       }
 
       if (!appId) {
+        const fbDevLoginUrl = 'https://www.facebook.com/login.php?next=https%3A%2F%2Fdevelopers.facebook.com%2Fapps%2F';
+        window.open(fbDevLoginUrl, '_blank', 'noopener');
         toggleMetaAppConfigBox(true);
         setMetaConnectFeedback(
-          '<strong>Por que a janela do Facebook ainda não abriu?</strong> O Facebook exige o <strong>ID do seu Aplicativo Meta</strong> (um número público no topo do seu painel Meta). <a href="https://www.facebook.com/login.php?next=https%3A%2F%2Fdevelopers.facebook.com%2Fapps%2F" target="_blank" class="underline font-extrabold">Clique aqui para fazer login no Facebook e abrir seus Apps</a>, copie o ID e cole abaixo 1 única vez!',
-          'warn'
+          '<strong>Tela de login do Facebook Developers aberta!</strong> Faça login lá, copie o <strong>ID do aplicativo</strong> no topo e cole abaixo 1 única vez (ou adicione <code>META_APP_ID</code> no Render). <a href="' + fbDevLoginUrl + '" target="_blank" class="underline font-extrabold">Abrir novamente</a>.',
+          'info'
         );
         return;
       }

@@ -33,10 +33,10 @@
       }
     }
 
-    /* Micro-interações instantâneas em todos os botões */
+    /* Micro-interações instantâneas (80ms) em todos os botões */
     button, [role="button"] {
       transition-property: transform, background-color, border-color, color, box-shadow, opacity;
-      transition-duration: 75ms;
+      transition-duration: 80ms;
       transition-timing-function: ease-out;
       -webkit-tap-highlight-color: transparent;
     }
@@ -45,12 +45,10 @@
     }
 
     .pipefy-card {
-      background: rgba(229, 235, 244, 0.90) !important;
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-      border: 1px solid rgba(255, 255, 255, 0.82) !important;
-      box-shadow: 0 6px 18px -4px rgba(15, 23, 42, 0.10);
-      transition: transform 75ms ease-out, box-shadow 75ms ease-out, border-color 75ms ease-out, background-color 75ms ease-out;
+      background: rgba(235, 240, 248, 0.96) !important;
+      border: 1px solid rgba(255, 255, 255, 0.92) !important;
+      box-shadow: 0 4px 14px -4px rgba(15, 23, 42, 0.10);
+      transition: transform 80ms ease-out, box-shadow 80ms ease-out, border-color 80ms ease-out, background-color 80ms ease-out;
       will-change: transform;
       color: #0f172a !important;
     }
