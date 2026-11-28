@@ -2026,9 +2026,20 @@ Responda APENAS com um objeto JSON válido:
       if (!appId) {
         toggleMetaAppConfigBox(true);
         setMetaConnectFeedback(
-          'Falta apenas informar o <strong>Meta App ID</strong> (e o <strong>Config ID</strong> do Embedded Signup) abaixo ou nas variáveis do Render para abrir o popup oficial do Facebook.',
+          '<strong>Por que a janela do Facebook ainda não abriu?</strong> O Facebook exige o <strong>ID do seu Aplicativo Meta</strong> (um número público que fica no topo do painel <a href="https://developers.facebook.com/apps" target="_blank" class="underline font-extrabold">developers.facebook.com/apps</a>). Cole ele abaixo 1 única vez e clique em <strong>Salvar ID & Testar Botão Azul</strong>!',
           'warn'
         );
+        return;
+      }
+
+      // Em HTTP local (localhost), o SDK JS do Facebook bloqueia popup -> abre o diálogo OAuth oficial diretamente em nova aba
+      if (window.location.protocol !== 'https:') {
+        const redirectUri = encodeURIComponent('https://alris-call-center.onrender.com/api/whatsapp/webhook');
+        const oauthUrl = configId
+          ? `https://www.facebook.com/v25.0/dialog/oauth?client_id=${encodeURIComponent(appId)}&config_id=${encodeURIComponent(configId)}&response_type=code&redirect_uri=${redirectUri}`
+          : `https://www.facebook.com/v25.0/dialog/oauth?client_id=${encodeURIComponent(appId)}&scope=whatsapp_business_management,whatsapp_business_messaging&response_type=code&redirect_uri=${redirectUri}`;
+        window.open(oauthUrl, 'alris_meta_login', 'width=620,height=720');
+        setMetaConnectFeedback('Janela oficial de login do Facebook aberta! Conclua a autorização na nova janela.', 'info');
         return;
       }
 
