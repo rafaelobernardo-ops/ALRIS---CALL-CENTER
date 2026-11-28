@@ -2026,7 +2026,7 @@ Responda APENAS com um objeto JSON válido:
       if (!appId) {
         toggleMetaAppConfigBox(true);
         setMetaConnectFeedback(
-          '<strong>Por que a janela do Facebook ainda não abriu?</strong> O Facebook exige o <strong>ID do seu Aplicativo Meta</strong> (um número público que fica no topo do painel <a href="https://developers.facebook.com/apps" target="_blank" class="underline font-extrabold">developers.facebook.com/apps</a>). Cole ele abaixo 1 única vez e clique em <strong>Salvar ID & Testar Botão Azul</strong>!',
+          '<strong>Por que a janela do Facebook ainda não abriu?</strong> O Facebook exige o <strong>ID do seu Aplicativo Meta</strong> (um número público no topo do seu painel Meta). <a href="https://www.facebook.com/login.php?next=https%3A%2F%2Fdevelopers.facebook.com%2Fapps%2F" target="_blank" class="underline font-extrabold">Clique aqui para fazer login no Facebook e abrir seus Apps</a>, copie o ID e cole abaixo 1 única vez!',
           'warn'
         );
         return;
