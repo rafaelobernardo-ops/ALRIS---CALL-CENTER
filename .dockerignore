@@ -1,0 +1,11 @@
+.git
+.gitignore
+.env
+.netlify
+dist
+prints
+backend/voice_gateway_config.json
+backend/call_logs.json
+backend/verifications.json
+*.log
+node_modules
